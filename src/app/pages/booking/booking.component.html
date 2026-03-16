@@ -1,0 +1,651 @@
+<div class="dashboard-wrapper">
+
+  <!-- 🔥 TOP MENU BAR -->
+  <header class="top-header">
+    <div class="navbar">
+      <app-update-profile></app-update-profile>
+      <app-change-password></app-change-password>
+      <div class="logo">
+        <h3>MANKURUSSI TEMPLES</h3>
+      </div>
+      <ul class="menu" #menuContainer1>
+
+        <li routerLink="/dashboard" (click)="$event.stopPropagation()">Dashboard</li>
+
+        <!-- MASTER -->
+        <li *ngIf="isAdmin()" (click)="toggleMenu('master')" class="has-sub">
+          Master
+          <span class="arrow" [class.rotate]="activeMenu === 'master'">▾</span>
+          <ul class="submenu" *ngIf="activeMenu === 'master'">
+            <li routerLink="/offering" (click)="$event.stopPropagation()">Offerings/Vazhipadu</li>
+            <li routerLink="/god" (click)="$event.stopPropagation()">Prathista</li>
+            <li routerLink="/event" (click)="$event.stopPropagation()">Events</li>
+          </ul>
+        </li>
+
+        <!-- BOOKING -->
+        <li (click)="toggleMenu('booking')" class="has-sub active">
+          Booking
+          <span class="arrow" [class.rotate]="activeMenu === 'booking'">▾</span>
+
+          <ul class="submenu" *ngIf="activeMenu === 'booking'">
+            <li routerLink="/booking" (click)="$event.stopPropagation()">Counter</li>
+          </ul>
+        </li>
+
+        <!-- DONATION -->
+        <li (click)="toggleMenu('donation')" class="has-sub">
+          Donation
+          <span class="arrow" [class.rotate]="activeMenu === 'donation'">▾</span>
+
+          <ul class="submenu" *ngIf="activeMenu === 'donation'">
+            <li routerLink="/donation" (click)="$event.stopPropagation()">Add Donation</li>
+          </ul>
+        </li>
+
+        <!-- ACCOUNTS -->
+        <li (click)="toggleMenu('accounts')" class="has-sub">
+          Accounts
+          <span class="arrow" [class.rotate]="activeMenu === 'accounts'">▾</span>
+
+          <ul class="submenu" *ngIf="activeMenu === 'accounts'">
+            <li *ngIf="isAdmin()" routerLink="/finance-manager" (click)="$event.stopPropagation()">Income/Expense
+              Titles
+            </li>
+            <li routerLink="/income-entry" (click)="$event.stopPropagation()">Income</li>
+            <li routerLink="/expense-entry" (click)="$event.stopPropagation()">Expense</li>
+          </ul>
+        </li>
+
+        <!-- REPORTS -->
+        <li (click)="toggleMenu('reports')" class="has-sub">
+          Reports
+          <span class="arrow" [class.rotate]="activeMenu === 'reports'">▾</span>
+
+          <ul class="submenu" *ngIf="activeMenu === 'reports'">
+            <li routerLink="/booking-report" (click)="$event.stopPropagation()">Vazhipadu</li>
+            <li routerLink="/donation-report" (click)="$event.stopPropagation()">Donation</li>
+            <li routerLink="/income-report" (click)="$event.stopPropagation()">Income</li>
+            <li routerLink="/expense-report" (click)="$event.stopPropagation()">Expense</li>
+          </ul>
+        </li>
+
+      </ul>
+
+      <div class="user-section" (click)="toggleProfile($event)">
+        Hi, {{ getFirstName(username) }}
+        <div class="avatar">{{avatar}}</div>
+        <!-- PROFILE DROPDOWN -->
+        <div class="profile-dropdown" *ngIf="showProfile">
+
+          <div class="profile-top">
+            <div class="avatar big">{{avatar}}</div>
+
+            <div class="profile-text">
+              <h4>{{ getFirstName(username) }}</h4>
+              <span class="role">{{role}}</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="profile-item" (click)="openMyProfile()">
+            👤 My Profile
+          </div>
+
+          <div *ngIf="isUser()" class="profile-item" (click)="updateProfilePopup.open()">
+            ⚙ Update Profile
+          </div>
+
+          <div *ngIf="isAdmin()" class="profile-item" routerLink="/users" (click)="$event.stopPropagation()">
+            ⚙ Profiles Management
+          </div>
+
+          <div class="profile-item" (click)="changePasswordPopup.open()">
+            🔑 Change Password
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="profile-item logout" (click)="logout()">
+            🚪 Sign Out
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </header>
+  <!-- 🔥 PAGE CONTENT -->
+  <div class="content-area">
+
+    <div class="page-header">
+      <h2>Manage Bookings</h2>
+      <button class="btn-new" (click)="openAddModal()">NEW BOOKING</button>
+    </div>
+
+    <!-- MESSAGE HERE -->
+
+    <div *ngIf="successMessage" class="success-alert">
+      ✔ {{successMessage}}
+    </div>
+
+    <div *ngIf="errorMessage" class="error-alert">
+      ⚠ {{errorMessage}}
+    </div>
+
+    <div class="table-card">
+
+      <div class="filter-row" [formGroup]="filterForm">
+
+        <input type="text"
+               formControlName="receiptNumber"
+               placeholder="Receipt Number">
+
+        <select formControlName="paymentStatus">
+          <option value="">Payment Status</option>
+          <option value="SUCCESS">Success</option>
+          <option value="PENDING">Pending</option>
+          <option value="FAILED">Failed</option>
+        </select>
+
+        <select formControlName="paymentType">
+          <option value="">Payment Method</option>
+          <option value="CASH">Cash</option>
+          <option value="UPI">UPI</option>
+          <option value="ONLINE">Online</option>
+        </select>
+        <input #startDateInput type="text"
+               placeholder="Start Date"
+               formControlName="startDate"
+               (focus)="startDateInput.type='date'"
+               (blur)="!startDateInput.value ? startDateInput.type='text' : null">
+        <input #endDateInput type="text"
+               placeholder="End Date"
+               formControlName="endDate"
+               (focus)="endDateInput.type='date'"
+               (blur)="!endDateInput.value ? endDateInput.type='text' : null">
+
+        <div class="btn-group">
+          <button class="btn-search" (click)="applyFilter()">Search</button>
+          <button class="btn-reset" (click)="resetFilter()">Reset</button>
+        </div>
+
+
+      </div>
+
+      <!-- 📋 Booking Table -->
+      <table>
+        <thead>
+        <tr>
+          <th>Booking #</th>
+          <th>Phone</th>
+          <th>Amount</th>
+          <th>Payment Status</th>
+          <th>Payment Method</th>
+          <th>Created Date</th>
+          <th>Edit</th>
+          <th>View</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let receipt of receipts">
+          <td>{{ receipt.receiptNumber }}</td>
+
+          <td>{{ receipt.phoneNumber }}</td>
+
+          <td>Total: ₹ {{ receipt.totalAmount }}</td>
+
+          <td>
+  <span
+    class="badge"
+    [ngClass]="{
+      'confirmed': receipt.paymentStatus === 'SUCCESS',
+      'pending': receipt.paymentStatus === 'PENDING',
+      'cancelled': receipt.paymentStatus === 'FAILED'
+    }">
+    {{ receipt.paymentStatus }}
+  </span>
+          </td>
+
+          <td>{{ receipt.paymentType }}</td>
+
+          <td>{{ receipt.createdDate | date:'MMM d, yyyy h:mm:ss a' }}</td>
+          <td>
+            <button class="edit-btn" (click)="openUpdateModal(receipt)">Edit</button>
+          </td>
+          <td>
+            <button class="delete-btn" (click)="openViewModal(receipt)">View</button>
+          </td>
+        </tr>
+
+        </tbody>
+      </table>
+      <div class="pagination" *ngIf="totalPages > 1">
+
+        <button
+          [disabled]="page === 0"
+          (click)="changePage(page - 1)">
+          ⬅ Prev
+        </button>
+
+        <span>
+    Page {{ page + 1 }} of {{ totalPages }}
+  </span>
+
+        <button
+          [disabled]="page === totalPages - 1"
+          (click)="changePage(page + 1)">
+          Next ➡
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- -----ADD POPUP HTML--------- -->
+
+<div class="modal-overlay" *ngIf="isAddModalOpen">
+
+  <div class="modal-container" (click)="$event.stopPropagation()">
+
+    <!-- HEADER -->
+    <div class="modal-header">
+      <h2>
+        NEW VAZHIPADU BOOKING –
+        <span class="total">INR {{ getTotalAmount() | number:'1.2-2' }}</span>
+      </h2>
+
+      <button class="close-btn" (click)="closeAddModal()">✕</button>
+    </div>
+
+    <form [formGroup]="receiptForm" (ngSubmit)="submitReceipt()">
+
+      <!-- TOP SECTION -->
+      <div class="top-grid">
+        <div>
+          <input type="date" formControlName="createdDate" class="input">
+        </div>
+        <div>
+          <select formControlName="paymentType" class="input">
+            <option value="">Select Type</option>
+            <option value="CASH">Cash</option>
+            <option value="UPI">UPI</option>
+          </select>
+          <small class="error"
+                 *ngIf="receiptForm.get('paymentType')?.touched &&
+ receiptForm.get('paymentType')?.invalid">
+            Payment Type is required
+          </small>
+        </div>
+        <div>
+          <select formControlName="paymentStatus" class="input">
+            <option value="">Select Status</option>
+            <option value="PENDING">Pending</option>
+            <option value="SUCCESS">Success</option>
+            <option value="FAILED">Failed</option>
+          </select>
+          <small class="error"
+                 *ngIf="receiptForm.get('paymentStatus')?.touched &&
+ receiptForm.get('paymentStatus')?.invalid">
+            Payment Status is required
+          </small>
+        </div>
+        <div>
+          <input type="text" formControlName="phoneNumber"
+                 placeholder="Phone Number"
+                 class="input">
+        </div>
+      </div>
+
+      <!-- CHILD ROWS -->
+      <div class="booking-scroll-wrapper" formArrayName="bookings">
+        <div *ngFor="let booking of bookingsArray.controls; let i=index"
+             [formGroupName]="i"
+             class="booking-row">
+
+          <div class="field-group">
+            <label>
+              Vazhipadu <span class="required">*</span>
+              <input *ngIf="i > 0"
+                     type="checkbox"
+                     class="copy-check"
+                     (change)="copyField(i, 'vazhipadu', $event)"
+                     (change)="onOfferingChange(i)">
+            </label>
+            <select formControlName="vazhipadu"
+                    class="input"
+                    (change)="onOfferingChange(i)">
+
+              <option value="">Select Vazhipadu</option>
+
+              <option *ngFor="let offering of offerings"
+                      [value]="offering.id">
+                {{ offering.offeringEnglish }} - {{ offering.offeringMalayalam }}
+              </option>
+
+            </select>
+            <small class="error"
+                   *ngIf="booking.get('vazhipadu')?.touched &&
+booking.get('vazhipadu')?.invalid">
+              Vazhipadu is required
+            </small>
+          </div>
+
+          <div class="field-group">
+            <label>Quantity <span class="required">*</span></label>
+            <input type="number" formControlName="quantity"
+                   class="input">
+            <small class="error"
+                   *ngIf="booking.get('quantity')?.touched &&
+ booking.get('quantity')?.invalid">
+              Quantity is required
+            </small>
+          </div>
+
+          <div class="field-group">
+            <label>Amount <span class="required">*</span></label>
+            <input type="number"
+                   formControlName="amount"
+                   class="input"
+                   readonly>
+          </div>
+
+          <!-- Devotee Name -->
+          <div class="field-group">
+            <label>
+              Devotee Name <span class="required">*</span>
+              <input *ngIf="i > 0"
+                     type="checkbox"
+                     class="copy-check"
+                     (change)="copyField(i, 'devoteeName', $event)">
+            </label>
+
+            <input type="text" formControlName="devoteeName" class="input">
+            <small class="error"
+                   *ngIf="booking.get('devoteeName')?.touched &&
+ booking.get('devoteeName')?.invalid">
+              Devotee Name is required
+            </small>
+          </div>
+
+          <!-- Column 5 -->
+          <!-- Birth Star -->
+          <div class="field-group">
+            <label>
+              Birth Star <span class="required">*</span>
+              <input *ngIf="i > 0"
+                     type="checkbox"
+                     class="copy-check"
+                     (change)="copyField(i, 'birthStar', $event)">
+            </label>
+
+            <select formControlName="birthStar" class="input">
+              <option value="">Select Birth Star</option>
+              <option *ngFor="let star of birthStars" [value]="star.value">
+                {{ star.label }}
+              </option>
+            </select>
+            <small class="error"
+                   *ngIf="booking.get('birthStar')?.touched &&
+ booking.get('birthStar')?.invalid">
+              Birth Star is required
+            </small>
+          </div>
+          <div class="remove-wrapper">
+            <button type="button"
+                    class="remove-btn"
+                    (click)="removeBookingRow(i)">
+              ✕
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <button type="button"
+              class="add-btn"
+              (click)="addBookingRow()"
+              [disabled]="bookingsArray.length >= 5">
+        + Add More Vazhipadu
+      </button>
+
+      <div class="actions">
+        <button type="button" class="cancel-btn" (click)="closeAddModal()">Cancel</button>
+        <button type="submit" class="save-btn" [disabled]="receiptForm.invalid">Save Receipt</button>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+<!-- UPDATE PAYMENT MODAL -->
+<div class="modal-overlay" *ngIf="isUpdateModalOpen">
+
+  <div class="modal-container small-modal" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h2>UPDATE PAYMENT</h2>
+      <button class="close-btn" (click)="closeUpdateModal()">✕</button>
+    </div>
+
+    <form [formGroup]="updateForm" (ngSubmit)="updateReceipt()">
+
+      <div class="top-grid single-column">
+
+        <div class="field-group">
+          <label>Phone Number</label>
+          <input type="text"
+                 formControlName="phoneNumber"
+                 class="input">
+        </div>
+
+        <div class="field-group">
+          <label>Payment Method</label>
+          <select formControlName="paymentType" class="input">
+            <option value="" disabled>Select Type</option>
+            <option value="CASH">Cash</option>
+            <option value="UPI">UPI</option>
+            <option value="ONLINE">Online</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label>Payment Status</label>
+          <select formControlName="paymentStatus" class="input">
+            <option value="" disabled>Select Status</option>
+            <option value="PENDING">Pending</option>
+            <option value="SUCCESS">Success</option>
+            <option value="FAILED">Failed</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="actions">
+        <button type="button"
+                class="cancel-btn"
+                (click)="closeUpdateModal()">
+          Cancel
+        </button>
+
+        <button type="submit"
+                class="save-btn">
+          Update
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+<!-- RECEIPT VIEW MODAL -->
+<div class="modal-overlay" *ngIf="isViewModalOpen" (click)="closeViewModal()">
+
+  <div class="receipt-modal print-area" (click)="$event.stopPropagation()">
+    <!-- CLOSE BUTTON -->
+    <div class="modal-close" (click)="closeViewModal()">✕</div>
+    <!-- TOP ACTION BUTTONS -->
+    <div class="receipt-actions">
+      <button class="btn print" (click)="printReceipt()">🖨 Print</button>
+      <!--      <button class="btn new" (click)="openAddModal()">➕ NEW BOOKING</button>-->
+      <button class="btn back" (click)="closeViewModal()">⬅ BACK</button>
+      <button class="btn english"
+              (click)="switchLanguage('ENGLISH')">
+        ENGLISH RECEIPT
+      </button>
+      <button class="btn malayalam"
+              (click)="switchLanguage('MALAYALAM')">
+        MALAYALAM RECEIPT
+      </button>
+      <button class="btn download" (click)="downloadReceipt()">⬇ DOWNLOAD</button>
+    </div>
+
+    <!-- HEADER -->
+    <div class="receipt-container" *ngIf="selectedReceipt">
+
+      <!-- IMAGES -->
+      <img src="temple.jpg" class="temple-img left-img">
+      <img src="temple.jpg" class="temple-img right-img">
+
+      <!-- HEADER TEXT -->
+      <div class="temple-details">
+
+        <h2 *ngIf="receiptLanguage === 'MALAYALAM'">
+          മാങ്കുറുശ്ശി ശ്രീ കുറുംബ ഭഗവതി ക്ഷേത്രം കരാകുരുശ്ശി
+        </h2>
+
+        <h2 *ngIf="receiptLanguage === 'ENGLISH'">
+          Mankurussi Bhagavathi Temple
+        </h2>
+        <p>കരാകുരുശ്ശി,പാലക്കാട്,കേരളം -678595</p>
+        <p>Phone: 9072017303, Email: mankurussibhagavathitemple&#64;gmail.com</p>
+
+        <h3>വഴിപാടൂ രസീത് </h3>
+      </div>
+      <!-- RECEIPT INFO -->
+      <div class="receipt-info">
+        <div>
+          <strong>RECEIPT NO:</strong>
+          {{ selectedReceipt.receiptNumber }} /
+          {{ selectedReceipt.paymentType }}
+        </div>
+
+        <div>
+          <strong>DATE:</strong>
+          {{ selectedReceipt.createdDate | date:'dd/MM/yyyy' }}
+        </div>
+      </div>
+
+      <!-- TABLE -->
+      <table class="receipt-table">
+        <thead>
+        <tr>
+          <th>NAME</th>
+          <th>VAZHIPADU</th>
+          <th>POOJA DATE</th>
+          <th>QTY</th>
+          <th>AMOUNT</th>
+          <th>TOTAL</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let booking of selectedReceipt.bookings">
+          <td>{{ booking.devoteeName }}<br>
+            {{booking.birthStar}}
+          </td>
+          <td>{{ booking.vazhipadu }}</td>
+          <td>{{ booking.bookingDate }}</td>
+          <td>{{ booking.quantity }}</td>
+          <td>Rs. {{ booking.amount }}</td>
+          <td>Rs. {{ booking.quantity * booking.amount }}</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <!-- GRAND TOTAL -->
+      <div class="grand-total">
+        Grand Total: Rs. {{ selectedReceipt.totalAmount }}.00
+      </div>
+
+      <!-- SIGNATURE -->
+      <div class="signature">
+        Stamp / Signature
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- MY PROFILE MODAL -->
+
+<div class="profile-popup" *ngIf="showMyProfileModal">
+
+  <div class="profile-card">
+
+    <button class="profile-close-btn" (click)="showMyProfileModal=false">✕</button>
+
+    <!-- Avatar -->
+    <div class="profile-avatar">
+      {{profile.name?.charAt(0) || 'U'}}
+    </div>
+
+    <!-- Name -->
+    <h3>{{profile.name}}</h3>
+    <span class="role-badge" [ngClass]="profile.role">
+      {{profile.role}}
+    </span>
+
+    <div class="profile-info">
+
+      <div class="info-row">
+        <span>Email</span>
+        <p>{{profile.email || '-'}}</p>
+      </div>
+
+      <div class="info-row">
+        <span>Phone</span>
+        <p>{{profile.phone || '-'}}</p>
+      </div>
+
+      <div class="info-row">
+        <span>Address</span>
+        <p>{{profile.address || '-'}}</p>
+      </div>
+
+      <div class="info-row">
+        <span>District</span>
+        <p>{{profile.district || '-'}}</p>
+      </div>
+
+      <div class="info-row">
+        <span>State</span>
+        <p>{{profile.state || '-'}}</p>
+      </div>
+
+    </div>
+
+    <div class="profile-actions">
+
+      <button class="btn-edit">
+        ✏ Edit Profile
+      </button>
+
+      <button class="btn-password">
+        🔑 Change Password
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

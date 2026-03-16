@@ -1,0 +1,99 @@
+// -- UPDATE POPUP CSS ---
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-container {
+  background: #fff;
+  width: 800px;
+  border-radius: 10px;
+  padding: 25px;
+  animation: fadeIn 0.3s ease-in-out;
+   position:relative;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.modal-header h3{
+  margin:0;
+  font-size:22px;
+  font-weight:600;
+  color:#333;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.form-grid input,
+.form-grid select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.modal-footer  {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 30px;
+  text-align: right;
+}
+
+.cancel-btn {
+  background: #d5d5d5;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+}
+
+.save-btn {
+  background: #6a1b9a;
+  color: white;
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: none;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 14px;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.required {
+  color: red;
+  font-weight: bold;
+}

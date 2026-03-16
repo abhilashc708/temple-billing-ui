@@ -1,0 +1,127 @@
+<div class="main-container">
+
+  <!-- LEFT SIDE -->
+  <div class="left-section">
+    <div class="branding">
+      <img src="logo.png" class="logo" alt="Logo">
+
+      <h1>
+        Login Now to<br>
+        Explore Temple Billing App
+      </h1>
+
+      <img src="ganesha.png" class="ganesha" alt="Ganesha">
+    </div>
+  </div>
+
+  <!-- RIGHT SIDE -->
+  <div class="right-section">
+
+    <div class="login-container">
+
+      <h2 class="title">
+        LOGIN MANKURUSSI TEMPLE BOOKING BILLING APP
+      </h2>
+
+      <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+
+        <div class="mb-3">
+          <label class="form-label">Email ID/Phone Number</label>
+          <input
+            type="text"
+            name="username"
+            [(ngModel)]="username"
+            #usernameRef="ngModel"
+            class="form-control"
+            placeholder="Username"
+            required
+            minlength="3">
+
+          <div class="error" *ngIf="usernameRef.invalid && usernameRef.touched">
+            <small *ngIf="usernameRef.errors?.['required']">
+              Username is required
+            </small>
+            <small *ngIf="usernameRef.errors?.['minlength']">
+              Minimum 3 characters required
+            </small>
+          </div>
+
+        </div>
+
+        <!--        <div class="mb-3 password-row">-->
+        <!--          <label class="form-label">Password</label>-->
+        <!--          <a href="#" class="forgot-link">Forgot Password ?</a>-->
+        <!--        </div>-->
+
+        <!--        <div class="mb-3">-->
+        <!--          <input-->
+        <!--            type="password"-->
+        <!--            name="password"-->
+        <!--            [(ngModel)]="password"-->
+        <!--            #passwordRef="ngModel"-->
+        <!--            class="form-control"-->
+        <!--            placeholder="Password"-->
+        <!--            required-->
+        <!--            minlength="4">-->
+
+        <!--          <div class="error" *ngIf="passwordRef.invalid && passwordRef.touched">-->
+        <!--            <small *ngIf="passwordRef.errors?.['required']">-->
+        <!--              Password is required-->
+        <!--            </small>-->
+        <!--            <small *ngIf="passwordRef.errors?.['minlength']">-->
+        <!--              Minimum 4 characters required-->
+        <!--            </small>-->
+        <!--          </div>-->
+
+        <!--        </div>-->
+        <div class="mb-3">
+
+          <div class="password-row">
+            <label class="form-label">Password</label>
+            <a href="#" class="forgot-link">Forgot Password ?</a>
+          </div>
+
+          <input
+            type="password"
+            name="password"
+            [(ngModel)]="password"
+            #passwordRef="ngModel"
+            class="form-control"
+            placeholder="Password"
+            required
+            minlength="4">
+
+          <div class="error" *ngIf="passwordRef.invalid && passwordRef.touched">
+            <small *ngIf="passwordRef.errors?.['required']">
+              Password is required
+            </small>
+            <small *ngIf="passwordRef.errors?.['minlength']">
+              Minimum 4 characters required
+            </small>
+          </div>
+
+        </div>
+
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input">
+          <label class="form-check-label">Remember me</label>
+        </div>
+
+        <button
+          type="submit"
+          class="btn-login"
+          [disabled]="loginForm.invalid">
+          Sign In
+        </button>
+
+        <div *ngIf="errorMessage" class="error-box">
+          {{ errorMessage }}
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>
