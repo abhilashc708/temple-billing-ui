@@ -693,7 +693,7 @@ closeProfile() {
 
 logout() {
   localStorage.clear();
-  window.location.href = '/login';
+ this.router.navigate(['/login']);
 }
 
 @HostListener('document:click')
