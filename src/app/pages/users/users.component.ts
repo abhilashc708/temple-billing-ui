@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild, HostListener, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators, FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { UsersService } from '../../services/users.service';
 import { debounceTime } from 'rxjs/operators';
 import { ChangePasswordComponent } from '../../shared/change-password/change-password.component';
@@ -43,7 +43,8 @@ export class UsersComponent {
 
    constructor(
      private fb: FormBuilder,
-     private usersService: UsersService
+     private usersService: UsersService,
+     private router: Router
    ) {}
 
    activeMenu: string | null = null;
@@ -377,7 +378,7 @@ deleteConfirmed(){
    logout() {
 
      localStorage.clear();
-     window.location.href = '/login';
+ this.router.navigate(['/login']);
 
    }
 

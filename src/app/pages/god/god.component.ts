@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild, HostListener, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators, FormsModule } from '@angular/forms';
 import { GodsService } from '../../services/gods.service';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { UsersService } from '../../services/users.service';
 import { UpdateProfileComponent } from '../../shared/update-profile/update-profile.component';
 import { ChangePasswordComponent } from '../../shared/change-password/change-password.component';
@@ -44,7 +44,8 @@ export class GodComponent {
   constructor(
     private fb: FormBuilder,
     private godsService: GodsService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private router: Router
   ) {}
 
 activeMenu: string | null = null;
@@ -246,7 +247,7 @@ closeProfile() {
 
 logout() {
   localStorage.clear();
-  window.location.href = '/login';
+ this.router.navigate(['/login']);
 }
 
 @HostListener('document:click')

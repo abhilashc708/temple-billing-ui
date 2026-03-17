@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar'; // ✅ Import MatSnackBar
 import { MatSnackBarModule } from '@angular/material/snack-bar'; // ✅ Import Module
 import { MatDialog } from '@angular/material/dialog';
@@ -35,7 +35,8 @@ export class LayoutComponent implements OnInit{
 
  constructor(
     private layoutService: LayoutService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private router: Router
   ) {}
        summary: any;
        showQuickMenu = false;
@@ -113,7 +114,7 @@ closeProfile() {
 
 logout() {
   localStorage.clear();
-  window.location.href = '/login';
+ this.router.navigate(['/login']);
 }
 
 @HostListener('document:click')

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild, HostListener, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators, FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { OfferingService } from '../../services/offering.service';
 import { GodsService } from '../../services/gods.service';
 import { Offering } from '../../models/offering.model';
@@ -50,7 +50,8 @@ offeringForm!: FormGroup;
     private fb: FormBuilder,
     private offeringService: OfferingService,
     private godsService: GodsService,
-     private usersService: UsersService
+     private usersService: UsersService,
+     private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -417,7 +418,7 @@ closeProfile() {
 
 logout() {
   localStorage.clear();
-  window.location.href = '/login';
+ this.router.navigate(['/login']);
 }
 
 @HostListener('document:click')

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild, HostListener, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { IncomeEntryService } from '../../services/income-entry.service';
 import { FinanceManagerService } from '../../services/finance-manager.service';
@@ -45,7 +45,8 @@ searchForm!: FormGroup;
               private fb: FormBuilder,
               private incomeEntryService: IncomeEntryService,
                private financeService: FinanceManagerService,
-                 private usersService: UsersService
+                 private usersService: UsersService,
+                 private router: Router
             ) {}
 
      ngOnInit(): void {
@@ -211,7 +212,7 @@ closeProfile() {
 
 logout() {
   localStorage.clear();
-  window.location.href = '/login';
+ this.router.navigate(['/login']);
 }
 
 @HostListener('document:click')

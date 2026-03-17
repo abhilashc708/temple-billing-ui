@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild, HostListener, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators, FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { DonationService } from '../../services/donation.service';
 import { EventsService } from '../../services/events.service';
 import html2canvas from 'html2canvas';
@@ -10,7 +10,6 @@ import jsPDF from 'jspdf';
 import { UpdateProfileComponent } from '../../shared/update-profile/update-profile.component';
 import { ChangePasswordComponent } from '../../shared/change-password/change-password.component';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
-
 @Component({
   selector: 'app-donation',
     standalone: true,
@@ -52,7 +51,8 @@ role: string = '';
     private fb: FormBuilder,
     private donationService: DonationService,
     private eventsService: EventsService,
-     private usersService: UsersService
+     private usersService: UsersService,
+      private router: Router
   ) {}
 
 activeMenu: string | null = null;
@@ -390,7 +390,7 @@ closeProfile() {
 
 logout() {
   localStorage.clear();
-  window.location.href = '/login';
+ this.router.navigate(['/login']);
 }
 
 @HostListener('document:click')

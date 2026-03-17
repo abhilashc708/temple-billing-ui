@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild, HostListener, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { BookingService } from '../../services/booking.service';
 import { OfferingService } from '../../services/offering.service';
@@ -72,7 +72,8 @@ search: any = {
 constructor(private bookingService: BookingService,
   private offeringService: OfferingService,
   private usersService: UsersService,
-  private fb:FormBuilder){}
+  private fb:FormBuilder,
+  private router: Router){}
 
 ngOnInit(){
   this.searchForm = this.fb.group({
@@ -225,7 +226,7 @@ closeProfile() {
 
 logout() {
   localStorage.clear();
-  window.location.href = '/login';
+  this.router.navigate(['/login']);
 }
 
 @HostListener('document:click')

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild, HostListener, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators, FormsModule } from '@angular/forms';
 import { EventsService } from '../../services/events.service';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { debounceTime } from 'rxjs/operators';
 import { UsersService } from '../../services/users.service';
 import { UpdateProfileComponent } from '../../shared/update-profile/update-profile.component';
@@ -47,7 +47,8 @@ export class EventComponent {
   constructor(
     private fb: FormBuilder,
     private eventsService: EventsService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private router: Router
   ) {}
 
 activeMenu: string | null = null;
@@ -270,7 +271,7 @@ closeProfile() {
 
 logout() {
   localStorage.clear();
-  window.location.href = '/login';
+  this.router.navigate(['/login']);
 }
 
 @HostListener('document:click')
