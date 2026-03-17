@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
@@ -8,7 +9,8 @@ import { Observable } from 'rxjs';
 })
 export class DonationService {
 
-  private baseUrl = 'http://localhost:8080/api/donations';
+ // private baseUrl = 'http://localhost:8080/api/donations';
+ private baseUrl = `${environment.apiBaseUrl}/api/donations`;
 
   constructor(private http: HttpClient) {}
 

@@ -1,13 +1,15 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FinanceManagerService {
 
-  private baseUrl = 'http://localhost:8080/api/finance-master';
+//   private baseUrl = 'http://localhost:8080/api/finance-master';
+ private baseUrl = `${environment.apiBaseUrl}/api/finance-master`;
 
   constructor(private http: HttpClient) {}
 

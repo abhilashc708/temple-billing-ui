@@ -1,4 +1,4 @@
 export const environment = {
  production: true,
- apiBaseUrl: 'https://erpwebservice.onrender.com' // Prod Backend URL
+ apiBaseUrl: 'https://temple-billing-service.onrender.com' // Prod Backend URL
 };

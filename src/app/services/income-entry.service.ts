@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,8 @@ import { Observable } from 'rxjs';
 export class IncomeEntryService {
 
 
-  private baseUrl = 'http://localhost:8080/api/income';
+//   private baseUrl = 'http://localhost:8080/api/income';
+ private baseUrl = `${environment.apiBaseUrl}/api/income`;
 
   constructor(private http: HttpClient) {}
 
