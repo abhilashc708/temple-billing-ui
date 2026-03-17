@@ -9,6 +9,7 @@ import { UsersService } from '../../services/users.service';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { UpdateProfileComponent } from '../../shared/update-profile/update-profile.component';
 import { ChangePasswordComponent } from '../../shared/change-password/change-password.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-booking',
@@ -85,7 +86,8 @@ birthStars = [
     constructor(private bookingService: BookingService,
        private offeringService: OfferingService,
        private usersService: UsersService,
-      private fb: FormBuilder) {}
+      private fb: FormBuilder,
+      private router: Router) {}
 
     ngOnInit() {
        this.initializeForms();
