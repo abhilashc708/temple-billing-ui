@@ -230,23 +230,68 @@ onOfferingChange(index: number): void {
 
 
 // -----------------ADD POPUP ----------------
-
 initForm() {
-  const today = new Date();
-  const formattedDate = today.toISOString().split('T')[0]; // yyyy-MM-dd
+//   const today = new Date();
+//   const formattedDate = today.toISOString().split('T')[0]; // yyyy-MM-dd
+//   this.receiptForm = this.fb.group({
+//     phoneNumber: [''],
+//     paymentType: ['', Validators.required],
+//     paymentStatus: ['', Validators.required],
+//     createdDate: [formattedDate, Validators.required],  // ✅ default today
+//     bookings: this.fb.array([this.createBookingRow()])
+//   });
+ const today = new Date().toISOString().split('T')[0];
 
   this.receiptForm = this.fb.group({
     phoneNumber: [''],
     paymentType: ['', Validators.required],
-    paymentStatus: ['', Validators.required],
-    createdDate: [formattedDate, Validators.required],  // ✅ default today
-    bookings: this.fb.array([this.createBookingRow()])
+   paymentStatus: ['SUCCESS', Validators.required],
+    createdDate: [today, Validators.required],
+    bookings: this.fb.array([])
   });
- this.updateForm = this.fb.group({
+
+  this.initializeFixedRows(); // ✅ always 6 rows
+
+this.updateForm = this.fb.group({
     phoneNumber: [''],
     paymentType: [''],
     paymentStatus: ['']
   });
+}
+
+initializeFixedRows() {
+  const MAX_ROWS = 6;
+  const bookings = this.bookingsArray;
+
+  bookings.clear(); // 🔥 important (avoid duplication)
+
+  for (let i = 0; i < MAX_ROWS; i++) {
+    bookings.push(this.createBookingRow());
+  }
+}
+// resetForm(): void {
+//   this.receiptForm.reset();
+//
+//   const today = new Date().toISOString().split('T')[0];
+//
+//   this.receiptForm.patchValue({
+//     createdDate: today,
+//     paymentStatus: 'PENDING'
+//   });
+//
+//   this.initializeFixedRows(); // ✅ FIX HERE (instead of 1 row)
+// }
+resetForm(): void {
+  const today = new Date().toISOString().split('T')[0];
+
+  this.receiptForm.reset({
+    phoneNumber: '',
+    paymentType: '',
+    paymentStatus: 'SUCCESS', // ✅ FIXED
+    createdDate: today
+  });
+
+  this.initializeFixedRows();
 }
 initializeForms() {
   this.filterForm = this.fb.group({
@@ -260,23 +305,13 @@ initializeForms() {
 createBookingRow(): FormGroup {
 
   const group = this.fb.group({
-    vazhipadu: ['', Validators.required],
-    quantity: [1, Validators.required],
-    amount: [{ value: 0, disabled: true }, Validators.required],
-    devoteeName: ['', Validators.required],
-    birthStar: ['', Validators.required],
-    price: [0, Validators.required]   // internal hidden price storage
+    vazhipadu: [''],
+    quantity: [1],
+    amount: [{ value: 0, disabled: true }],
+    devoteeName: [''],
+    birthStar: [''],
+    price: [0]   // internal hidden price storage
   });
-
-//change amount when change quantity
-//  group.get('quantity')?.valueChanges.subscribe(qty => {
-//
-//    const quantity = qty ?? 0;
-//    const price = group.get('price')?.value ?? 0;
-//
-//    group.get('amount')?.setValue(price * quantity);
-//
-//  });
 
   return group;
 }
@@ -284,17 +319,17 @@ createBookingRow(): FormGroup {
   get bookingsArray(): FormArray {
     return this.receiptForm.get('bookings') as FormArray;
   }
-  addBookingRow() {
-    if (this.bookingsArray.length < 5) {
-      this.bookingsArray.push(this.createBookingRow());
-    }
-  }
+//   addBookingRow() {
+//     if (this.bookingsArray.length < 5) {
+//       this.bookingsArray.push(this.createBookingRow());
+//     }
+//   }
 
-  removeBookingRow(index: number) {
-    if (this.bookingsArray.length > 1) {
-      this.bookingsArray.removeAt(index);
-    }
-  }
+//   removeBookingRow(index: number) {
+//     if (this.bookingsArray.length > 1) {
+//       this.bookingsArray.removeAt(index);
+//     }
+//   }
 
   getTotalAmount(): number {
     return this.bookingsArray.controls.reduce((total, control) => {
@@ -311,22 +346,31 @@ closeAddModal(): void {
 }
 
 openAddModal() {
+  this.resetForm();
   this.isAddModalOpen = true;
 }
+
 submitReceipt(): void {
 
-  if (this.receiptForm.invalid) {
-    this.receiptForm.markAllAsTouched();
+  const rawValue = this.receiptForm.getRawValue();
+
+  const filledRows = rawValue.bookings.filter((row: any) =>
+    row.vazhipadu || row.devoteeName || row.birthStar
+  );
+
+  if (filledRows.length === 0) {
+    alert("Fill at least one row");
     return;
   }
 
+  for (let row of filledRows) {
+    if (!row.vazhipadu || !row.devoteeName || !row.birthStar) {
+      alert("Complete all required fields in filled rows");
+      return;
+    }
+  }
 
-  // Get disabled values like amount
-  const rawValue = this.receiptForm.getRawValue();
-
-  // Map offering ID → offering name (if backend expects name instead of ID)
-  const formattedBookings = rawValue.bookings.map((row: any) => {
-
+  const formattedBookings = filledRows.map((row: any) => {
     const selectedOffering = this.offerings.find(o => o.id == row.vazhipadu);
 
     return {
@@ -351,49 +395,21 @@ submitReceipt(): void {
     bookings: formattedBookings
   };
 
-  this.bookingService.saveBatchReceipt(payload)
-//   .subscribe({
-//     next: (res) => {
-//       console.log("Saved successfully", res);
-//       alert("Receipt Saved Successfully ✅");
-//
-//       this.closeAddModal();  // this should reset form also
-//       this. loadBookings();
-//     },
-//     error: (err) => {
-//       console.error("Error saving receipt", err);
-//       alert("Failed to save receipt ❌");
-//     }
-//   });
-.subscribe({
-              next: (res) => {
-          this.successMessage = 'Receipt Created Successfully';
-          this.errorMessage = '';
-
-         this.closeAddModal();
-          this. loadBookings();
-            // ⭐ OPEN PRINT MODAL
-          this.openViewModal(res);
-
-//     // ⭐ AUTO PRINT
-//     setTimeout(() => {
-//       window.print();
-//     }, 500);
-//
-          this.autoHideMessage();
-
-        },
-        error: (err) => {
-
-          this.errorMessage = err.error?.message || 'Update Failed';
-          this.successMessage = '';
-
-           this.closeAddModal();
-          this. loadBookings();
-          this.autoHideMessage();
-
-        }
-        });
+  this.bookingService.saveBatchReceipt(payload).subscribe({
+    next: (res) => {
+      this.successMessage = 'Receipt Created Successfully';
+      this.closeAddModal();
+      this.loadBookings();
+      this.openViewModal(res);
+      this.autoHideMessage();
+    },
+    error: (err) => {
+      this.errorMessage = err.error?.message || 'Update Failed';
+      this.closeAddModal();
+      this.loadBookings();
+      this.autoHideMessage();
+    }
+  });
 }
 
 autoHideMessage() {
@@ -429,28 +445,28 @@ copyField(index: number, field: string, event: any) {
   }
 }
 
-resetForm(): void {
-
-  this.receiptForm.reset();
-
-  // Clear all child rows
-  while (this.bookingsArray.length !== 0) {
-    this.bookingsArray.removeAt(0);
-  }
-
-  // Add fresh default row
-  this.bookingsArray.push(this.createBookingRow());
-
-  // Set default created date to today
-  const today = new Date();
-  const formattedDate = today.toISOString().split('T')[0];
-
-  this.receiptForm.patchValue({
-    createdDate: formattedDate,
-    paymentStatus: 'PENDING'
-  });
-
-}
+// resetForm(): void {
+//
+//   this.receiptForm.reset();
+//
+//   // Clear all child rows
+//   while (this.bookingsArray.length !== 0) {
+//     this.bookingsArray.removeAt(0);
+//   }
+//
+//   // Add fresh default row
+//   this.bookingsArray.push(this.createBookingRow());
+//
+//   // Set default created date to today
+//   const today = new Date();
+//   const formattedDate = today.toISOString().split('T')[0];
+//
+//   this.receiptForm.patchValue({
+//     createdDate: formattedDate,
+//     paymentStatus: 'PENDING'
+//   });
+//
+// }
 
 openUpdateModal(receipt: any) {
 
@@ -514,14 +530,15 @@ switchLanguage(lang: 'ENGLISH' | 'MALAYALAM') {
   this.receiptLanguage = lang;
 }
 
-// printReceipt() {
-//   window.print();
-// }
-
-
 printReceipt() {
   const receipt = document.querySelector('.print-area') as HTMLElement;
   if (!receipt) return;
+
+   // 🔥 FIX IMAGE PATH HERE
+    const html = receipt.innerHTML.replaceAll(
+      'src="assets/',
+      `src="${window.location.origin}/assets/`
+    );
 
   const iframe = document.createElement('iframe');
   iframe.style.position = 'fixed';
@@ -538,87 +555,87 @@ printReceipt() {
       <head>
         <style>
           @page {
-            size: A4 landscape;
-            margin: 10mm;
+            size: legal portrait; /* ✅ FIX 1 */
+            margin: 0;
           }
+        * {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
 
           body {
             margin: 0;
+            padding: 10px;
             font-family: Arial, sans-serif;
-            font-size: 15px;
+            font-size: 10px; /* ✅ FIX 2 */
           }
 
-          /* HEADER */
+          /* 🔥 MAIN RECEIPT SIZE (1/3 LEGAL PAGE) */
           .receipt-container {
+            width: 100%;
+            height: 4.67in; /* ✅ FIX 3 (CRITICAL) */
+            box-sizing: border-box;
+             border: 2px solid black !important;
+            padding: 8px;
             text-align: center;
             position: relative;
-              border: 2px solid #000;   /* 👈 ONLY BORDER */
-              padding: 0px 20px 20px 20px;   /* reduced top padding */
+            page-break-after: always;
+             margin: 0;
+              overflow: hidden;
           }
-        .receipt-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-        .temple-details h2,
-        .temple-details h3,
-        .temple-details p {
-          margin: 5px 0;
-        }
+
+          .receipt-container:last-child {
+            page-break-after: auto;
+          }
+
+          .temple-details h2,
+          .temple-details h3,
+          .temple-details p {
+            margin: 2px 0;
+          }
 
           /* IMAGES */
           .temple-img {
-           width: 130px;
-           height: auto;
-           position: absolute;
-           top: 10px;
+            width: 60px; /* smaller */
+            position: absolute;
+            top: 5px;
           }
 
-          .left-img { left: 10px; }
-          .right-img { right: 10px; }
+          .left-img { left: 5px; }
+          .right-img { right: 5px; }
 
-          /* RECEIPT INFO */
           .receipt-info {
             display: flex;
             justify-content: space-between;
-            margin: 10px 0;
-            font-size: 13px;
+            margin: 5px 0;
+            font-size: 9px;
           }
 
-          /* TABLE */
           table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-top: 5px;
           }
 
           th, td {
             border: 1px solid #000;
-            padding: 6px 8px;       /* ✅ MORE SPACE */
+            padding: 3px; /* reduced */
+            font-size: 9px;
             text-align: center;
-            font-size: 13px;        /* ✅ BIGGER TEXT */
-            line-height: 1.4;
           }
 
-          th {
-            font-weight: bold;
-          }
-
-          /* TOTAL & SIGNATURE */
           .grand-total {
             text-align: right;
-            font-weight: bold;
-            margin-top: 12px;
-            font-size: 14px;
+            font-size: 10px;
+            margin-top: 5px;
           }
 
           .signature {
-            margin-top: 30px;
+            margin-top: 10px;
+            font-size: 10px;
             text-align: right;
-            font-size: 13px;
           }
 
-          /* HIDE UI ELEMENTS */
           .receipt-actions,
           .modal-close,
           button {
@@ -627,16 +644,20 @@ printReceipt() {
         </style>
       </head>
       <body>
-        ${receipt.innerHTML}
+         ${html}
       </body>
     </html>
   `);
   doc.close();
 
-  iframe.contentWindow!.focus();
-  iframe.contentWindow!.print();
+ iframe.onload = () => {
+    setTimeout(() => {
+      iframe.contentWindow!.focus();
+      iframe.contentWindow!.print();
+    }, 300);
+  };
 
-  setTimeout(() => document.body.removeChild(iframe), 1000);
+  setTimeout(() => document.body.removeChild(iframe), 1500);
 }
 
 downloadReceipt() {

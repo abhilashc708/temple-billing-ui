@@ -293,7 +293,6 @@
         <div class="form-group">
           <label>Payment Status <span class="required"> * </span></label>
           <select formControlName="paymentStatus">
-            <option value="">Select Payment Status</option>
             <option value="SUCCESS">Success</option>
             <option value="FAILED">Failed</option>
             <option value="PENDING">Pending</option>
@@ -306,11 +305,11 @@
         </div>
         <div class="form-group">
           <label>Receipt Book No </label>
-          <input type="text" placeholder="Receipt Book No" formControlName="receiptBookNo">
+          <input type="text" placeholder="Receipt Book No" formControlName="receiptBookNo" readonly>
         </div>
         <div class="form-group">
           <label>Receipt No </label>
-          <input type="text" placeholder="Receipt No" formControlName="receiptNo">
+          <input type="text" placeholder="Receipt No" formControlName="receiptNo" readonly>
         </div>
         <div class="form-group">
           <label>Devotee Name <span class="required"> * </span></label>
@@ -398,7 +397,7 @@
 
       <!-- HEADER -->
       <div class="receipt-header">
-        <img src="temple.jpg" class="temple-img left-img">
+        <img src="assets/temple.jpg" class="temple-img left-img">
 
         <div class="receipt-title">
           <h2> മാങ്കുറുശ്ശി ശ്രീ കുറുംബ ഭഗവതി ക്ഷേത്രം കരാകുരുശ്ശി</h2>
@@ -407,7 +406,7 @@
           <div class="receipt-badge">സംഭാവന രസീത്</div>
         </div>
 
-        <img src="temple.jpg" class="temple-img right-img">
+        <img src="assets/temple.jpg" class="temple-img right-img">
       </div>
 
       <!-- TOP INFO -->
@@ -438,7 +437,6 @@
       </div>
 
     </div>
-
   </div>
 </div>
 

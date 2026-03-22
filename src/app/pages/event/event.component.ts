@@ -225,31 +225,32 @@ changePage(newPage: number) {
   }
 
 //--Event Name Field Malayalam Type & Wait for some time before filling
-autoTranslate() {
-  this.eventForm.get('eventName')?.valueChanges
-    .pipe(debounceTime(1000))
-    .subscribe((value: string) => {
-      if (value) {
-        this.translateToMalayalam(value);
-      }
-    });
-}
-translateToMalayalam(text: string) {
+// autoTranslate() {
+//   this.eventForm.get('eventName')?.valueChanges
+//     .pipe(debounceTime(1000))
+//     .subscribe((value: string) => {
+//       if (value) {
+//         this.translateToMalayalam(value);
+//       }
+//     });
+// }
+// translateToMalayalam(text: string) {
+//
+//   const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ml&dt=t&q=${text}`;
+//
+//   fetch(url)
+//     .then(res => res.json())
+//     .then(data => {
+//
+//       const translatedText = data[0][0][0];
+//
+//       this.eventForm.get('eventName')
+//         ?.setValue(translatedText, { emitEvent: false });
+//
+//     })
+//     .catch(err => console.error(err));
+// }
 
-  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ml&dt=t&q=${text}`;
-
-  fetch(url)
-    .then(res => res.json())
-    .then(data => {
-
-      const translatedText = data[0][0][0];
-
-      this.eventForm.get('eventName')
-        ?.setValue(translatedText, { emitEvent: false });
-
-    })
-    .catch(err => console.error(err));
-}
 isAdmin(): boolean {
   return this.role === 'ADMIN';
 }

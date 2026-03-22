@@ -212,7 +212,7 @@
 
       <div class="form-group">
         <label>Event <span class="required"> * </span></label>
-        <input type="text" placeholder="Events" formControlName="eventName" (click)="autoTranslate()">
+        <input type="text" placeholder="Events" formControlName="eventName">
         <small class="error"
                *ngIf="eventForm.get('eventName')?.touched &&
  eventForm.get('eventName')?.invalid">

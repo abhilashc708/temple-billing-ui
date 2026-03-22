@@ -89,7 +89,7 @@ filterInitializeForms() {
     this.donationForm = this.fb.group({
       donationDate: ['', Validators.required],
       paymentType: ['', Validators.required],
-      paymentStatus: ['', Validators.required],
+      paymentStatus: ['SUCCESS', Validators.required],
       receiptBookNo: [''],
       receiptNo: [''],
       devoteeName: ['', Validators.required],
@@ -166,8 +166,28 @@ filterInitializeForms() {
     this.showModal = true;
     this.isEditMode = false;
     this.selectedId = null;
-    this.donationForm.reset();
+
+     const today = new Date().toISOString().split('T')[0];
+
+      const receiptBookNo = this.generateReceiptBookNo();
+      const receiptNo = this.generateReceiptNo();
+
+      this.donationForm.reset({
+        donationDate: today,
+        paymentStatus: 'SUCCESS',
+        receiptBookNo: receiptBookNo,
+        receiptNo: receiptNo
+      });
   }
+
+generateReceiptBookNo(): string {
+  const num = Math.floor(Math.random() * 9) + 1; // 1–9
+  return `RB-0${num}`;
+}
+
+generateReceiptNo(): string {
+  return Math.floor(10000 + Math.random() * 90000).toString(); // 5 digit
+}
 
   closeModal() {
     this.showModal = false;
@@ -328,8 +348,6 @@ resetFilter() {
   this.loadDonations();
 }
 
-
-
 openPrintPopup(donation: any) {
   this.selectedDonation = donation;
   this.showPrintModal = true;
@@ -339,8 +357,131 @@ closePrintPopup() {
   this.showPrintModal = false;
 }
 
+// printReceipt() {
+//   window.print();
+// }
 printReceipt() {
-  window.print();
+  const content = document.getElementById('receiptSection')?.innerHTML;
+  if (!content) return;
+
+  const iframe = document.createElement('iframe');
+  iframe.style.position = 'fixed';
+  iframe.style.width = '0';
+  iframe.style.height = '0';
+  iframe.style.border = '0';
+
+  document.body.appendChild(iframe);
+
+  const doc = iframe.contentWindow!.document;
+  doc.open();
+
+  doc.write(`
+    <html>
+      <head>
+        <title>Receipt Print</title>
+
+        <style>
+          @page {
+            size: legal portrait;
+            margin: 5mm;
+          }
+
+          body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+          }
+
+          /* 1/3 legal size */
+          .receipt-container {
+            width: 210mm;
+            height: 95mm;
+            border: 2px solid black;
+            padding: 10px;
+            box-sizing: border-box;
+          }
+
+        .amount-box {
+          background: #000;
+          color: #fff;
+          font-size: 18px;
+           text-align: left;
+        }
+
+          /* HEADER FIX */
+          .receipt-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+
+          .temple-img {
+            width: 120px;
+            height: 90px;
+          }
+        .receipt-title h2,
+        .receipt-title p {
+          margin: 2px 0;
+        }
+        .receipt-title {
+          text-align: center;
+          flex: 1;
+          padding-top: 5px;
+        }
+
+          /* 🔥 IMPORTANT FIX */
+          .receipt-top {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            padding-bottom: 30px;
+          }
+
+          .receipt-top div:first-child {
+            text-align: left;
+          }
+
+          .receipt-top div:last-child {
+            text-align: right;
+          }
+
+          /* BODY ALIGNMENT */
+          .receipt-body {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 15px;
+            line-height: 15px;
+          }
+
+
+          .donation-text {
+            text-align: center;
+          }
+
+
+          /* REMOVE BUTTONS */
+          .no-print {
+            display: none !important;
+          }
+
+        </style>
+
+      </head>
+
+      <body>
+        <div class="receipt-container">
+          ${content}
+        </div>
+      </body>
+    </html>
+  `);
+
+  doc.close();
+
+  iframe.contentWindow!.focus();
+  iframe.contentWindow!.print();
+
+  setTimeout(() => document.body.removeChild(iframe), 1000);
 }
 
 downloadPDF() {

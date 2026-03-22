@@ -272,7 +272,7 @@
         </div>
         <div>
           <select formControlName="paymentType" class="input">
-            <option value="">Select Type</option>
+            <option value="">Select Payment Type</option>
             <option value="CASH">Cash</option>
             <option value="UPI">UPI</option>
           </select>
@@ -284,9 +284,8 @@
         </div>
         <div>
           <select formControlName="paymentStatus" class="input">
-            <option value="">Select Status</option>
-            <option value="PENDING">Pending</option>
             <option value="SUCCESS">Success</option>
+            <option value="PENDING">Pending</option>
             <option value="FAILED">Failed</option>
           </select>
           <small class="error"
@@ -310,7 +309,7 @@
 
           <div class="field-group">
             <label>
-              Vazhipadu <span class="required">*</span>
+              Vazhipadu
               <input *ngIf="i > 0"
                      type="checkbox"
                      class="copy-check"
@@ -337,7 +336,7 @@ booking.get('vazhipadu')?.invalid">
           </div>
 
           <div class="field-group">
-            <label>Quantity <span class="required">*</span></label>
+            <label>Quantity</label>
             <input type="number" formControlName="quantity"
                    class="input">
             <small class="error"
@@ -348,7 +347,7 @@ booking.get('vazhipadu')?.invalid">
           </div>
 
           <div class="field-group">
-            <label>Amount <span class="required">*</span></label>
+            <label>Amount</label>
             <input type="number"
                    formControlName="amount"
                    class="input"
@@ -358,7 +357,7 @@ booking.get('vazhipadu')?.invalid">
           <!-- Devotee Name -->
           <div class="field-group">
             <label>
-              Devotee Name <span class="required">*</span>
+              Devotee Name
               <input *ngIf="i > 0"
                      type="checkbox"
                      class="copy-check"
@@ -377,7 +376,7 @@ booking.get('vazhipadu')?.invalid">
           <!-- Birth Star -->
           <div class="field-group">
             <label>
-              Birth Star <span class="required">*</span>
+              Birth Star
               <input *ngIf="i > 0"
                      type="checkbox"
                      class="copy-check"
@@ -396,24 +395,24 @@ booking.get('vazhipadu')?.invalid">
               Birth Star is required
             </small>
           </div>
-          <div class="remove-wrapper">
-            <button type="button"
-                    class="remove-btn"
-                    (click)="removeBookingRow(i)">
-              ✕
-            </button>
-          </div>
+<!--          <div class="remove-wrapper">-->
+<!--            <button type="button"-->
+<!--                    class="remove-btn"-->
+<!--                    (click)="removeBookingRow(i)">-->
+<!--              ✕-->
+<!--            </button>-->
+<!--          </div>-->
 
         </div>
 
       </div>
 
-      <button type="button"
-              class="add-btn"
-              (click)="addBookingRow()"
-              [disabled]="bookingsArray.length >= 5">
-        + Add More Vazhipadu
-      </button>
+<!--      <button type="button"-->
+<!--              class="add-btn"-->
+<!--              (click)="addBookingRow()"-->
+<!--              [disabled]="bookingsArray.length >= 5">-->
+<!--        + Add More Vazhipadu-->
+<!--      </button>-->
 
       <div class="actions">
         <button type="button" class="cancel-btn" (click)="closeAddModal()">Cancel</button>
@@ -512,8 +511,8 @@ booking.get('vazhipadu')?.invalid">
     <div class="receipt-container" *ngIf="selectedReceipt">
 
       <!-- IMAGES -->
-      <img src="temple.jpg" class="temple-img left-img">
-      <img src="temple.jpg" class="temple-img right-img">
+      <img src="assets/temple.jpg" class="temple-img left-img">
+      <img src="assets/temple.jpg" class="temple-img right-img">
 
       <!-- HEADER TEXT -->
       <div class="temple-details">
@@ -563,7 +562,7 @@ booking.get('vazhipadu')?.invalid">
             {{booking.birthStar}}
           </td>
           <td>{{ booking.vazhipadu }}</td>
-          <td>{{ booking.bookingDate }}</td>
+          <td>{{ booking.bookingDate | date:'dd/MM/yyyy'}}</td>
           <td>{{ booking.quantity }}</td>
           <td>Rs. {{ booking.amount }}</td>
           <td>Rs. {{ booking.quantity * booking.amount }}</td>

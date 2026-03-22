@@ -331,6 +331,69 @@ closePrintModal() {
   this.showPrintModal = false;
 }
 
+// printReceipt() {
+//   const receipt = document.getElementById('printSection')?.innerHTML;
+//   if (!receipt) return;
+//
+//   const iframe = document.createElement('iframe');
+//   iframe.style.position = 'fixed';
+//   iframe.style.width = '0';
+//   iframe.style.height = '0';
+//   iframe.style.border = '0';
+//
+//   document.body.appendChild(iframe);
+//
+//   const doc = iframe.contentWindow!.document;
+//   doc.open();
+//   doc.write(`
+//    <html>
+//          <head>
+//            <title>Receipt</title>
+//            <style>
+//              body { font-family: Arial; padding: 20px; }
+//              .receipt-wrapper { border: 2px solid black; padding: 20px; }
+//              .receipt-header {
+//                display: flex;
+//                justify-content: space-between;
+//                align-items: center;
+//              }
+//              .receipt-title h3,
+//              .receipt-title p {
+//              margin: 2px 0;
+//             }
+//            .receipt-title {
+//              text-align: center;
+//              padding-top: 5px;
+//            }
+//              .receipt-table {
+//                width: 100%;
+//                border-collapse: collapse;
+//                margin-top: 20px;
+//              }
+//              .receipt-table td {
+//                border: 1px solid #ccc;
+//                padding: 8px;
+//              }
+//              .text-right { text-align: right; }
+//              .signature {
+//                margin-top: 40px;
+//                text-align: right;
+//              }
+//              img { width: 120px; }
+//            </style>
+//          </head>
+//          <body>
+//            ${receipt}
+//          </body>
+//        </html>
+//   `);
+//   doc.close();
+//
+//   iframe.contentWindow!.focus();
+//   iframe.contentWindow!.print();
+//
+//   setTimeout(() => document.body.removeChild(iframe), 1000);
+// }
 printReceipt() {
   const receipt = document.getElementById('printSection')?.innerHTML;
   if (!receipt) return;
@@ -346,54 +409,98 @@ printReceipt() {
   const doc = iframe.contentWindow!.document;
   doc.open();
   doc.write(`
-   <html>
-         <head>
-           <title>Receipt</title>
-           <style>
-             body { font-family: Arial; padding: 20px; }
-             .receipt-wrapper { border: 2px solid black; padding: 20px; }
-             .receipt-header {
-               display: flex;
-               justify-content: space-between;
-               align-items: center;
-             }
-             .receipt-title h3,
-             .receipt-title p {
-             margin: 2px 0;
-            }
-           .receipt-title {
-             text-align: center;
-             padding-top: 5px;
-           }
-             .receipt-table {
-               width: 100%;
-               border-collapse: collapse;
-               margin-top: 20px;
-             }
-             .receipt-table td {
-               border: 1px solid #ccc;
-               padding: 8px;
-             }
-             .text-right { text-align: right; }
-             .signature {
-               margin-top: 40px;
-               text-align: right;
-             }
-             img { width: 120px; }
-           </style>
-         </head>
-         <body>
-           ${receipt}
-         </body>
-       </html>
-  `);
-  doc.close();
+    <html>
+      <head>
+        <title>Receipt</title>
 
+        <style>
+          @page {
+            size: legal;
+            margin: 0;
+          }
+
+          body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial;
+          }
+
+          /* 🔥 1/3 Legal Page */
+          .print-wrapper {
+            width: 100%;
+            height: 4.67in; /* 14 / 3 */
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+
+          .receipt-wrapper {
+            width: 7.5in; /* slightly smaller than 8.5 */
+            transform: scale(0.8); /* shrink to fit */
+            transform-origin: top center;
+            border: 2px solid black;
+            padding: 15px;
+          }
+
+          .receipt-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+
+          .receipt-title h3,
+          .receipt-title p {
+            margin: 2px 0;
+          }
+          .receipt-title {
+            text-align: center;
+            padding-top: 5px;
+          }
+
+          .receipt-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+          }
+
+          .receipt-table td {
+            border: 1px solid #ccc;
+            padding: 6px;
+            font-size: 12px;
+          }
+
+          .temple-img {
+            width: 130px;
+            border-radius: 8px;
+              height: 120px;
+              top: 10px;
+          }
+
+          .signature {
+            margin-top: 20px;
+            text-align: right;
+            font-size: 12px;
+          }
+        </style>
+
+      </head>
+
+      <body>
+        <div class="print-wrapper">
+          ${receipt}
+        </div>
+      </body>
+    </html>
+  `);
+
+  doc.close();
   iframe.contentWindow!.focus();
   iframe.contentWindow!.print();
 
   setTimeout(() => document.body.removeChild(iframe), 1000);
 }
+
 
 convertToWords(amount: number): string {
   if (amount == null) return '';
