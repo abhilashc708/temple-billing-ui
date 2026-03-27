@@ -498,6 +498,8 @@ tbody tr:hover {
   position: relative;
   border: 2px solid #000;   /* 👈 ONLY BORDER */
   padding: 0px 20px 20px 20px;   /* reduced top padding */
+   height: auto;              /* ❌ REMOVE fixed height */
+    min-height: 4.4in;
 }
 
 .receipt-header {
@@ -562,11 +564,26 @@ tbody tr:hover {
   font-size: 18px;
 }
 
-.signature {
-  text-align: right;
-  margin-top: 40px;
+// .signature {
+//   text-align: right;
+//   margin-top: 40px;
+// }
+.bottom-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 20px;
 }
 
+.upi {
+  font-size: 11px;
+  text-align: left;
+}
+
+.signature {
+  text-align: right;
+  font-size: 12px;
+}
 //---Recipt Close Button---
 .modal-close {
   position: absolute;
@@ -860,4 +877,20 @@ tbody tr:hover {
   margin-top: 4px;
   min-height: 16px;   /* reserve space */
   display: block;
+}
+.top-outside {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+
+  margin-bottom: 4px; /* space before border */
+  padding: 0 2px;
+}
+
+.left-text {
+  text-align: left;
+}
+
+.right-text {
+  text-align: right;
 }

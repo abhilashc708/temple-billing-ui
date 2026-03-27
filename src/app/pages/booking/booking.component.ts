@@ -41,10 +41,11 @@ selectedReceipt: any;
   @ViewChild(ChangePasswordComponent)
   changePasswordPopup!: ChangePasswordComponent;
 
-receiptLanguage: 'MALAYALAM' | 'ENGLISH' = 'MALAYALAM';
+receiptLanguage: 'ENGLISH' | 'MALAYALAM' = 'ENGLISH';
 
 
 birthStars = [
+  { value: 'Nill', label: 'Nill' },
   { value: 'aswathi', label: 'Aswathi - അശ്വതി' },
   { value: 'bharani', label: 'Bharani - ഭരണി' },
   { value: 'karthika', label: 'Karthika - കാർത്തിക' },
@@ -556,7 +557,7 @@ printReceipt() {
         <style>
           @page {
             size: legal portrait; /* ✅ FIX 1 */
-            margin: 0;
+            margin: 5mm;
           }
         * {
           -webkit-print-color-adjust: exact;
@@ -565,23 +566,27 @@ printReceipt() {
 
           body {
             margin: 0;
-            padding: 10px;
+            padding: 12px;
             font-family: Arial, sans-serif;
             font-size: 10px; /* ✅ FIX 2 */
           }
 
+        tbody tr {
+          height: calc(100% / 7);  /* 🔥 EXACTLY 7 ROWS */
+        }
+
           /* 🔥 MAIN RECEIPT SIZE (1/3 LEGAL PAGE) */
           .receipt-container {
             width: 100%;
-            height: 4.67in; /* ✅ FIX 3 (CRITICAL) */
+            height: 4.4in; /* ✅ FIX 3 (CRITICAL) */
             box-sizing: border-box;
              border: 2px solid black !important;
-            padding: 8px;
+            padding: 6px;
             text-align: center;
             position: relative;
             page-break-after: always;
-             margin: 0;
-              overflow: hidden;
+             margin: 5px;
+              //overflow: hidden;
           }
 
           .receipt-container:last-child {
@@ -613,14 +618,15 @@ printReceipt() {
 
           table {
             width: 100%;
+            height:auto;
             border-collapse: collapse;
             margin-top: 5px;
           }
 
           th, td {
             border: 1px solid #000;
-            padding: 3px; /* reduced */
-            font-size: 9px;
+            padding: 6px; /* reduced */
+            font-size: 12px;
             text-align: center;
           }
 
@@ -630,12 +636,39 @@ printReceipt() {
             margin-top: 5px;
           }
 
-          .signature {
-            margin-top: 10px;
+            .bottom-section {
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-end;
+              margin-top: 8px;
+            }
+
+            .upi {
+              font-size: 10px;
+              text-align: left;
+            }
+
+            .signature {
+              text-align: right;
+              font-size: 10px;
+            }
+
+          .top-outside {
+            display: flex;
+            justify-content: space-between;
             font-size: 10px;
-            text-align: right;
+
+            margin-bottom: 4px; /* space before border */
+            padding: 0 2px;
           }
 
+           .left-text {
+             text-align: left;
+           }
+
+           .right-text {
+             text-align: right;
+           }
           .receipt-actions,
           .modal-close,
           button {

@@ -507,27 +507,45 @@ booking.get('vazhipadu')?.invalid">
       <button class="btn download" (click)="downloadReceipt()">⬇ DOWNLOAD</button>
     </div>
 
+    <!-- 🔥 MOVE INSIDE -->
+    <div class="top-outside">
+      <div class="left-text">
+        Vazhipadu Booking: https://www.keralatemplesbooking.com/booknow/?temple=258
+      </div>
+
+      <div class="right-text">
+        Intagram: mankurussi_bhagavathi_temple
+      </div>
+    </div>
     <!-- HEADER -->
     <div class="receipt-container" *ngIf="selectedReceipt">
 
       <!-- IMAGES -->
-      <img src="assets/temple.jpg" class="temple-img left-img">
-      <img src="assets/temple.jpg" class="temple-img right-img">
+      <img src="assets/temple-left.jpeg" class="temple-img left-img">
+      <img src="assets/temple-right.jpeg" class="temple-img right-img">
 
       <!-- HEADER TEXT -->
       <div class="temple-details">
 
         <h2 *ngIf="receiptLanguage === 'MALAYALAM'">
-          മാങ്കുറുശ്ശി ശ്രീ കുറുംബ ഭഗവതി ക്ഷേത്രം കരാകുരുശ്ശി
+          മാങ്കുറുശ്ശി ശ്രീ കുറുംബ ഭഗവതി ക്ഷേത്രം
         </h2>
 
         <h2 *ngIf="receiptLanguage === 'ENGLISH'">
           Mankurussi Bhagavathi Temple
         </h2>
-        <p>കരാകുരുശ്ശി,പാലക്കാട്,കേരളം -678595</p>
+        <p *ngIf="receiptLanguage === 'MALAYALAM'">
+          കരാകുരുശ്ശി,പാലക്കാട്,കേരളം -678595
+        </p>
+        <p *ngIf="receiptLanguage === 'ENGLISH'">
+          Karakurussi,Palakkad,Kerala -678595
+        </p>
         <p>Phone: 9072017303, Email: mankurussibhagavathitemple&#64;gmail.com</p>
 
-        <h3>വഴിപാടൂ രസീത് </h3>
+        <h3 *ngIf="receiptLanguage === 'MALAYALAM'">
+          വഴിപാടൂ രസീത് </h3>
+        <h3 *ngIf="receiptLanguage === 'ENGLISH'">
+          Vazhipadu Reciept </h3>
       </div>
       <!-- RECEIPT INFO -->
       <div class="receipt-info">
@@ -549,7 +567,7 @@ booking.get('vazhipadu')?.invalid">
         <tr>
           <th>NAME</th>
           <th>VAZHIPADU</th>
-          <th>POOJA DATE</th>
+<!--          <th>POOJA DATE</th>-->
           <th>QTY</th>
           <th>AMOUNT</th>
           <th>TOTAL</th>
@@ -562,7 +580,7 @@ booking.get('vazhipadu')?.invalid">
             {{booking.birthStar}}
           </td>
           <td>{{ booking.vazhipadu }}</td>
-          <td>{{ booking.bookingDate | date:'dd/MM/yyyy'}}</td>
+<!--          <td>{{ booking.bookingDate | date:'dd/MM/yyyy'}}</td>-->
           <td>{{ booking.quantity }}</td>
           <td>Rs. {{ booking.amount }}</td>
           <td>Rs. {{ booking.quantity * booking.amount }}</td>
@@ -576,11 +594,30 @@ booking.get('vazhipadu')?.invalid">
       </div>
 
       <!-- SIGNATURE -->
-      <div class="signature">
-        Stamp / Signature
-      </div>
+<!--      <div class="signature">-->
+<!--        Stamp / Signature-->
+<!--      </div>-->
+      <div class="bottom-section">
+        <div class="upi">
+          UPI ID: themankuruss4645&#64;dlb
+        </div>
 
+        <div class="signature">
+          Stamp / Signature
+        </div>
+      </div>
     </div>
+
+<!--    &lt;!&ndash; 🔥 OUTSIDE BORDER TEXT &ndash;&gt;-->
+<!--    <div class="bottom-outside">-->
+<!--      <div class="left-text">-->
+<!--        www.mankurussitemple.com-->
+<!--      </div>-->
+
+<!--      <div class="right-text">-->
+<!--        GSTIN: 32ABCDE1234F1Z5-->
+<!--      </div>-->
+<!--    </div>-->
 
   </div>
 </div>
