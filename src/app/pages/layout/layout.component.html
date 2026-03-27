@@ -1,9 +1,8 @@
 <div class="main-wrapper">
-
+  <app-update-profile></app-update-profile>
+  <app-change-password></app-change-password>
   <!-- NAVBAR -->
   <nav class="top-navbar" #menuContainer>
-    <app-update-profile></app-update-profile>
-    <app-change-password></app-change-password>
     <div class="logo">
       MANKURUSSI BHAGAVATHI TEMPLE
     </div>
@@ -18,7 +17,7 @@
         <span class="arrow" [class.rotate]="activeMenu === 'master'">▾</span>
         <ul class="submenu" *ngIf="activeMenu === 'master'">
           <li routerLink="/offering" (click)="$event.stopPropagation()">Offerings/Vazhipadu</li>
-          <li routerLink="/god" (click)="$event.stopPropagation()">Prathista</li>
+<!--          <li routerLink="/god" (click)="$event.stopPropagation()">Prathista</li>-->
           <li routerLink="/event" (click)="$event.stopPropagation()">Events</li>
         </ul>
       </li>
@@ -184,11 +183,18 @@
 
     <!-- Donation Card -->
     <div class="card purple">
-      <div class="card-body center">
+      <div class="card-body">
         <h3>₹ {{dashboardData.donationTotal || 0}}.00</h3>
+
+        <p>Cash({{dashboardData.donationCashCount || 0}}) - {{dashboardData.donationCash || 0}}.00</p>
+
+        <p>UPI({{dashboardData.donationUpiCount || 0}}) - {{dashboardData.donationUpi || 0}}.00</p>
+
+        <p><strong>Total - {{dashboardData.donationTotal || 0}}.00</strong></p>
+<!--        <h3>₹ {{dashboardData.donationTotal || 0}}.00</h3>-->
       </div>
       <div class="card-footer">
-        Donation Amount
+        Donation({{dashboardData.totalDonationCount || 0}}) Amount
       </div>
     </div>
 
@@ -208,11 +214,11 @@
     <div class="footer-container">
 
       <div class="footer-left">
-        © 2026 Kerala Temples Booking System
+        © 2026 Mankurussi Temple Booking System
       </div>
 
       <div class="footer-center">
-        Powered by Your Company Name
+        Powered by Abhilash C
       </div>
 
       <div class="footer-right">

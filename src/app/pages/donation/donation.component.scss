@@ -485,10 +485,27 @@ background: #6a1b9a;
   font-size: 18px;
 }
 
+// .signature {
+//   text-align: right;
+//   margin-top: 60px;
+// }
+.bottom-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: auto;
+}
+
+.upi {
+  font-size: 10px;
+  text-align: left;
+}
+
 .signature {
   text-align: right;
-  margin-top: 60px;
+  font-size: 10px;
 }
+
 //-- Print page css
 
 @media print {
@@ -812,3 +829,37 @@ background: #6a1b9a;
   font-size:12px;
   margin-top:3px;
 }
+.top-outside {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+
+  margin-bottom: 4px; /* space before border */
+  padding: 0 2px;
+}
+
+.left-text {
+  text-align: left;
+}
+
+.right-text {
+  text-align: right;
+}
+    .contact-line {
+          display: flex;
+          align-items: center;
+          justify-content: center; /* center like your header */
+          gap: 6px;
+          font-size: 14px;
+        }
+
+        .icon-img {
+          width: 16px;
+          height: 16px;
+          position: static;   /* 🔥 FIX: remove absolute */
+        }
+        .upi-icon-img {
+          width: 10px;
+          height: 10px;
+          position: static;   /* 🔥 FIX: remove absolute */
+        }

@@ -1,8 +1,8 @@
 <div class="dashboard-wrapper">
   <!-- 🔥 TOP MENU BAR -->
   <header class="top-header">
+    <app-change-password></app-change-password>
     <div class="navbar">
-      <app-change-password></app-change-password>
       <div class="logo">
         <h3>MANKURUSSI TEMPLES</h3>
       </div>
@@ -16,7 +16,7 @@
           <span class="arrow" [class.rotate]="activeMenu === 'master'">▾</span>
           <ul class="submenu" *ngIf="activeMenu === 'master'">
             <li routerLink="/offering" (click)="$event.stopPropagation()">Offerings/Vazhipadu</li>
-            <li routerLink="/god" (click)="$event.stopPropagation()">Prathista</li>
+<!--            <li routerLink="/god" (click)="$event.stopPropagation()">Prathista</li>-->
             <li routerLink="/event" (click)="$event.stopPropagation()">Events</li>
           </ul>
         </li>

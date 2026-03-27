@@ -632,25 +632,27 @@ printReceipt() {
 
           .grand-total {
             text-align: right;
-            font-size: 10px;
-            margin-top: 5px;
+              margin-top: 5px;
+              font-weight: bold;
+              font-size: 15px;
+
           }
 
             .bottom-section {
               display: flex;
               justify-content: space-between;
               align-items: flex-end;
-              margin-top: 8px;
+              margin-top: auto;
             }
 
             .upi {
-              font-size: 10px;
+              font-size: 8px;
               text-align: left;
             }
 
             .signature {
               text-align: right;
-              font-size: 10px;
+              font-size: 8px;
             }
 
           .top-outside {
@@ -674,6 +676,25 @@ printReceipt() {
           button {
             display: none !important;
           }
+        .contact-line {
+          display: flex;
+          align-items: center;
+          justify-content: center; /* center like your header */
+          gap: 6px;
+          font-size: 14px;
+        }
+
+        .icon-img {
+          width: 16px;
+          height: 16px;
+          position: static;   /* 🔥 FIX: remove absolute */
+        }
+        .upi-icon-img {
+          width: 10px;
+          height: 10px;
+          position: static;   /* 🔥 FIX: remove absolute */
+        }
+
         </style>
       </head>
       <body>

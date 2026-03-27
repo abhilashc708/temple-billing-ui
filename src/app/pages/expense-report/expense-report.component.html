@@ -2,9 +2,9 @@
 
   <!-- 🔥 TOP MENU BAR -->
   <header class="top-header">
+    <app-update-profile></app-update-profile>
+    <app-change-password></app-change-password>
     <div class="navbar">
-      <app-update-profile></app-update-profile>
-      <app-change-password></app-change-password>
       <div class="logo">
         <h3>MANKURUSSI TEMPLES</h3>
       </div>
@@ -18,7 +18,7 @@
           <span class="arrow" [class.rotate]="activeMenu === 'master'">▾</span>
           <ul class="submenu" *ngIf="activeMenu === 'master'">
             <li routerLink="/offering" (click)="$event.stopPropagation()">Offerings/Vazhipadu</li>
-            <li routerLink="/god" (click)="$event.stopPropagation()">Prathista</li>
+<!--            <li routerLink="/god" (click)="$event.stopPropagation()">Prathista</li>-->
             <li routerLink="/event" (click)="$event.stopPropagation()">Events</li>
           </ul>
         </li>
@@ -157,7 +157,7 @@
 
       <!-- Temple Header -->
       <div class="temple-header">
-        <h2>മാങ്കുറുശ്ശി ശ്രീ കുറുംബ ഭഗവതി ക്ഷേത്രം കരാകുരുശ്ശി</h2>
+        <h2>മാങ്കുറുശ്ശി ശ്രീ കുറുംബ ഭഗവതി ക്ഷേത്രം</h2>
         <p>കരാകുരുശ്ശി,പാലക്കാട്,കേരളം -678595</p>
         <p>Phone: 9072017303, Email: mankurussibhagavathitemple&#64;gmail.com</p>
       </div>

@@ -59,7 +59,7 @@ offeringForm!: FormGroup;
     this.initializeForm();
     this.autoTranslate();
     this.loadOfferings();
-    this.loadGods();
+   // this.loadGods();
     this.username = localStorage.getItem('name') || 'User';
     this.avatar = localStorage.getItem('avatar') || 'U';
     this.role = localStorage.getItem('role') || 'NULL';
@@ -81,11 +81,11 @@ initializeForm() {
     offeringEnglish: ['', Validators.required],
     offeringMalayalam: [''],
     offeringType: ['', Validators.required],
-    offeringGod: ['', Validators.required],
+   // offeringGod: ['', Validators.required],
     price: ['', Validators.required],
-    noOfPooja: [''],
+   // noOfPooja: [''],
     status: ['', Validators.required],
-    remarks: ['']
+   // remarks: ['']
   });
 }
 
@@ -202,13 +202,13 @@ closeModal() {
 }
 
 //--- LOADING GODS DATA
-loadGods() {
-  this.godsService
-    .getGods(this.page, this.size, 'createdDate')
-    .subscribe((data: any) => {
-      this.gods = data.content;  // ✅ FIX
-    });
-}
+// loadGods() {
+//   this.godsService
+//     .getGods(this.page, this.size, 'createdDate')
+//     .subscribe((data: any) => {
+//       this.gods = data.content;  // ✅ FIX
+//     });
+// }
 
 //---LOADING EDIT DATA -----
 
@@ -224,11 +224,11 @@ loadGods() {
       offeringEnglish: offering.offeringEnglish,
       offeringMalayalam: offering.offeringMalayalam,
       offeringType: offering.offeringType,
-      offeringGod: offering.offeringGod,
+    //  offeringGod: offering.offeringGod,
       price: offering.price,
-      noOfPooja: offering.noOfPooja,
+      //noOfPooja: offering.noOfPooja,
       status: offering.status,
-      remarks: offering.remarks
+     // remarks: offering.remarks
     });
   }
 

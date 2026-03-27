@@ -2,9 +2,9 @@
 
   <!-- 🔥 TOP MENU BAR -->
   <header class="top-header">
+    <app-update-profile></app-update-profile>
+    <app-change-password></app-change-password>
     <div class="navbar">
-      <app-update-profile></app-update-profile>
-      <app-change-password></app-change-password>
       <div class="logo">
         <h3>MANKURUSSI TEMPLES</h3>
       </div>
@@ -18,7 +18,7 @@
           <span class="arrow" [class.rotate]="activeMenu === 'master'">▾</span>
           <ul class="submenu" *ngIf="activeMenu === 'master'">
             <li routerLink="/offering" (click)="$event.stopPropagation()">Offerings/Vazhipadu</li>
-            <li routerLink="/god" (click)="$event.stopPropagation()">Prathista</li>
+<!--            <li routerLink="/god" (click)="$event.stopPropagation()">Prathista</li>-->
             <li routerLink="/event" (click)="$event.stopPropagation()">Events</li>
           </ul>
         </li>
@@ -158,10 +158,10 @@
           <th>Offering English</th>
           <th>Offering Malayalam</th>
           <th>Price</th>
-          <th>God</th>
+<!--          <th>God</th>-->
           <th>Type</th>
-          <th>Remarks</th>
-          <th>Pooja/Day</th>
+<!--          <th>Remarks</th>-->
+<!--          <th>Pooja/Day</th>-->
           <th>Status</th>
           <th>Edit</th>
           <th>Delete</th>
@@ -172,10 +172,10 @@
           <td>{{ offering.offeringEnglish }}</td>
           <td>{{ offering.offeringMalayalam }}</td>
           <td>₹ {{ offering.price }}</td>
-          <td>{{ offering.offeringGod }}</td>
+<!--          <td>{{ offering.offeringGod }}</td>-->
           <td>{{ offering.offeringType }}</td>
-          <td>{{ offering.remarks }}</td>
-          <td>{{ offering.noOfPooja }}</td>
+<!--          <td>{{ offering.remarks }}</td>-->
+<!--          <td>{{ offering.noOfPooja }}</td>-->
           <td>
              <span
                class="badge"
@@ -273,20 +273,20 @@
             Offering Type is required
           </small>
         </div>
-        <div class="form-group">
-          <label>Offering God <span class="required">*</span></label>
-          <select formControlName="offeringGod">
-            <option value="">Select</option>
-            <option *ngFor="let g of gods"
-                    [value]="g.god">{{ g.god }}
-            </option>
-          </select>
-          <small class="error"
-                 *ngIf="offeringForm.get('offeringGod')?.touched &&
-         offeringForm.get('offeringGod')?.invalid">
-            Offering God is required
-          </small>
-        </div>
+<!--        <div class="form-group">-->
+<!--          <label>Offering God <span class="required">*</span></label>-->
+<!--          <select formControlName="offeringGod">-->
+<!--            <option value="">Select</option>-->
+<!--            <option *ngFor="let g of gods"-->
+<!--                    [value]="g.god">{{ g.god }}-->
+<!--            </option>-->
+<!--          </select>-->
+<!--          <small class="error"-->
+<!--                 *ngIf="offeringForm.get('offeringGod')?.touched &&-->
+<!--         offeringForm.get('offeringGod')?.invalid">-->
+<!--            Offering God is required-->
+<!--          </small>-->
+<!--        </div>-->
         <div class="form-group">
           <label>Price <span class="required">*</span></label>
           <input type="number"
@@ -299,12 +299,12 @@
           </small>
         </div>
 
-        <div class="form-group">
-          <label>No of Pooja / Day</label>
-          <input type="number"
-                 placeholder="No of Pooja/Day"
-                 formControlName="noOfPooja">
-        </div>
+<!--        <div class="form-group">-->
+<!--          <label>No of Pooja / Day</label>-->
+<!--          <input type="number"-->
+<!--                 placeholder="No of Pooja/Day"-->
+<!--                 formControlName="noOfPooja">-->
+<!--        </div>-->
         <div class="form-group">
           <label>Status <span class="required">*</span></label>
           <select formControlName="status">
@@ -318,12 +318,12 @@
             Offering Status is required
           </small>
         </div>
-        <div class="form-group">
-          <label>Remarks</label>
-          <input type="text"
-                 placeholder="Remarks"
-                 formControlName="remarks">
-        </div>
+<!--        <div class="form-group">-->
+<!--          <label>Remarks</label>-->
+<!--          <input type="text"-->
+<!--                 placeholder="Remarks"-->
+<!--                 formControlName="remarks">-->
+<!--        </div>-->
 
       </div>
 

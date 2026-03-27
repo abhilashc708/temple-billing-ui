@@ -1,9 +1,9 @@
 <div class="dashboard-wrapper">
   <!-- 🔥 TOP MENU BAR -->
   <header class="top-header">
+    <app-update-profile></app-update-profile>
+    <app-change-password></app-change-password>
     <div class="navbar">
-      <app-update-profile></app-update-profile>
-      <app-change-password></app-change-password>
       <div class="logo">
         <h3>MANKURUSSI TEMPLES</h3>
       </div>
@@ -18,7 +18,7 @@
           <span class="arrow" [class.rotate]="activeMenu === 'master'">▾</span>
           <ul class="submenu" *ngIf="activeMenu === 'master'">
             <li routerLink="/offering" (click)="$event.stopPropagation()">Offerings/Vazhipadu</li>
-            <li routerLink="/god" (click)="$event.stopPropagation()">Prathista</li>
+<!--            <li routerLink="/god" (click)="$event.stopPropagation()">Prathista</li>-->
             <li routerLink="/event" (click)="$event.stopPropagation()">Events</li>
           </ul>
         </li>
@@ -278,7 +278,7 @@
         <div class="form-group">
           <label>Payment Type <span class="required"> * </span></label>
           <select formControlName="paymentType">
-            <option value="">Select Payment Type</option>
+            <option value="">Select</option>
             <option value="CASH">Cash</option>
             <option value="UPI">UPI</option>
             <option value="CARD">Card</option>
@@ -303,11 +303,11 @@
             Payment Status is required
           </small>
         </div>
-        <div class="form-group">
+        <div class="form-group" *ngIf="showReceiptFields">
           <label>Receipt Book No </label>
           <input type="text" placeholder="Receipt Book No" formControlName="receiptBookNo" readonly>
         </div>
-        <div class="form-group">
+        <div class="form-group" *ngIf="showReceiptFields">
           <label>Receipt No </label>
           <input type="text" placeholder="Receipt No" formControlName="receiptNo" readonly>
         </div>
@@ -376,7 +376,7 @@
 <!-- DONATION RECEIPT POPUP -->
 <div class="receipt-modal" *ngIf="showPrintModal">
 
-  <div class="receipt-wrapper">
+  <div class="receipt-wrapper" id="printWrapper">
 
     <!-- TOP BUTTONS -->
 
@@ -392,26 +392,43 @@
 
     </div>
 
+    <!-- 🔥 MOVE INSIDE -->
+    <div class="top-outside">
+      <div class="left-text">
+        Vazhipadu Booking: https://www.keralatemplesbooking.com/booknow/?temple=258
+      </div>
+
+      <div class="right-text">
+        <img src="assets/instagram.png" class="upi-icon-img">
+        <span>mankurussi_bhagavathi_temple</span>
+      </div>
+    </div>
     <!-- RECEIPT CONTENT -->
     <div id="receiptSection" class="receipt-container">
 
       <!-- HEADER -->
       <div class="receipt-header">
-        <img src="assets/temple.jpg" class="temple-img left-img">
+        <img src="assets/temple-left.jpeg" class="temple-img left-img">
 
         <div class="receipt-title">
-          <h2> മാങ്കുറുശ്ശി ശ്രീ കുറുംബ ഭഗവതി ക്ഷേത്രം കരാകുരുശ്ശി</h2>
-          <p>കരാകുരുശ്ശി,പാലക്കാട്,കേരളം -678595</p>
-          <p>Phone: 9072017303, Email: mankurussibhagavathitemple&#64;gmail.com</p>
+          <h2> Mankurussi Bhagavathi Temple</h2>
+          <p>Karakurussi,Palakkad,Kerala -678595</p>
+<!--          <p>Phone: 9072017303, Email: mankurussibhagavathitemple&#64;gmail.com</p>-->
+          <p class="contact-line">
+            <img src="assets/phone-call.png" class="icon-img">
+            <span>9072017303</span>,
+            <img src="assets/email.png" class="icon-img">
+            <span>mankurussibhagavathitemple&#64;gmail.com</span>
+          </p>
           <div class="receipt-badge">സംഭാവന രസീത്</div>
         </div>
 
-        <img src="assets/temple.jpg" class="temple-img right-img">
+        <img src="assets/temple-right.jpeg" class="temple-img right-img">
       </div>
 
       <!-- TOP INFO -->
       <div class="receipt-top">
-        <div><b>RECEIPT NO:</b> {{selectedDonation?.receiptNo}} / {{selectedDonation?.paymentType}}</div>
+        <div><b>RECEIPT NO:</b> {{selectedDonation?.receiptBookNo}}-{{selectedDonation?.receiptNo}} / {{selectedDonation?.paymentType}}</div>
         <div><b>DATE:</b> {{selectedDonation?.donationDate | date:'dd/MM/yyyy' }}</div>
       </div>
 
@@ -428,14 +445,23 @@
           <b>{{selectedDonation?.donateFor}}</b>
           ആവശ്യത്തിലേക്കായി നന്ദിപൂർവം ലഭിച്ചതായി സാക്ഷ്യപ്പെടുത്തുന്നു.
         </p>
-
+        <div class="amount-wrapper">
         <div class="amount-box">
           {{selectedDonation?.amount}} /-
         </div>
-
+        </div>
         <p class="donation-text">ഇതൊരു കമ്പ്യൂട്ടർ രസീത് ആണ്, ഇതിനു സ്റ്റമ്പോ/ഒപ്പോ ആവശ്യമില്ല </p>
       </div>
+      <div class="bottom-section">
+        <div class="upi">
+          <img src="assets/upi.png" class="upi-icon-img">
+          <span>themankuruss4645&#64;dlb</span>
+        </div>
 
+        <div class="signature">
+          Stamp / Signature
+        </div>
+      </div>
     </div>
   </div>
 </div>

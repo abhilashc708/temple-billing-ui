@@ -35,6 +35,7 @@ role: string = '';
   selectedId: number | null = null;
   profile: any = {};
   showMyProfileModal = false;
+  showReceiptFields = false;
 
 @ViewChild(UpdateProfileComponent)
   updateProfilePopup!: UpdateProfileComponent;
@@ -333,7 +334,7 @@ resetFilter() {
    this.filterForm.reset({
       devoteeName: '',
       paymentStatus: '',
-      paymentType: '',
+     // paymentType: '',
       startDate: '',
       endDate: ''
     });
@@ -360,12 +361,182 @@ closePrintPopup() {
 // printReceipt() {
 //   window.print();
 // }
+// printReceipt() {
+//   const content = document.getElementById('printWrapper')?.innerHTML;
+//   if (!content) return;
+//
+//   const iframe = document.createElement('iframe');
+//   iframe.style.position = 'fixed';
+//   iframe.style.width = '0';
+//   iframe.style.height = '0';
+//   iframe.style.border = '0';
+//
+//   document.body.appendChild(iframe);
+//
+//   const doc = iframe.contentWindow!.document;
+//   doc.open();
+//
+//   doc.write(`
+//     <html>
+//       <head>
+//         <title>Receipt Print</title>
+//
+//         <style>
+//           @page {
+//             size: legal portrait;
+//             margin: 5mm;
+//           }
+//
+//           body {
+//             font-family: Arial, sans-serif;
+//             margin: 0;
+//             padding: 0;
+//           }
+//
+//           /* 1/3 legal size */
+//           .receipt-container {
+// //             width: 210mm;
+// //             height: 95mm;
+// //             border: 2px solid black;
+// //             padding: 10px;
+// //             box-sizing: border-box;
+//  display: flex;
+//   flex-direction: column;
+//   height: 95mm;
+//           }
+//
+//         .amount-box {
+//           background: #000;
+//           color: #fff;
+//           font-size: 18px;
+//            text-align: left;
+//         }
+//
+//           /* HEADER FIX */
+//           .receipt-header {
+//             display: flex;
+//             justify-content: space-between;
+//             align-items: center;
+//           }
+//
+//           .temple-img {
+//             width: 120px;
+//             height: 90px;
+//           }
+//         .receipt-title h2,
+//         .receipt-title p {
+//           margin: 2px 0;
+//         }
+//         .receipt-title {
+//           text-align: center;
+//           flex: 1;
+//           padding-top: 5px;
+//         }
+//
+//           /* 🔥 IMPORTANT FIX */
+//           .receipt-top {
+//             display: flex;
+//             justify-content: space-between;
+//             font-weight: bold;
+//             padding-bottom: 30px;
+//           }
+//
+//           .receipt-top div:first-child {
+//             text-align: left;
+//           }
+//
+//           .receipt-top div:last-child {
+//             text-align: right;
+//           }
+//
+//           /* BODY ALIGNMENT */
+//           .receipt-body {
+// //             margin-top: 10px;
+// //             text-align: center;
+// //             font-size: 15px;
+// //             line-height: 15px;
+//   flex: 1;
+//           }
+//
+//
+//           .donation-text {
+//             text-align: center;
+//           }
+//
+//
+//           /* REMOVE BUTTONS */
+//           .no-print {
+//             display: none !important;
+//           }
+//
+//         .bottom-section {
+// //           display: flex;
+// //           justify-content: space-between;
+// //           align-items: flex-end;
+// //           margin-top: auto;
+// display: flex;
+//   justify-content: space-between;
+//   align-items: flex-end;
+//         }
+//
+//         .upi {
+//           font-size: 10px;
+//           text-align: left;
+//         }
+//
+//         .signature {
+//           text-align: right;
+//           font-size: 10px;
+//         }
+//       .top-outside {
+// //         display: flex;
+// //         justify-content: space-between;
+// //         font-size: 10px;
+// //
+// //         margin-bottom: 4px; /* space before border */
+// //         padding: 0 2px;
+//   display: flex;
+//   justify-content: space-between;
+//   font-size: 10px;
+//   margin-bottom: 4px;
+//       }
+//
+//       .left-text {
+//         text-align: left;
+//       }
+//
+//       .right-text {
+//         text-align: right;
+//       }
+//
+//         </style>
+//
+//       </head>
+//
+//       <body>
+//        // <div class="receipt-container">
+//           ${content}
+//        // </div>
+//       </body>
+//     </html>
+//   `);
+//
+//   doc.close();
+//
+//   iframe.contentWindow!.focus();
+//   iframe.contentWindow!.print();
+//
+//   setTimeout(() => document.body.removeChild(iframe), 1000);
+// }
+
 printReceipt() {
-  const content = document.getElementById('receiptSection')?.innerHTML;
+  const content = document.getElementById('printWrapper')?.innerHTML;
   if (!content) return;
 
   const iframe = document.createElement('iframe');
   iframe.style.position = 'fixed';
+  iframe.style.right = '0';
+  iframe.style.bottom = '0';
   iframe.style.width = '0';
   iframe.style.height = '0';
   iframe.style.border = '0';
@@ -378,7 +549,7 @@ printReceipt() {
   doc.write(`
     <html>
       <head>
-        <title>Receipt Print</title>
+        <title>Print Receipt</title>
 
         <style>
           @page {
@@ -389,87 +560,153 @@ printReceipt() {
           body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
+            padding: 12px;
+             font-size: 10px; /* ✅ SAME AS BOOKING */
           }
 
-          /* 1/3 legal size */
-          .receipt-container {
+          /* 🔥 Wrapper (TOP TEXT + RECEIPT) */
+          .print-wrapper {
             width: 210mm;
-            height: 95mm;
-            border: 2px solid black;
-            padding: 10px;
-            box-sizing: border-box;
           }
 
-        .amount-box {
-          background: #000;
-          color: #fff;
-          font-size: 18px;
-           text-align: left;
-        }
+          /* 🔥 TOP OUTSIDE HEADER */
+          .top-outside {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            margin-bottom: 4px;
+          }
 
-          /* HEADER FIX */
+          .left-text {
+            text-align: left;
+          }
+
+          .right-text {
+            text-align: right;
+          }
+
+          /* 🔥 MAIN RECEIPT BOX */
+          .receipt-container {
+            width: 100%;
+            height: 4.4in; /* ✅ SAME */
+            border: 2px solid black !important;
+            padding: 6px;
+            box-sizing: border-box;
+            margin: 5px;
+            text-align: center;
+            position: relative;
+            page-break-after: always;
+            display: flex;
+            flex-direction: column;
+          }
+
+          /* 🔥 IMAGE FIX (VERY IMPORTANT) */
+          img {
+            max-width: 100%;
+            height: auto;
+           // display: block;
+          }
+
+          .temple-img {
+            width: 110px !important;
+            height: 90px !important;
+            object-fit: cover;
+          }
+
+          /* 🔥 HEADER */
           .receipt-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
           }
 
-          .temple-img {
-            width: 120px;
-            height: 90px;
+          .receipt-title {
+            text-align: center;
+            flex: 1;
           }
-        .receipt-title h2,
-        .receipt-title p {
-          margin: 2px 0;
-        }
-        .receipt-title {
-          text-align: center;
-          flex: 1;
-          padding-top: 5px;
-        }
 
-          /* 🔥 IMPORTANT FIX */
+          .receipt-title h2,
+          .receipt-title p {
+            margin: 2px 0;
+          }
+
+          /* 🔥 TOP ROW */
           .receipt-top {
             display: flex;
             justify-content: space-between;
             font-weight: bold;
-            padding-bottom: 30px;
+            margin-top: 5px;
           }
 
-          .receipt-top div:first-child {
-            text-align: left;
-          }
-
-          .receipt-top div:last-child {
-            text-align: right;
-          }
-
-          /* BODY ALIGNMENT */
+          /* 🔥 BODY */
           .receipt-body {
-            margin-top: 10px;
             text-align: center;
-            font-size: 15px;
-            line-height: 15px;
+            font-size: 14px;
+            line-height: 20px;
           }
-
 
           .donation-text {
             text-align: center;
           }
 
+          .amount-box {
+            background: black;
+            color: white;
+            display: inline-block;
+            padding: 6px 12px;
+            margin-top: 10px;
+             text-align: left !important;
+          }
+        .amount-wrapper {
+          text-align: left !important;
+        }
 
-          /* REMOVE BUTTONS */
+          /* 🔥 FOOTER FIXED */
+          .bottom-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: auto;
+          }
+
+          .upi {
+            font-size: 10px;
+          }
+
+          .signature {
+            font-size: 10px;
+            text-align: right;
+          }
+
+          /* ❌ REMOVE BUTTONS */
           .no-print {
             display: none !important;
           }
+         .contact-line {
+                  display: flex;
+                  align-items: center;
+                  justify-content: center; /* center like your header */
+                  gap: 6px;
+                  font-size: 14px;
+                }
+
+                .icon-img {
+                  width: 16px;
+                  height: 16px;
+                  position: static;   /* 🔥 FIX: remove absolute */
+                }
+                .upi-icon-img {
+                  width: 10px;
+                  height: 10px;
+                  position: static;   /* 🔥 FIX: remove absolute */
+                }
+
 
         </style>
-
       </head>
 
       <body>
-        <div class="receipt-container">
+        <div class="print-wrapper">
           ${content}
         </div>
       </body>
@@ -481,7 +718,9 @@ printReceipt() {
   iframe.contentWindow!.focus();
   iframe.contentWindow!.print();
 
-  setTimeout(() => document.body.removeChild(iframe), 1000);
+  setTimeout(() => {
+    document.body.removeChild(iframe);
+  }, 1000);
 }
 
 downloadPDF() {

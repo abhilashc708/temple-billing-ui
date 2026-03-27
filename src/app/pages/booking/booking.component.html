@@ -2,9 +2,9 @@
 
   <!-- 🔥 TOP MENU BAR -->
   <header class="top-header">
+    <app-update-profile></app-update-profile>
+    <app-change-password></app-change-password>
     <div class="navbar">
-      <app-update-profile></app-update-profile>
-      <app-change-password></app-change-password>
       <div class="logo">
         <h3>MANKURUSSI TEMPLES</h3>
       </div>
@@ -18,7 +18,7 @@
           <span class="arrow" [class.rotate]="activeMenu === 'master'">▾</span>
           <ul class="submenu" *ngIf="activeMenu === 'master'">
             <li routerLink="/offering" (click)="$event.stopPropagation()">Offerings/Vazhipadu</li>
-            <li routerLink="/god" (click)="$event.stopPropagation()">Prathista</li>
+<!--            <li routerLink="/god" (click)="$event.stopPropagation()">Prathista</li>-->
             <li routerLink="/event" (click)="$event.stopPropagation()">Events</li>
           </ul>
         </li>
@@ -514,7 +514,8 @@ booking.get('vazhipadu')?.invalid">
       </div>
 
       <div class="right-text">
-        Intagram: mankurussi_bhagavathi_temple
+        <img src="assets/instagram.png" class="upi-icon-img">
+        <span>mankurussi_bhagavathi_temple</span>
       </div>
     </div>
     <!-- HEADER -->
@@ -540,7 +541,13 @@ booking.get('vazhipadu')?.invalid">
         <p *ngIf="receiptLanguage === 'ENGLISH'">
           Karakurussi,Palakkad,Kerala -678595
         </p>
-        <p>Phone: 9072017303, Email: mankurussibhagavathitemple&#64;gmail.com</p>
+<!--        <p><img src="assets/phone-call.png" class="icon-img">Phone: 9072017303, Email: mankurussibhagavathitemple&#64;gmail.com</p>-->
+        <p class="contact-line">
+          <img src="assets/phone-call.png" class="icon-img">
+          <span>9072017303</span>,
+          <img src="assets/email.png" class="icon-img">
+          <span>mankurussibhagavathitemple&#64;gmail.com</span>
+        </p>
 
         <h3 *ngIf="receiptLanguage === 'MALAYALAM'">
           വഴിപാടൂ രസീത് </h3>
@@ -599,9 +606,9 @@ booking.get('vazhipadu')?.invalid">
 <!--      </div>-->
       <div class="bottom-section">
         <div class="upi">
-          UPI ID: themankuruss4645&#64;dlb
+            <img src="assets/upi.png" class="upi-icon-img">
+            <span>themankuruss4645&#64;dlb</span>
         </div>
-
         <div class="signature">
           Stamp / Signature
         </div>
