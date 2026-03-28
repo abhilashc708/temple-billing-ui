@@ -416,7 +416,27 @@ booking.get('vazhipadu')?.invalid">
 
       <div class="actions">
         <button type="button" class="cancel-btn" (click)="closeAddModal()">Cancel</button>
-        <button type="submit" class="save-btn">Save Receipt</button>
+<!--        <button type="submit" class="save-btn" [disabled]="isSubmitting">-->
+<!--          <span *ngIf="!isSubmitting">Save Receipt</span>-->
+<!--&lt;!&ndash;          <span *ngIf="isSubmitting">Saving...</span>&ndash;&gt;-->
+<!--&lt;!&ndash;          <span *ngIf="isSubmitting">⏳ Saving...</span>&ndash;&gt;-->
+<!--          <span *ngIf="isSubmitting" class="spinner"></span>-->
+<!--        </button>-->
+        <button
+          type="submit"
+          class="save-btn"
+          [disabled]="isSubmitting">
+
+          <ng-container *ngIf="!isSubmitting">
+            Save Receipt
+          </ng-container>
+
+          <ng-container *ngIf="isSubmitting">
+            <span class="spinner"></span>
+            Saving...
+          </ng-container>
+
+        </button>
       </div>
 
     </form>

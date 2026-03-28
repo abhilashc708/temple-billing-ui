@@ -19,18 +19,26 @@ export class LoginComponent {
   username = '';
   password = '';
  errorMessage: string = '';   // ✅ ADD THIS LINE
+ isLoggingIn = false;
   http= inject(HttpClient);
 
 constructor(private authService: AuthService, private router:Router){
   }
 
   onLogin() {
+    if (this.isLoggingIn) return; // 🚫 prevent multiple clicks
+    this.isLoggingIn = true;
      if (!this.username || !this.password) {
           this.errorMessage = 'Username and password required';
+           this.isLoggingIn = false;
+             setTimeout(() => {
+               this.errorMessage = '';
+             }, 3000);
           return;
         }
 this.authService.login(this.username, this.password).subscribe({
             next: (response) => {
+               this.isLoggingIn = false;
                 this.authService.storeToken(response.token, this.username);
                 const role = this.authService.getUserRole();
                 if (role === 'ADMIN' || role === 'USER') {
@@ -42,7 +50,7 @@ this.authService.login(this.username, this.password).subscribe({
             },
 
     error: (err) => {
-
+ this.isLoggingIn = false;
       this.errorMessage = err.error?.message || "Invalid username or password";
 
       // hide message after 3 seconds

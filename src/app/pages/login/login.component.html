@@ -159,8 +159,20 @@
       </div>
 
       <!-- BUTTON -->
-      <button type="submit" [disabled]="loginForm.invalid">
-        Sign In
+<!--      <button type="submit" [disabled]="loginForm.invalid">-->
+<!--        Sign In-->
+<!--      </button>-->
+      <button type="submit" [disabled]="isLoggingIn">
+
+        <ng-container *ngIf="!isLoggingIn">
+          Sign In
+        </ng-container>
+
+        <ng-container *ngIf="isLoggingIn">
+          <span class="spinner"></span>
+          Signing in...
+        </ng-container>
+
       </button>
 
       <!-- ERROR -->
@@ -171,4 +183,10 @@
     </form>
   </div>
 
+  <div class="login-loader" *ngIf="isLoggingIn">
+    <div class="loader-box">
+      <div class="advanced-spinner"></div>
+      <p>Please wait...</p>
+    </div>
+  </div>
 </div>

@@ -34,6 +34,7 @@ isViewModalOpen = false;
 selectedReceipt: any;
   profile: any = {};
      showMyProfileModal = false;
+     isSubmitting = false;
 
  @ViewChild(UpdateProfileComponent)
    updateProfilePopup!: UpdateProfileComponent;
@@ -353,6 +354,10 @@ openAddModal() {
 
 submitReceipt(): void {
 
+    if (this.isSubmitting) return; // 🚫 BLOCK MULTIPLE CLICKS
+
+    this.isSubmitting = true; // ✅ LOCK BUTTON
+
   const rawValue = this.receiptForm.getRawValue();
 
   const filledRows = rawValue.bookings.filter((row: any) =>
@@ -361,17 +366,20 @@ submitReceipt(): void {
 
   if (filledRows.length === 0) {
     alert("Fill at least one row");
+    this.isSubmitting = false; // 🔓 unlock
     return;
   }
 
    if (!rawValue.createdDate || !rawValue.paymentType || !rawValue.paymentStatus ) {
       alert("Complete all required fields in filled rows");
+      this.isSubmitting = false; // 🔓 unlock
       return;
     }
 
   for (let row of filledRows) {
     if (!row.vazhipadu || !row.devoteeName || !row.birthStar) {
       alert("Complete all required fields in filled rows");
+      this.isSubmitting = false; // 🔓 unlock
       return;
     }
   }
@@ -403,6 +411,7 @@ submitReceipt(): void {
 
   this.bookingService.saveBatchReceipt(payload).subscribe({
     next: (res) => {
+       this.isSubmitting = false; // 🔓 unlock
       this.successMessage = 'Receipt Created Successfully';
       this.closeAddModal();
       this.loadBookings();
@@ -410,6 +419,7 @@ submitReceipt(): void {
       this.autoHideMessage();
     },
     error: (err) => {
+       this.isSubmitting = false; // 🔓 unlock
       this.errorMessage = err.error?.message || 'Update Failed';
       this.closeAddModal();
       this.loadBookings();
