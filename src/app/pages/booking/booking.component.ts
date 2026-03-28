@@ -364,6 +364,11 @@ submitReceipt(): void {
     return;
   }
 
+   if (!rawValue.createdDate || !rawValue.paymentType || !rawValue.paymentStatus ) {
+      alert("Complete all required fields in filled rows");
+      return;
+    }
+
   for (let row of filledRows) {
     if (!row.vazhipadu || !row.devoteeName || !row.birthStar) {
       alert("Complete all required fields in filled rows");
@@ -586,6 +591,8 @@ printReceipt() {
             position: relative;
             page-break-after: always;
              margin: 5px;
+            display: flex;              /* ✅ IMPORTANT */
+            flex-direction: column;     /* ✅ IMPORTANT */
               //overflow: hidden;
           }
 
