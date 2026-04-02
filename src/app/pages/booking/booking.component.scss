@@ -934,3 +934,28 @@ display: flex;
     transform: rotate(360deg);
   }
 }
+
+
+.searchable-dropdown {
+  position: relative;
+}
+
+.dropdown-list {
+  position: absolute;
+  width: 100%;
+  background: white;
+  border: 1px solid #ccc;
+  max-height: 180px;
+  overflow-y: auto;
+  z-index: 9999;
+  border-radius: 6px;
+}
+
+.dropdown-item {
+  padding: 5px;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: #f1f1f1;
+}

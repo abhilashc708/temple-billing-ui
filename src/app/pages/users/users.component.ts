@@ -38,7 +38,7 @@ export class UsersComponent {
  changePasswordPopup!: ChangePasswordComponent;
 
    page = 0;
-   size = 5;
+   size = 8;
    totalPages = 0;
 
    constructor(

@@ -6,7 +6,7 @@
     <app-change-password></app-change-password>
     <div class="navbar">
       <div class="logo">
-        <h3>MANKURUSSI TEMPLES</h3>
+        <h3>MANKURUSSI TEMPLE</h3>
       </div>
       <ul class="menu" #menuContainer1>
 
@@ -187,7 +187,7 @@
           <td>{{ item.receiptDate }}</td>
           <td>{{ item.paidTo }}</td>
           <td>{{ item.expenseType }}</td>
-          <td>Rs: {{ item.amount }}.00</td>
+          <td>₹ {{ item.amount }}.00</td>
           <td>{{ item.remarks }}</td>
 
           <td>
@@ -295,9 +295,7 @@
           <select formControlName="modeOfExpense">
             <option value="">Select</option>
             <option value="CASH">Cash</option>
-            <option value="CHEQUE">Cheque</option>
             <option value="UPI">UPI</option>
-            <option value="BANK">Bank Transfer</option>
           </select>
           <small class="error"
                  *ngIf="expenseForm.get('modeOfExpense')?.touched &&
@@ -308,18 +306,18 @@
         </div>
 
         <!-- Show only if Cheque -->
-        <div *ngIf="isChequeMode">
+<!--        <div *ngIf="isChequeMode">-->
 
-          <div class="form-group">
-            <label>Cheque No</label>
-            <input type="text" formControlName="chequeNo">
-          </div>
+<!--          <div class="form-group">-->
+<!--            <label>Cheque No</label>-->
+<!--            <input type="text" formControlName="chequeNo">-->
+<!--          </div>-->
 
-          <div class="form-group">
-            <label>Cheque Date</label>
-            <input type="date" formControlName="chequeDate">
-          </div>
-        </div>
+<!--          <div class="form-group">-->
+<!--            <label>Cheque Date</label>-->
+<!--            <input type="date" formControlName="chequeDate">-->
+<!--          </div>-->
+<!--        </div>-->
         <div class="form-group">
           <label>Remarks</label>
           <textarea formControlName="remarks"></textarea>
@@ -369,7 +367,7 @@
 
           <tr>
             <td><b>Amount</b></td>
-            <td>Rs. {{ selectedExpense?.amount }}.00</td>
+            <td>₹ {{ selectedExpense?.amount }}.00</td>
           </tr>
 
           <tr>

@@ -6,7 +6,7 @@
     <app-change-password></app-change-password>
     <div class="navbar">
       <div class="logo">
-        <h3>MANKURUSSI TEMPLES</h3>
+        <h3>MANKURUSSI TEMPLE</h3>
       </div>
       <ul class="menu" #menuContainer1>
 
@@ -307,43 +307,72 @@
              [formGroupName]="i"
              class="booking-row">
 
-          <div class="field-group">
-            <label>
-              Vazhipadu
+<!--          <div class="field-group">-->
+<!--            <label>-->
+<!--              Vazhipadu-->
+<!--              <input *ngIf="i > 0"-->
+<!--                     type="checkbox"-->
+<!--                     class="copy-check"-->
+<!--                     (change)="copyField(i, 'vazhipadu', $event)"-->
+<!--                     (change)="onOfferingChange(i)">-->
+<!--            </label>-->
+<!--            <select formControlName="vazhipadu"-->
+<!--                    class="input"-->
+<!--                    (change)="onOfferingChange(i)">-->
+
+<!--              <option value="">Select Vazhipadu</option>-->
+
+<!--              <option *ngFor="let offering of offerings"-->
+<!--                      [value]="offering.id">-->
+<!--                {{ offering.offeringEnglish }} - {{ offering.offeringMalayalam }}-->
+<!--              </option>-->
+
+<!--            </select>-->
+
+
+<!--&lt;!&ndash;            <small class="error"&ndash;&gt;-->
+<!--&lt;!&ndash;                   *ngIf="booking.get('vazhipadu')?.touched &&&ndash;&gt;-->
+<!--&lt;!&ndash;booking.get('vazhipadu')?.invalid">&ndash;&gt;-->
+<!--&lt;!&ndash;              Vazhipadu is required&ndash;&gt;-->
+<!--&lt;!&ndash;            </small>&ndash;&gt;-->
+<!--          </div>-->
+
+          <div class="searchable-dropdown">
+            <label>Vazhipadu
               <input *ngIf="i > 0"
                      type="checkbox"
                      class="copy-check"
-                     (change)="copyField(i, 'vazhipadu', $event)"
-                     (change)="onOfferingChange(i)">
+                     (change)="copyField(i, 'vazhipadu', $event)">
             </label>
-            <select formControlName="vazhipadu"
-                    class="input"
-                    (change)="onOfferingChange(i)">
+            <!-- INPUT FIELD -->
+            <input type="text"
+                   class="input"
+                   [value]="inputValues[i] || ''"
+                   (input)="onInputChange($event, i)"
+                   (focus)="openDropdown(i)"
+                   (blur)="onBlur(i)"
+                   placeholder="Search Vazhipadu">
 
-              <option value="">Select Vazhipadu</option>
-
-              <option *ngFor="let offering of offerings"
-                      [value]="offering.id">
+            <!-- DROPDOWN LIST -->
+            <div class="dropdown-list" *ngIf="activeDropdownIndex === i">
+              <div class="dropdown-item"
+                   *ngFor="let offering of filteredOfferings[i]"
+                   (click)="selectOffering(offering, i, $event)">
                 {{ offering.offeringEnglish }} - {{ offering.offeringMalayalam }}
-              </option>
+              </div>
+            </div>
 
-            </select>
-            <small class="error"
-                   *ngIf="booking.get('vazhipadu')?.touched &&
-booking.get('vazhipadu')?.invalid">
-              Vazhipadu is required
-            </small>
           </div>
 
           <div class="field-group">
             <label>Quantity</label>
             <input type="number" formControlName="quantity"
                    class="input">
-            <small class="error"
-                   *ngIf="booking.get('quantity')?.touched &&
- booking.get('quantity')?.invalid">
-              Quantity is required
-            </small>
+<!--            <small class="error"-->
+<!--                   *ngIf="booking.get('quantity')?.touched &&-->
+<!-- booking.get('quantity')?.invalid">-->
+<!--              Quantity is required-->
+<!--            </small>-->
           </div>
 
           <div class="field-group">
@@ -365,11 +394,11 @@ booking.get('vazhipadu')?.invalid">
             </label>
 
             <input type="text" formControlName="devoteeName" class="input">
-            <small class="error"
-                   *ngIf="booking.get('devoteeName')?.touched &&
- booking.get('devoteeName')?.invalid">
-              Devotee Name is required
-            </small>
+<!--            <small class="error"-->
+<!--                   *ngIf="booking.get('devoteeName')?.touched &&-->
+<!-- booking.get('devoteeName')?.invalid">-->
+<!--              Devotee Name is required-->
+<!--            </small>-->
           </div>
 
           <!-- Column 5 -->
@@ -389,11 +418,11 @@ booking.get('vazhipadu')?.invalid">
                 {{ star.label }}
               </option>
             </select>
-            <small class="error"
-                   *ngIf="booking.get('birthStar')?.touched &&
- booking.get('birthStar')?.invalid">
-              Birth Star is required
-            </small>
+<!--            <small class="error"-->
+<!--                   *ngIf="booking.get('birthStar')?.touched &&-->
+<!-- booking.get('birthStar')?.invalid">-->
+<!--              Birth Star is required-->
+<!--            </small>-->
           </div>
 <!--          <div class="remove-wrapper">-->
 <!--            <button type="button"-->
@@ -530,12 +559,12 @@ booking.get('vazhipadu')?.invalid">
     <!-- 🔥 MOVE INSIDE -->
     <div class="top-outside">
       <div class="left-text">
-        Vazhipadu Booking: https://www.keralatemplesbooking.com/booknow/?temple=258
+        <b>Online Vazhipadu Booking: https://www.keralatemplesbooking.com/booknow/?temple=258</b>
       </div>
 
       <div class="right-text">
         <img src="assets/instagram.png" class="upi-icon-img">
-        <span>mankurussi_bhagavathi_temple</span>
+        <b> mankurussi_bhagavathi_temple</b>
       </div>
     </div>
     <!-- HEADER -->
@@ -609,15 +638,15 @@ booking.get('vazhipadu')?.invalid">
           <td>{{ booking.vazhipadu }}</td>
 <!--          <td>{{ booking.bookingDate | date:'dd/MM/yyyy'}}</td>-->
           <td>{{ booking.quantity }}</td>
-          <td>Rs. {{ booking.amount }}</td>
-          <td>Rs. {{ booking.quantity * booking.amount }}</td>
+          <td>₹ {{ booking.amount }}</td>
+          <td>₹ {{ booking.quantity * booking.amount }}</td>
         </tr>
         </tbody>
       </table>
 
       <!-- GRAND TOTAL -->
       <div class="grand-total">
-        Grand Total: Rs. {{ selectedReceipt.totalAmount }}.00
+        Grand Total: ₹ {{ selectedReceipt.totalAmount }}.00
       </div>
 
       <!-- SIGNATURE -->
@@ -626,11 +655,10 @@ booking.get('vazhipadu')?.invalid">
 <!--      </div>-->
       <div class="bottom-section">
         <div class="upi">
-            <img src="assets/upi.png" class="upi-icon-img">
-            <span>themankuruss4645&#64;dlb</span>
+            <span><b>UPI ID: themankuruss4645&#64;dlb</b></span>
         </div>
         <div class="signature">
-          Stamp / Signature
+          <b>Stamp / Signature</b>
         </div>
       </div>
     </div>

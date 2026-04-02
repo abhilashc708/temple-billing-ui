@@ -22,6 +22,7 @@ export class ExpenseReportComponent {
    @ViewChild(ChangePasswordComponent)
    changePasswordPopup!: ChangePasswordComponent;
 
+isAllSelected: boolean = false;
      profile: any = {};
        showMyProfileModal = false;
   showProfile = false;
@@ -31,6 +32,7 @@ export class ExpenseReportComponent {
 searchForm!: FormGroup;
   reportList: any[] = [];
   financeList: any[] = [];
+    selectedExpenseTypes: string[] = [];
    search: any = {
         receiptFrom: [''],
         receiptTo: ['']
@@ -64,16 +66,17 @@ searchForm!: FormGroup;
     const firstName = username.split(' ')[0];
     return firstName.charAt(0).toUpperCase() + firstName.slice(1);
   }
-      getReport(){
-        const payload = Object.fromEntries(
-          Object.entries(this.searchForm.value)
-            .map(([k,v]) => [k, v === '' ? null : v])
-        );
-        this.expenseEntryService.searchExpenseReport(payload).subscribe((res:any)=>{
-          this.reportList = res.content;
-        });
+  getReport() {
+      const payload = {
+        receiptFrom: this.searchForm.value.receiptFrom,
+        receiptTo: this.searchForm.value.receiptTo,
+        expenseTypes: this.selectedExpenseTypes   // ✅ ARRAY
+      };
 
-      }
+      this.expenseEntryService.searchExpenseReport(payload).subscribe((res:any) => {
+        this.reportList = res;
+      });
+    }
 
      loadFinanceList() {
              this.financeService.getAllByType('EXPENSE',this.page, this.size, 'createdDate')
@@ -86,6 +89,8 @@ searchForm!: FormGroup;
     clearForm(){
         this.searchForm.reset();
         this.reportList=[];
+          this.selectedExpenseTypes=[];
+          this.isAllSelected = false;   // 🔥 IMPORTANT
       }
 
       refreshPage(){
@@ -221,4 +226,25 @@ searchForm!: FormGroup;
 
       });
     }
+  onExpenseTypeChange(event: any) {
+    const value = event.target.value;
+
+    if (event.target.checked) {
+      this.selectedExpenseTypes.push(value);
+    } else {
+      this.selectedExpenseTypes = this.selectedExpenseTypes.filter(v => v !== value);
+    }
+
+    // 🔥 AUTO UPDATE SELECT ALL STATE
+    this.isAllSelected = this.selectedExpenseTypes.length === this.financeList.length;
+  }
+  toggleAll(event: any) {
+    this.isAllSelected = event.target.checked;
+
+    if (this.isAllSelected) {
+      this.selectedExpenseTypes = this.financeList.map(f => f.title);
+    } else {
+      this.selectedExpenseTypes = [];
+    }
+  }
 }

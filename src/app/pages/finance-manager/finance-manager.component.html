@@ -6,7 +6,7 @@
     <app-change-password></app-change-password>
     <div class="navbar">
       <div class="logo">
-        <h3>MANKURUSSI TEMPLES</h3>
+        <h3>MANKURUSSI TEMPLE</h3>
       </div>
       <ul class="menu" #menuContainer1>
 
@@ -152,7 +152,6 @@
         <thead>
         <tr>
           <th>Title</th>
-          <th>Title Malayalam</th>
           <th>Transaction Type</th>
           <th>Date</th>
           <th>Edit</th>
@@ -163,7 +162,6 @@
         <tbody>
         <tr *ngFor="let item of financeList">
           <td>{{ item.title }}</td>
-          <td>{{ item.titleMalayalam }}</td>
           <td>
         <span [ngClass]="item.transactionType === 'INCOME' ? 'income' : 'expense'">
           {{ item.transactionType }}
@@ -223,10 +221,10 @@
     </div>
 
     <form [formGroup]="financeForm" (ngSubmit)="submitFinance()">
-      <div class="form-grid">
+<!--      <div class="form-grid">-->
         <div class="form-group">
           <label>Title<span class="required">*</span></label>
-          <input type="text" formControlName="title" placeholder="Title" (click)="autoTranslate()">
+          <input type="text" formControlName="title" placeholder="Title">
           <small class="error"
                  *ngIf="financeForm.get('title')?.touched &&
  financeForm.get('title')?.invalid">
@@ -235,15 +233,15 @@
 
         </div>
 
-        <div class="form-group">
-          <label>Title Malayalam<span class="required">*</span></label>
-          <input type="text" formControlName="titleMalayalam" placeholder="Title Malayalam">
-          <small class="error"
-                 *ngIf="financeForm.get('titleMalayalam')?.touched &&
- financeForm.get('titleMalayalam')?.invalid">
-            Title Malayalam is required
-          </small>
-        </div>
+<!--        <div class="form-group">-->
+<!--          <label>Title Malayalam<span class="required">*</span></label>-->
+<!--          <input type="text" formControlName="titleMalayalam" placeholder="Title Malayalam">-->
+<!--          <small class="error"-->
+<!--                 *ngIf="financeForm.get('titleMalayalam')?.touched &&-->
+<!-- financeForm.get('titleMalayalam')?.invalid">-->
+<!--            Title Malayalam is required-->
+<!--          </small>-->
+<!--        </div>-->
 
         <div class="form-group">
           <label>Transaction Type<span class="required">*</span></label>
@@ -265,7 +263,7 @@
             {{ isEditMode ? 'Update' : 'Save' }}
           </button>
         </div>
-      </div>
+<!--      </div>-->
     </form>
 
   </div>

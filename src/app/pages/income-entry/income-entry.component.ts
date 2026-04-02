@@ -34,6 +34,10 @@ selectedIncome: any;
   selectedId: number | null = null;
   profile: any = {};
        showMyProfileModal = false;
+       isSyncing: boolean = false;
+       lastSyncDate: string | null = null;
+       showSyncInfo: boolean = false;
+
 @ViewChild(UpdateProfileComponent)
   updateProfilePopup!: UpdateProfileComponent;
 
@@ -41,7 +45,7 @@ selectedIncome: any;
  changePasswordPopup!: ChangePasswordComponent;
 
   page = 0;
-  size = 5;
+  size = 8;
   totalPages = 0;
   totalElements = 0;
 
@@ -54,6 +58,7 @@ selectedIncome: any;
   ) {}
 
   ngOnInit() {
+    this.loadLastSyncDate();
     this.filterInitializeForms();
     this.initForm();
     this.loadIncomeList();
@@ -266,17 +271,6 @@ autoHideMessage() {
   }, 3000);
 }
 
-
-//   deleteIncome(id: number) {
-//     if (!confirm('Are you sure to delete?')) return;
-//
-//     this.incomeService.delete(id)
-//       .subscribe(() => {
-//         alert('Deleted Successfully');
-//         this.loadIncomeList();
-//       });
-//   }
-
 deleteConfirmed(){
 
   if(!this.selectedId) return;
@@ -305,10 +299,6 @@ deleteConfirmed(){
 
 }
 
-//   printIncome(item: any) {
-//     console.log('Print logic here', item);
-//   }
-
   afterSave() {
     this.closeModal();
     this.loadIncomeList();
@@ -331,72 +321,15 @@ closePrintModal() {
   this.showPrintModal = false;
 }
 
-// printReceipt() {
-//   const receipt = document.getElementById('printSection')?.innerHTML;
-//   if (!receipt) return;
-//
-//   const iframe = document.createElement('iframe');
-//   iframe.style.position = 'fixed';
-//   iframe.style.width = '0';
-//   iframe.style.height = '0';
-//   iframe.style.border = '0';
-//
-//   document.body.appendChild(iframe);
-//
-//   const doc = iframe.contentWindow!.document;
-//   doc.open();
-//   doc.write(`
-//    <html>
-//          <head>
-//            <title>Receipt</title>
-//            <style>
-//              body { font-family: Arial; padding: 20px; }
-//              .receipt-wrapper { border: 2px solid black; padding: 20px; }
-//              .receipt-header {
-//                display: flex;
-//                justify-content: space-between;
-//                align-items: center;
-//              }
-//              .receipt-title h3,
-//              .receipt-title p {
-//              margin: 2px 0;
-//             }
-//            .receipt-title {
-//              text-align: center;
-//              padding-top: 5px;
-//            }
-//              .receipt-table {
-//                width: 100%;
-//                border-collapse: collapse;
-//                margin-top: 20px;
-//              }
-//              .receipt-table td {
-//                border: 1px solid #ccc;
-//                padding: 8px;
-//              }
-//              .text-right { text-align: right; }
-//              .signature {
-//                margin-top: 40px;
-//                text-align: right;
-//              }
-//              img { width: 120px; }
-//            </style>
-//          </head>
-//          <body>
-//            ${receipt}
-//          </body>
-//        </html>
-//   `);
-//   doc.close();
-//
-//   iframe.contentWindow!.focus();
-//   iframe.contentWindow!.print();
-//
-//   setTimeout(() => document.body.removeChild(iframe), 1000);
-// }
 printReceipt() {
-  const receipt = document.getElementById('printSection')?.innerHTML;
+  const receipt = document.getElementById('printSection') as HTMLElement;
   if (!receipt) return;
+
+  // ✅ Fix image paths (VERY IMPORTANT)
+  const html = receipt.outerHTML.replaceAll(
+    'src="assets/',
+    `src="${window.location.origin}/assets/`
+  );
 
   const iframe = document.createElement('iframe');
   iframe.style.position = 'fixed';
@@ -408,99 +341,122 @@ printReceipt() {
 
   const doc = iframe.contentWindow!.document;
   doc.open();
+
   doc.write(`
     <html>
       <head>
-        <title>Receipt</title>
+        <title>Receipt Print</title>
 
         <style>
+
           @page {
-            size: legal;
-            margin: 0;
+            size: legal portrait;
+            margin: 2mm;
+          }
+
+          * {
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
           }
 
           body {
             margin: 0;
-            padding: 0;
-            font-family: Arial;
+            padding: 5px;
+            font-family: Arial, sans-serif;
+            font-size: 10px;
           }
 
-          /* 🔥 1/3 Legal Page */
-          .print-wrapper {
-            width: 100%;
-            height: 4.67in; /* 14 / 3 */
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
-
+          /* 🔥 MAIN RECEIPT (1/3 LEGAL PAGE) */
           .receipt-wrapper {
-            width: 7.5in; /* slightly smaller than 8.5 */
-            transform: scale(0.8); /* shrink to fit */
-            transform-origin: top center;
+            width: 100%;
+            height: 4.4in;   /* ✅ EXACT 1/3 LEGAL */
+            box-sizing: border-box;
             border: 2px solid black;
-            padding: 15px;
+            padding: 10px;
+
+            display: flex;
+            flex-direction: column;
           }
 
+          /* HEADER */
           .receipt-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
           }
 
+          /* IMAGE */
+          .temple-img {
+            width: 110px;
+            height: 100px;
+            border-radius: 8px;
+          }
+
+          /* TITLE */
+          .receipt-title {
+            text-align: center;
+            flex: 1;
+          }
+
           .receipt-title h3,
           .receipt-title p {
             margin: 2px 0;
           }
-          .receipt-title {
-            text-align: center;
-            padding-top: 5px;
+
+          /* INFO ROW */
+          .receipt-info {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            font-size: 10px;
           }
 
+          /* TABLE */
           .receipt-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-top: 30px;
           }
 
           .receipt-table td {
-            border: 1px solid #ccc;
-            padding: 6px;
-            font-size: 12px;
+            border: 1px solid #000;
+            padding: 5px;
+            font-size: 11px;
           }
 
-          .temple-img {
-            width: 130px;
-            border-radius: 8px;
-              height: 120px;
-              top: 10px;
-          }
-
+          /* FOOTER */
           .signature {
-            margin-top: 20px;
+            margin-top: auto;   /* 🔥 stick to bottom */
             text-align: right;
-            font-size: 12px;
+            font-size: 11px;
           }
-        </style>
 
+          /* HIDE BUTTONS */
+          button,
+          .no-print {
+            display: none !important;
+          }
+
+        </style>
       </head>
 
       <body>
-        <div class="print-wrapper">
-          ${receipt}
-        </div>
+        ${html}
       </body>
     </html>
   `);
 
   doc.close();
-  iframe.contentWindow!.focus();
-  iframe.contentWindow!.print();
 
-  setTimeout(() => document.body.removeChild(iframe), 1000);
+  iframe.onload = () => {
+    setTimeout(() => {
+      iframe.contentWindow!.focus();
+      iframe.contentWindow!.print();
+    }, 300);
+  };
+
+  setTimeout(() => document.body.removeChild(iframe), 1500);
 }
-
 
 convertToWords(amount: number): string {
   if (amount == null) return '';
@@ -570,5 +526,70 @@ openMyProfile(){
     this.showMyProfileModal = true;
 
   });
+}
+loadLastSyncDate() {
+  this.incomeService.lastSyncDate()
+    .subscribe({
+      next: (res) => {
+        this.lastSyncDate = res.lastSyncDate;
+      }
+    });
+}
+
+syncIncome() {
+
+  // 🔥 prevent double click
+  if (this.isSyncing) return;
+
+  this.isSyncing = true;
+  this.successMessage = '';
+  this.errorMessage = '';
+
+  this.incomeService.syncIncome()
+    .subscribe({
+      next: (res: any) => {
+
+        const today = new Date().toISOString().split('T')[0];
+
+        // ✅ handle backend message properly
+        if (typeof res === 'string') {
+          this.successMessage = res;
+        } else if (res?.message) {
+          this.successMessage = res.message;
+        } else {
+          this.successMessage = 'Income synced successfully';
+        }
+
+        // 🔥 update last sync date
+        this.lastSyncDate = today;
+
+// 🔥 SHOW sync info
+  this.showSyncInfo = true;
+
+  // 🔥 AUTO HIDE after 3 sec
+  setTimeout(() => {
+    this.showSyncInfo = false;
+  }, 3000);
+        // 🔥 reload table
+        this.loadIncomeList();
+
+        this.isSyncing = false;
+        this.autoHideMessage();
+      },
+
+      error: (err) => {
+
+        if (typeof err.error === 'string') {
+          this.errorMessage = err.error;
+        } else if (err.error?.message) {
+          this.errorMessage = err.error.message;
+        } else {
+          this.errorMessage = '❌ Sync failed. Please try again';
+        }
+
+        this.isSyncing = false;
+        this.autoHideMessage();
+      }
+    });
 }
 }

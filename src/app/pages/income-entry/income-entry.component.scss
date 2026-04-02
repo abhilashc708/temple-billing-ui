@@ -733,3 +733,38 @@ background: #6a1b9a;
   font-size:12px;
   margin-top:3px;
 }
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-sync {
+  background: #ff9800;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-sync:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.sync-loader {
+  margin: 10px 0;
+  padding: 10px;
+  background: #fff3cd;
+  border-left: 4px solid #ff9800;
+  font-weight: bold;
+}
+.sync-info {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 6px 10px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  text-align: center;
+}

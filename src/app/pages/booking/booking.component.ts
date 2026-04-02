@@ -79,6 +79,9 @@ birthStars = [
 
     receipts: Receipt[] = [];
     offerings: any[] = [];
+    filteredOfferings: any[][] = [];
+    activeDropdownIndex: number | null = null;
+    inputValues: string[] = [];
 
     page = 0;
     size = 8;
@@ -195,10 +198,97 @@ changePage(newPage: number) {
   this.loadBookings();
 }
 
+// loadOfferings() {
+//   this.offeringService.getOfferingsByStatus().subscribe(data => {
+//     this.offerings = data;
+//   });
+// }
 loadOfferings() {
   this.offeringService.getOfferingsByStatus().subscribe(data => {
     this.offerings = data;
+
+    // initialize per row
+    this.filteredOfferings = [];
+
+    for (let i = 0; i < 6; i++) {
+      this.filteredOfferings[i] = [...this.offerings];
+    }
   });
+}
+openDropdown(index: number) {
+  this.activeDropdownIndex = index;
+  this.filteredOfferings[index] = [...this.offerings];
+}
+// toggleDropdown(index: number, event: Event) {
+//   event.stopPropagation(); // 🔥 VERY IMPORTANT
+//
+//   if (this.activeDropdownIndex === index) {
+//     this.activeDropdownIndex = null; // close if same clicked again
+//   } else {
+//     this.activeDropdownIndex = index;
+//     this.filteredOfferings[index] = [...this.offerings];
+//   }
+// }
+// filterOfferings(event: any, index: number) {
+//   const value = event.target.value.toLowerCase();
+//
+//   this.filteredOfferings[index] = this.offerings.filter(o =>
+//     o.offeringEnglish.toLowerCase().includes(value) ||
+//     o.offeringMalayalam.includes(value)
+//   );
+// }
+selectOffering(offering: any, index: number, event: Event) {
+  event.stopPropagation();
+
+  const row = this.bookingsArray.at(index);
+
+  row.get('vazhipadu')?.setValue(offering.id);
+
+  // ✅ SET TEXT VALUE (IMPORTANT FIX)
+  this.inputValues[index] =
+    `${offering.offeringEnglish} - ${offering.offeringMalayalam}`;
+
+  this.onOfferingChange(index);
+
+  this.activeDropdownIndex = null;
+}
+// getOfferingName(id: any): string {
+//   const found = this.offerings.find(o => o.id == id);
+//   return found
+//     ? `${found.offeringEnglish} - ${found.offeringMalayalam}`
+//     : '';
+// }
+// @HostListener('document:click')
+// onDocumentClick() {
+//   this.activeDropdownIndex = null;
+// }
+onInputChange(event: any, index: number) {
+  const value = event.target.value;
+
+  this.inputValues[index] = value;
+
+  // 🔥 RESET selected value if user edits
+  const row = this.bookingsArray.at(index);
+  row.get('vazhipadu')?.setValue(null);
+
+  // 🔍 FILTER
+  this.filteredOfferings[index] = this.offerings.filter(o =>
+    o.offeringEnglish.toLowerCase().includes(value.toLowerCase()) ||
+    o.offeringMalayalam.includes(value)
+  );
+}
+onBlur(index: number) {
+  setTimeout(() => {
+    const row = this.bookingsArray.at(index);
+    const selectedId = row.get('vazhipadu')?.value;
+
+    // ❌ If user typed but didn't select → reset
+    if (!selectedId) {
+      this.inputValues[index] = '';
+    }
+
+    this.activeDropdownIndex = null;
+  }, 200);
 }
 onOfferingChange(index: number): void {
 
@@ -294,6 +384,11 @@ resetForm(): void {
   });
 
   this.initializeFixedRows();
+
+  // ✅ Clear UI states
+    this.inputValues = [];
+    this.filteredOfferings = [];
+    this.activeDropdownIndex = null;
 }
 initializeForms() {
   this.filterForm = this.fb.group({
@@ -443,21 +538,54 @@ handleEscape(event: KeyboardEvent) {
   }
 }
 
+// copyField(index: number, field: string, event: any) {
+//   const isChecked = event.target.checked;
+//   const bookings = this.bookingsArray;
+//
+//   if (index === 0) return; // safety check (first row has no previous)
+//
+//   const currentControl = bookings.at(index).get(field);
+//   const previousValue = bookings.at(index - 1).get(field)?.value;
+//
+//   if (isChecked) {
+//     currentControl?.setValue(previousValue);
+//     currentControl?.disable();   // optional but recommended
+//   } else {
+//     currentControl?.enable();
+//     currentControl?.setValue('');
+//   }
+// }
+
 copyField(index: number, field: string, event: any) {
-  const isChecked = event.target.checked;
-  const bookings = this.bookingsArray;
+  if (event.target.checked && index > 0) {
 
-  if (index === 0) return; // safety check (first row has no previous)
+    const currentRow = this.bookingsArray.at(index);
+    const prevRow = this.bookingsArray.at(index - 1);
 
-  const currentControl = bookings.at(index).get(field);
-  const previousValue = bookings.at(index - 1).get(field)?.value;
+    const prevValue = prevRow.get(field)?.value;
 
-  if (isChecked) {
-    currentControl?.setValue(previousValue);
-    currentControl?.disable();   // optional but recommended
+    // ✅ SET FORM VALUE (ID)
+    currentRow.get(field)?.setValue(prevValue);
+
+    // 🔥 IMPORTANT: SET DISPLAY TEXT ALSO
+    const selected = this.offerings.find(o => o.id == prevValue);
+
+    if (selected) {
+      this.inputValues[index] =
+        `${selected.offeringEnglish} - ${selected.offeringMalayalam}`;
+    }
+
+    // trigger amount logic
+    this.onOfferingChange(index);
+
   } else {
-    currentControl?.enable();
-    currentControl?.setValue('');
+    // ❌ if unchecked → clear everything
+    const currentRow = this.bookingsArray.at(index);
+
+    currentRow.get(field)?.setValue(null);
+    this.inputValues[index] = '';
+
+    this.onOfferingChange(index);
   }
 }
 
@@ -572,7 +700,7 @@ printReceipt() {
         <style>
           @page {
             size: legal portrait; /* ✅ FIX 1 */
-            margin: 5mm;
+            margin: 2mm;
           }
         * {
           -webkit-print-color-adjust: exact;
@@ -581,14 +709,14 @@ printReceipt() {
 
           body {
             margin: 0;
-            padding: 12px;
+            padding: 8px;
             font-family: Arial, sans-serif;
             font-size: 10px; /* ✅ FIX 2 */
           }
 
-        tbody tr {
-          height: calc(100% / 7);  /* 🔥 EXACTLY 7 ROWS */
-        }
+//         tbody tr {
+//           height: calc(100% / 7);  /* 🔥 EXACTLY 7 ROWS */
+//         }
 
           /* 🔥 MAIN RECEIPT SIZE (1/3 LEGAL PAGE) */
           .receipt-container {
@@ -600,10 +728,9 @@ printReceipt() {
             text-align: center;
             position: relative;
             page-break-after: always;
-             margin: 5px;
+             margin: 0;
             display: flex;              /* ✅ IMPORTANT */
             flex-direction: column;     /* ✅ IMPORTANT */
-              //overflow: hidden;
           }
 
           .receipt-container:last-child {
@@ -618,7 +745,7 @@ printReceipt() {
 
           /* IMAGES */
           .temple-img {
-            width: 60px; /* smaller */
+            width: 120px; /* medium */
             position: absolute;
             top: 5px;
           }
@@ -637,12 +764,12 @@ printReceipt() {
             width: 100%;
             height:auto;
             border-collapse: collapse;
-            margin-top: 5px;
+            margin-top: 2px;
           }
 
           th, td {
             border: 1px solid #000;
-            padding: 6px; /* reduced */
+            padding: 5px; /* reduced */
             font-size: 12px;
             text-align: center;
           }
@@ -660,10 +787,12 @@ printReceipt() {
               justify-content: space-between;
               align-items: flex-end;
               margin-top: auto;
+              // transform: translateY(-4px); /* fine tune */
+              padding-bottom: 0;   /* 🔥 clean spacing */
             }
 
             .upi {
-              font-size: 8px;
+              font-size: 9px;
               text-align: left;
             }
 
@@ -675,10 +804,11 @@ printReceipt() {
           .top-outside {
             display: flex;
             justify-content: space-between;
-            font-size: 10px;
-
+            font-size: 12px;
+             align-items: center;   /* 🔥 IMPORTANT */
             margin-bottom: 4px; /* space before border */
             padding: 0 2px;
+             line-height: 1;
           }
 
            .left-text {
@@ -707,8 +837,8 @@ printReceipt() {
           position: static;   /* 🔥 FIX: remove absolute */
         }
         .upi-icon-img {
-          width: 10px;
-          height: 10px;
+          width: 15px;
+          height: 15px;
           position: static;   /* 🔥 FIX: remove absolute */
         }
 
@@ -763,6 +893,7 @@ downloadReceipt() {
   onDocumentClick(event: MouseEvent) {
     if (!this.menuContainer1?.nativeElement.contains(event.target)) {
       this.activeMenu = null;
+       this.activeDropdownIndex = null;
     }
   }
 isAdmin(): boolean {
@@ -801,5 +932,4 @@ openMyProfile(){
 
   });
 }
-
 }

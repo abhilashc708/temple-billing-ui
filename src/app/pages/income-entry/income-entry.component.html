@@ -6,7 +6,7 @@
     <app-change-password></app-change-password>
     <div class="navbar">
       <div class="logo">
-        <h3>MANKURUSSI TEMPLES</h3>
+        <h3>MANKURUSSI TEMPLE</h3>
       </div>
       <ul class="menu" #menuContainer1>
 
@@ -122,7 +122,19 @@
 
     <div class="page-header">
       <h2>Manage Income</h2>
-      <button class="btn-new" (click)="openModal()">Add Income</button>
+      <div class="header-actions">
+        <!-- 🔥 LAST SYNC INFO -->
+        <div class="sync-info" *ngIf="showSyncInfo">
+          Last Sync: {{ lastSyncDate | date:'dd-MM-yyyy' }}
+        </div>
+        <button class="btn-sync"
+                (click)="syncIncome()"
+                [disabled]="isSyncing">
+          {{ isSyncing ? 'Syncing...' : 'Sync Income' }}
+        </button>
+
+        <button class="btn-new" (click)="openModal()">Add Income</button>
+      </div>
     </div>
 
     <!-- MESSAGE HERE -->
@@ -133,6 +145,10 @@
 
     <div *ngIf="errorMessage" class="error-alert">
       ⚠ {{errorMessage}}
+    </div>
+
+    <div *ngIf="isSyncing" class="sync-loader">
+      🔄 Sync in progress... Please wait
     </div>
 
 
@@ -186,7 +202,7 @@
           <td>{{ item.receiptNo }}</td>
           <td>{{ item.receiptDate }}</td>
           <td>{{ item.incomeType }}</td>
-          <td>Rs: {{ item.amount }}.00</td>
+          <td>₹ {{ item.amount }}.00</td>
           <td>{{ item.remarks }}</td>
 
           <td>
@@ -283,9 +299,7 @@
           <select formControlName="modeOfIncome">
             <option value="">Select</option>
             <option value="CASH">Cash</option>
-            <option value="CHEQUE">Cheque</option>
             <option value="UPI">UPI</option>
-            <option value="BANK">Bank Transfer</option>
           </select>
           <small class="error"
                  *ngIf="incomeForm.get('modeOfIncome')?.touched &&
@@ -356,7 +370,7 @@
 
           <tr>
             <td><b>Amount</b></td>
-            <td>Rs. {{ selectedIncome?.amount }}.00</td>
+            <td>₹ {{ selectedIncome?.amount }}.00</td>
           </tr>
 
           <tr>

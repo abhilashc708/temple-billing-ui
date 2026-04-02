@@ -6,7 +6,7 @@
     <app-change-password></app-change-password>
     <div class="navbar">
       <div class="logo">
-        <h3>MANKURUSSI TEMPLES</h3>
+        <h3>MANKURUSSI TEMPLE</h3>
       </div>
       <ul class="menu" #menuContainer1>
 
@@ -133,13 +133,27 @@
       </div>
 
       <div class="form-group">
-        <label>Expense Type </label>
-        <select formControlName="expenseTypes">
-          <option value="">Select</option>
-          <option *ngFor="let f of financeList"
-                  [value]="f.title">{{ f.title }}
-          </option>
-        </select>
+        <label>Expense Type</label>
+
+        <div class="multi-checkbox-box">
+          <label class="checkbox-item">
+            <input
+              type="checkbox"
+              [checked]="isAllSelected"
+              (change)="toggleAll($event)"
+            />
+            <b>Select All</b>
+          </label>
+
+          <label *ngFor="let f of financeList" class="checkbox-item">
+            <input
+              type="checkbox"
+              [value]="f.title"
+              [checked]="selectedExpenseTypes.includes(f.title)"  (change)="onExpenseTypeChange($event)"
+            />
+            {{ f.title }}
+          </label>
+        </div>
       </div>
     </form>
 
@@ -193,7 +207,7 @@
 
         <tr class="grand-total">
           <td colspan="7">Grand Total</td>
-          <td>Rs:{{getGrandTotal()}}.00</td>
+          <td>₹ {{getGrandTotal()}}.00</td>
         </tr>
 
         </tbody>

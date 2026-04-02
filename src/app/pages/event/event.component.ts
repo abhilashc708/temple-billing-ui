@@ -40,7 +40,7 @@ export class EventComponent {
 
 
   page = 0;
-  size = 5;
+  size = 8;
   totalPages = 0;
   totalElements = 0;
 

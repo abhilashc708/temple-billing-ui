@@ -49,4 +49,11 @@ searchIncomes(params: any, page: number, size: number) {
   searchIncomeReport(searchData: any): Observable<any[]> {
     return this.http.post<any[]>(`${this.baseUrl}/report/search`, searchData);
   }
+
+syncIncome() {
+  return this.http.post(`${this.baseUrl}/sync-income`, {});
+}
+lastSyncDate() {
+  return this.http.get<any>(`${this.baseUrl}/last-sync-date`);
+}
 }

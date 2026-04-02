@@ -6,7 +6,7 @@
     <app-change-password></app-change-password>
     <div class="navbar">
       <div class="logo">
-        <h3>MANKURUSSI TEMPLES</h3>
+        <h3>MANKURUSSI TEMPLE</h3>
       </div>
       <ul class="menu" #menuContainer1>
 
@@ -132,15 +132,39 @@
         <input type="date" formControlName="receiptTo">
       </div>
 
+<!--      <div class="form-group">-->
+<!--        <label>Income Type </label>-->
+<!--        <select formControlName="incomeTypes">-->
+<!--          <option value="">Select</option>-->
+<!--          <option *ngFor="let f of financeList"-->
+<!--                  [value]="f.title">{{ f.title }}-->
+<!--          </option>-->
+<!--        </select>-->
+<!--      </div>-->
       <div class="form-group">
-        <label>Income Type </label>
-        <select formControlName="incomeTypes">
-          <option value="">Select</option>
-          <option *ngFor="let f of financeList"
-                  [value]="f.title">{{ f.title }}
-          </option>
-        </select>
+        <label>Income Type</label>
+
+        <div class="multi-checkbox-box">
+          <label class="checkbox-item">
+            <input
+              type="checkbox"
+              [checked]="isAllSelected"
+              (change)="toggleAll($event)"
+            />
+            <b>Select All</b>
+          </label>
+
+          <label *ngFor="let f of financeList" class="checkbox-item">
+            <input
+              type="checkbox"
+              [value]="f.title"
+              [checked]="selectedIncomeTypes.includes(f.title)"  (change)="onIncomeTypeChange($event)"
+            />
+            {{ f.title }}
+          </label>
+        </div>
       </div>
+
     </form>
 
     <!-- BUTTONS -->
@@ -183,13 +207,13 @@
           <td>{{item.incomeType}}</td>
           <td>{{item.remarks}}</td>
           <td>{{item.modeOfIncome}}</td>
-          <td>{{item.amount}}</td>
+          <td>₹ {{item.amount}}</td>
 
         </tr>
 
         <tr class="grand-total">
           <td colspan="5">Grand Total</td>
-          <td>Rs:{{getGrandTotal()}}.00</td>
+          <td>₹ {{getGrandTotal()}}.00</td>
         </tr>
 
         </tbody>

@@ -110,7 +110,7 @@ getReport(){
       .map(([k,v]) => [k, v === '' ? null : v])
   );
   this.bookingService.searchBookings(payload).subscribe((res:any)=>{
-    this.reportList = res.content;
+    this.reportList = res;
   });
 
 }

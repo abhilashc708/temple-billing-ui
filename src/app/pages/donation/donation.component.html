@@ -5,7 +5,7 @@
     <app-change-password></app-change-password>
     <div class="navbar">
       <div class="logo">
-        <h3>MANKURUSSI TEMPLES</h3>
+        <h3>MANKURUSSI TEMPLE</h3>
       </div>
 
       <ul class="menu">
@@ -155,7 +155,6 @@
           <option value="">Payment Method</option>
           <option value="CASH">Cash</option>
           <option value="UPI">UPI</option>
-          <option value="ONLINE">Online</option>
         </select>
         <input #startDateInput type="text"
                placeholder="Start Date"
@@ -199,7 +198,7 @@
           <td>{{ d.devoteeName }}</td>
           <td>{{ d.address }}</td>
           <td>{{ d.phoneNo }}</td>
-          <td>Rs:{{ d.amount }}.00</td>
+          <td>₹ {{ d.amount }}.00</td>
           <td>{{ d.donateFor }}</td>
           <td>
              <span
@@ -281,7 +280,6 @@
             <option value="">Select</option>
             <option value="CASH">Cash</option>
             <option value="UPI">UPI</option>
-            <option value="CARD">Card</option>
           </select>
           <small class="error"
                  *ngIf="donationForm.get('paymentType')?.touched &&
@@ -374,97 +372,195 @@
 </div>
 
 <!-- DONATION RECEIPT POPUP -->
-<div class="receipt-modal" *ngIf="showPrintModal">
+<div *ngIf="showReceiptPopup" class="donation-popup-overlay">
+  <div class="donation-popup-container">
 
-  <div class="receipt-wrapper" id="printWrapper">
-
-    <!-- TOP BUTTONS -->
-
-    <div class="receipt-actions no-print">
-
+    <!-- HEADER -->
+    <div class="donation-popup-header no-print">
       <div class="button-group">
         <button class="btn print" (click)="printReceipt()">🖨 Print</button>
         <button class="btn back" (click)="closePrintPopup()">⬅ BACK</button>
         <button class="btn download" (click)="downloadPDF()">⬇ DOWNLOAD</button>
       </div>
-
-      <span class="print-close-btn" (click)="closePrintPopup()">✕</span>
-
+      <span class="donation-close-btn" (click)="closePrintPopup()">✖</span>
     </div>
 
-    <!-- 🔥 MOVE INSIDE -->
-    <div class="top-outside">
-      <div class="left-text">
-        Vazhipadu Booking: https://www.keralatemplesbooking.com/booknow/?temple=258
-      </div>
+    <!-- BODY -->
+    <div class="donation-popup-body">
 
-      <div class="right-text">
-        <img src="assets/instagram.png" class="upi-icon-img">
-        <span>mankurussi_bhagavathi_temple</span>
-      </div>
-    </div>
-    <!-- RECEIPT CONTENT -->
-    <div id="receiptSection" class="receipt-container">
+      <div id="receiptSection" class="donation-template">
 
-      <!-- HEADER -->
-      <div class="receipt-header">
-        <img src="assets/temple-left.jpeg" class="temple-img left-img">
+        <!-- HEADER -->
+        <div class="donation-header-row">
+          <img src="assets/temple-left.jpeg" class="donation-logo"/>
 
-        <div class="receipt-title">
-          <h2> Mankurussi Bhagavathi Temple</h2>
-          <p>Karakurussi,Palakkad,Kerala -678595</p>
-<!--          <p>Phone: 9072017303, Email: mankurussibhagavathitemple&#64;gmail.com</p>-->
-          <p class="contact-line">
-            <img src="assets/phone-call.png" class="icon-img">
-            <span>9072017303</span>,
-            <img src="assets/email.png" class="icon-img">
-            <span>mankurussibhagavathitemple&#64;gmail.com</span>
-          </p>
-          <div class="receipt-badge">സംഭാവന രസീത്</div>
+          <div class="donation-header-text">
+            <h2>Mankurussi Bhagavathi Temple</h2>
+            <p>Karakurussi, Palakkad, Kerala - 678595</p>
+            <p class="contact-line">
+              <img src="assets/phone-call.png" class="icon-img">
+              <span>9072017303</span>,
+              <img src="assets/email.png" class="icon-img">
+              <span>mankurussibhagavathitemple&#64;gmail.com</span>
+            </p>
+            <p> <b>Online Vazhipadu Booking: https://www.keralatemplesbooking.com/booknow/?temple=258</b></p>
+            <p><b>UPI ID: themankuruss4645&#64;dlb</b></p>
+          </div>
         </div>
 
-        <img src="assets/temple-right.jpeg" class="temple-img right-img">
-      </div>
+        <!-- TITLE -->
+        <div class="donation-title-row">
+          <h3 class="donation-title">DONATION RECEIPT</h3>
 
-      <!-- TOP INFO -->
-      <div class="receipt-top">
-        <div><b>RECEIPT NO:</b> {{selectedDonation?.receiptBookNo}}-{{selectedDonation?.receiptNo}} / {{selectedDonation?.paymentType}}</div>
-        <div><b>DATE:</b> {{selectedDonation?.donationDate | date:'dd/MM/yyyy' }}</div>
-      </div>
-
-      <!-- BODY CONTENT -->
-      <div class="receipt-body">
-
-        <p class="donation-text">
-          ശ്രീ/ശ്രീമതി
-          <b>{{selectedDonation?.devoteeName}}</b>
-          ({{selectedDonation?.address}})
-          പക്കൽനിന്നും
-          <b>{{selectedDonation?.amount}} /-</b>
-          രൂപ
-          <b>{{selectedDonation?.donateFor}}</b>
-          ആവശ്യത്തിലേക്കായി നന്ദിപൂർവം ലഭിച്ചതായി സാക്ഷ്യപ്പെടുത്തുന്നു.
-        </p>
-        <div class="amount-wrapper">
-        <div class="amount-box">
-          {{selectedDonation?.amount}} /-
-        </div>
-        </div>
-        <p class="donation-text">ഇതൊരു കമ്പ്യൂട്ടർ രസീത് ആണ്, ഇതിനു സ്റ്റമ്പോ/ഒപ്പോ ആവശ്യമില്ല </p>
-      </div>
-      <div class="bottom-section">
-        <div class="upi">
-          <img src="assets/upi.png" class="upi-icon-img">
-          <span>themankuruss4645&#64;dlb</span>
+<!--          <div class="donation-meta">-->
+<!--            <p><b>No:</b> test</p>-->
+<!--            <p><b>Date:</b> test</p>-->
+<!--          </div>-->
+          <div class="donation-meta">
+            <table class="meta-table">
+              <tr>
+                <td class="meta-label">Receipt No</td>
+                <td class="meta-value">{{selectedDonation?.receiptBookNo}}-{{selectedDonation?.receiptNo}}</td>
+              </tr>
+              <tr>
+                <td class="meta-label">Receipt Date</td>
+                <td class="meta-value">{{selectedDonation?.donationDate | date:'dd/MM/yyyy' }}</td>
+              </tr>
+            </table>
+          </div>
         </div>
 
-        <div class="signature">
-          Stamp / Signature
+        <!-- TABLE -->
+        <table class="donation-table">
+          <tr>
+            <td class="label">Received from</td>
+            <td>
+              {{ selectedDonation?.devoteeName }}
+              <span *ngIf="selectedDonation?.address">
+      ({{ selectedDonation?.address }})
+    </span>
+            </td>
+          </tr>
+          <tr><td class="label">Amount</td><td>₹ {{selectedDonation?.amount}}</td></tr>
+          <tr>
+            <td class="label">Amount in words</td>
+            <td>{{ convertToWords(selectedDonation.amount) }}</td>
+          </tr>
+          <tr>
+            <td class="label">Payment Method</td>
+            <td>
+              <span *ngIf="selectedDonation?.paymentType === 'CASH'">☑</span>
+              <span *ngIf="selectedDonation?.paymentType !== 'CASH'">☐</span>
+              Cash &nbsp;&nbsp;
+
+              <span *ngIf="selectedDonation?.paymentType === 'UPI'">☑</span>
+              <span *ngIf="selectedDonation?.paymentType !== 'UPI'">☐</span>
+              UPI
+            </td>
+          </tr>
+          <tr><td class="label">Purpose</td><td>{{selectedDonation?.donateFor}}</td></tr>
+        </table>
+
+        <!-- FOOTER -->
+        <div class="donation-footer">
+          <span>Thank you for your generosity. We appreciate your support</span>
+          <span>Authorized Signature</span>
         </div>
+
       </div>
     </div>
   </div>
 </div>
+<!--<div class="receipt-modal" *ngIf="showPrintModal">-->
+
+<!--  <div class="receipt-wrapper" id="printWrapper">-->
+
+<!--    &lt;!&ndash; TOP BUTTONS &ndash;&gt;-->
+
+<!--    <div class="receipt-actions no-print">-->
+
+<!--      <div class="button-group">-->
+<!--        <button class="btn print" (click)="printReceipt()">🖨 Print</button>-->
+<!--        <button class="btn back" (click)="closePrintPopup()">⬅ BACK</button>-->
+<!--        <button class="btn download" (click)="downloadPDF()">⬇ DOWNLOAD</button>-->
+<!--      </div>-->
+
+<!--      <span class="print-close-btn" (click)="closePrintPopup()">✕</span>-->
+
+<!--    </div>-->
+
+<!--    &lt;!&ndash; 🔥 MOVE INSIDE &ndash;&gt;-->
+<!--    <div class="top-outside">-->
+<!--      <div class="left-text">-->
+<!--       <b>Online Vazhipadu Booking: https://www.keralatemplesbooking.com/booknow/?temple=258</b>-->
+<!--      </div>-->
+
+<!--      <div class="right-text">-->
+<!--        <img src="assets/instagram.png" class="upi-icon-img">-->
+<!--        <b> mankurussi_bhagavathi_temple</b>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; RECEIPT CONTENT &ndash;&gt;-->
+<!--    <div id="receiptSection" class="receipt-container">-->
+
+<!--      &lt;!&ndash; HEADER &ndash;&gt;-->
+<!--      <div class="receipt-header">-->
+<!--        <img src="assets/temple-left.jpeg" class="temple-img left-img">-->
+
+<!--        <div class="receipt-title">-->
+<!--          <h2> Mankurussi Bhagavathi Temple</h2>-->
+<!--          <p>Karakurussi,Palakkad,Kerala -678595</p>-->
+<!--&lt;!&ndash;          <p>Phone: 9072017303, Email: mankurussibhagavathitemple&#64;gmail.com</p>&ndash;&gt;-->
+<!--          <p class="contact-line">-->
+<!--            <img src="assets/phone-call.png" class="icon-img">-->
+<!--            <span>9072017303</span>,-->
+<!--            <img src="assets/email.png" class="icon-img">-->
+<!--            <span>mankurussibhagavathitemple&#64;gmail.com</span>-->
+<!--          </p>-->
+<!--          <div class="receipt-badge">സംഭാവന രസീത്</div>-->
+<!--        </div>-->
+
+<!--        <img src="assets/temple-right.jpeg" class="temple-img right-img">-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; TOP INFO &ndash;&gt;-->
+<!--      <div class="receipt-top">-->
+<!--        <div><b>RECEIPT NO:</b> {{selectedDonation?.receiptBookNo}}-{{selectedDonation?.receiptNo}} / {{selectedDonation?.paymentType}}</div>-->
+<!--        <div><b>DATE:</b> {{selectedDonation?.donationDate | date:'dd/MM/yyyy' }}</div>-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; BODY CONTENT &ndash;&gt;-->
+<!--      <div class="receipt-body">-->
+
+<!--        <p class="donation-text">-->
+<!--          ശ്രീ/ശ്രീമതി-->
+<!--          <b>{{selectedDonation?.devoteeName}}</b>-->
+<!--          ({{selectedDonation?.address}})-->
+<!--          പക്കൽനിന്നും-->
+<!--          <b>{{selectedDonation?.amount}} /-</b>-->
+<!--          രൂപ-->
+<!--          <b>{{selectedDonation?.donateFor}}</b>-->
+<!--          ആവശ്യത്തിലേക്കായി നന്ദിപൂർവം ലഭിച്ചതായി സാക്ഷ്യപ്പെടുത്തുന്നു.-->
+<!--        </p>-->
+<!--        <div class="amount-wrapper">-->
+<!--        <div class="amount-box">-->
+<!--          {{selectedDonation?.amount}} /- -->
+<!--        </div>-->
+<!--        </div>-->
+<!--        <p class="donation-text">ഇതൊരു കമ്പ്യൂട്ടർ രസീത് ആണ്, ഇതിനു സ്റ്റമ്പോ/ഒപ്പോ ആവശ്യമില്ല </p>-->
+<!--      </div>-->
+<!--      <div class="bottom-section">-->
+<!--        <div class="upi">-->
+<!--          <span><b>UPI ID: themankuruss4645&#64;dlb</b></span>-->
+<!--        </div>-->
+
+<!--        <div class="signature">-->
+<!--          Stamp / Signature-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
 
 <!-- MY PROFILE MODAL -->
 

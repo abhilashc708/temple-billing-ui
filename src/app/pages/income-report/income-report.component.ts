@@ -24,6 +24,7 @@ export class IncomeReportComponent {
    @ViewChild(ChangePasswordComponent)
    changePasswordPopup!: ChangePasswordComponent;
 
+isAllSelected: boolean = false;
   profile: any = {};
        showMyProfileModal = false;
   showProfile = false;
@@ -33,6 +34,7 @@ export class IncomeReportComponent {
 searchForm!: FormGroup;
   reportList: any[] = [];
   financeList: any[] = [];
+  selectedIncomeTypes: string[] = [];
    search: any = {
         receiptFrom: [''],
         receiptTo: ['']
@@ -69,16 +71,18 @@ searchForm!: FormGroup;
       }
 
 
-      getReport(){
-        const payload = Object.fromEntries(
-          Object.entries(this.searchForm.value)
-            .map(([k,v]) => [k, v === '' ? null : v])
-        );
-        this.incomeEntryService.searchIncomeReport(payload).subscribe((res:any)=>{
-          this.reportList = res.content;
-        });
+    getReport() {
+      const payload = {
+        receiptFrom: this.searchForm.value.receiptFrom,
+        receiptTo: this.searchForm.value.receiptTo,
+        incomeTypes: this.selectedIncomeTypes   // ✅ ARRAY
+      };
 
-      }
+      this.incomeEntryService.searchIncomeReport(payload).subscribe((res:any) => {
+       // this.reportList = res.content;
+        this.reportList = res;
+      });
+    }
 
      loadFinanceList() {
              this.financeService.getAllByType('INCOME',this.page, this.size, 'createdDate')
@@ -91,6 +95,8 @@ searchForm!: FormGroup;
     clearForm(){
         this.searchForm.reset();
         this.reportList=[];
+        this.selectedIncomeTypes=[];
+          this.isAllSelected = false;   // 🔥 IMPORTANT
       }
 
       refreshPage(){
@@ -225,5 +231,26 @@ openMyProfile(){
     this.showMyProfileModal = true;
 
   });
+}
+onIncomeTypeChange(event: any) {
+  const value = event.target.value;
+
+  if (event.target.checked) {
+    this.selectedIncomeTypes.push(value);
+  } else {
+    this.selectedIncomeTypes = this.selectedIncomeTypes.filter(v => v !== value);
+  }
+
+  // 🔥 AUTO UPDATE SELECT ALL STATE
+  this.isAllSelected = this.selectedIncomeTypes.length === this.financeList.length;
+}
+toggleAll(event: any) {
+  this.isAllSelected = event.target.checked;
+
+  if (this.isAllSelected) {
+    this.selectedIncomeTypes = this.financeList.map(f => f.title);
+  } else {
+    this.selectedIncomeTypes = [];
+  }
 }
 }

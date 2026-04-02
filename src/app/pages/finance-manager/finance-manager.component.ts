@@ -39,7 +39,7 @@ showProfile = false;
        showMyProfileModal = false;
 
   page = 0;
-  size = 5;
+  size = 8;
   totalPages = 0;
   totalElements = 0;
 
@@ -77,7 +77,7 @@ initializeFilterForm() {
   initializeForm() {
     this.financeForm = this.fb.group({
       title: ['', Validators.required],
-      titleMalayalam: ['', Validators.required],
+    //  titleMalayalam: ['', Validators.required],
       transactionType: ['', Validators.required]
     });
   }
@@ -141,7 +141,7 @@ loadFinanceList() {
 
     this.financeForm.patchValue({
       title: item.title,
-      titleMalayalam: item.titleMalayalam,
+      //titleMalayalam: item.titleMalayalam,
       transactionType: item.transactionType
     });
   }
@@ -271,33 +271,33 @@ deleteConfirmed(){
     this.loadFinanceList();
   }
 
-autoTranslate() {
-  this.financeForm.get('title')?.valueChanges
-    .subscribe((value: string) => {
-      if (!value) {
-        this.financeForm.get('titleMalayalam')?.setValue('');
-        return;
-      }
-      this.translateToMalayalam(value);
-    });
-}
+// autoTranslate() {
+//   this.financeForm.get('title')?.valueChanges
+//     .subscribe((value: string) => {
+//       if (!value) {
+//         this.financeForm.get('titleMalayalam')?.setValue('');
+//         return;
+//       }
+//       this.translateToMalayalam(value);
+//     });
+// }
 
-translateToMalayalam(text: string) {
-
-  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ml&dt=t&q=${text}`;
-
-  fetch(url)
-    .then(res => res.json())
-    .then(data => {
-
-      const translatedText = data[0][0][0];
-
-      this.financeForm.get('titleMalayalam')
-        ?.setValue(translatedText, { emitEvent: false });
-
-    })
-    .catch(err => console.error(err));
-}
+// translateToMalayalam(text: string) {
+//
+//   const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ml&dt=t&q=${text}`;
+//
+//   fetch(url)
+//     .then(res => res.json())
+//     .then(data => {
+//
+//       const translatedText = data[0][0][0];
+//
+//       this.financeForm.get('titleMalayalam')
+//         ?.setValue(translatedText, { emitEvent: false });
+//
+//     })
+//     .catch(err => console.error(err));
+// }
 isAdmin(): boolean {
   return this.role === 'ADMIN';
 }

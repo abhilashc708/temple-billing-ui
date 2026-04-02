@@ -6,7 +6,7 @@
     <app-change-password></app-change-password>
     <div class="navbar">
       <div class="logo">
-        <h3>MANKURUSSI TEMPLES</h3>
+        <h3>MANKURUSSI TEMPLE</h3>
       </div>
       <ul class="menu" #menuContainer1>
 
@@ -138,7 +138,6 @@
           <option value="">Select</option>
           <option value="CASH">CASH</option>
           <option value="UPI">UPI</option>
-          <option value="CHEQUE">CHEQUE</option>
         </select>
       </div>
 
@@ -198,6 +197,7 @@
           <th>Address</th>
           <th>Phone</th>
           <th>Date</th>
+          <th>Remarks</th>
           <th>Method</th>
           <th>Amount</th>
         </tr>
@@ -214,13 +214,14 @@
           <td>{{item.address}}</td>
           <td>{{item.phoneNo}}</td>
           <td>{{item.createdDate | date:'dd-MM-yyyy'}}</td>
+          <td>Donate For {{item.donateFor}}</td>
           <td>{{item.paymentType}}</td>
-          <td>{{item.amount}}</td>
+          <td>₹ {{item.amount}}</td>
 
         </tr>
 
         <tr class="grand-total">
-          <td colspan="8">Grand Total</td>
+          <td colspan="9">Grand Total</td>
           <td>Rs:{{getGrandTotal()}}.00</td>
         </tr>
 
