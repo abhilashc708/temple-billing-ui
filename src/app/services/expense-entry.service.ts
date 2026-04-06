@@ -49,4 +49,8 @@ searchExpense(params: any, page: number, size: number) {
  searchExpenseReport(searchData: any): Observable<any[]> {
     return this.http.post<any[]>(`${this.baseUrl}/report/search`, searchData);
   }
+
+getSummaryReport(data: any) {
+  return this.http.post<any[]>(`${this.baseUrl}/report/summary`, data);
+}
 }

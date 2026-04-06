@@ -183,11 +183,14 @@ form {
 /* PAGE BACKGROUND */
 .login-page {
   height: 100vh;
-  background: url("/assets/login-page.jpeg") no-repeat center center/cover;
+ // background: url("/assets/mankurussi-temple-f.JPG") no-repeat center center/cover;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
+  background-size: cover;
+    background-position: center;
+    transition: background-image 1s ease-in-out; /* 🔥 smooth fade */
 }
 
 /* DARK OVERLAY */

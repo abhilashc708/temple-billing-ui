@@ -524,7 +524,7 @@ printReceipt() {
 
           @page {
             size: legal portrait;
-            margin: 2mm;
+            margin: 0;
           }
 
           * {
@@ -534,7 +534,7 @@ printReceipt() {
 
           body {
             margin: 0;
-            padding: 5px;
+            padding: 4px;
             font-family: Arial, sans-serif;
             font-size: 10px;
           }
@@ -542,7 +542,7 @@ printReceipt() {
           /* 🔥 MAIN RECEIPT (1/3 LEGAL PAGE) */
           .receipt-wrapper {
             width: 100%;
-            height: 4.4in;   /* ✅ EXACT 1/3 LEGAL */
+           height: 4.66in;
             box-sizing: border-box;
             border: 2px solid black;
             padding: 10px;

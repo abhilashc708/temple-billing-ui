@@ -67,6 +67,7 @@
             <li routerLink="/donation-report" (click)="$event.stopPropagation()">Donation</li>
             <li routerLink="/income-report" (click)="$event.stopPropagation()">Income</li>
             <li routerLink="/expense-report" (click)="$event.stopPropagation()">Expense</li>
+            <li routerLink="/income-summary" (click)="$event.stopPropagation()">Income/Expense Summary Report</li>
           </ul>
         </li>
 
@@ -351,13 +352,15 @@
                    (input)="onInputChange($event, i)"
                    (focus)="openDropdown(i)"
                    (blur)="onBlur(i)"
+                   (keydown)="onKeyDown($event, i)"
                    placeholder="Search Vazhipadu">
 
             <!-- DROPDOWN LIST -->
             <div class="dropdown-list" *ngIf="activeDropdownIndex === i">
               <div class="dropdown-item"
-                   *ngFor="let offering of filteredOfferings[i]"
-                   (click)="selectOffering(offering, i, $event)">
+                   *ngFor="let offering of filteredOfferings[i]; let idx = index"
+                   [class.active]="highlightedIndex[i] === idx"
+                   (mousedown)="selectOffering(offering, i, $event)">
                 {{ offering.offeringEnglish }} - {{ offering.offeringMalayalam }}
               </div>
             </div>
@@ -571,8 +574,8 @@
     <div class="receipt-container" *ngIf="selectedReceipt">
 
       <!-- IMAGES -->
-      <img src="assets/temple-left.jpeg" class="temple-img left-img">
-      <img src="assets/temple-right.jpeg" class="temple-img right-img">
+      <img src="assets/mankurussi-temple-l.JPG" class="temple-img left-img">
+      <img src="assets/mankurussi-temple-f.JPG" class="temple-img right-img">
 
       <!-- HEADER TEXT -->
       <div class="temple-details">

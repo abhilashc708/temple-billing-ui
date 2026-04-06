@@ -20,11 +20,25 @@ export class LoginComponent {
   password = '';
  errorMessage: string = '';   // ✅ ADD THIS LINE
  isLoggingIn = false;
-  http= inject(HttpClient);
 
+  backgroundImages: string[] = [
+    'assets/mankurussi-temple-f.JPG',
+    'assets/mankurussi-temple-l.JPG',
+    'assets/mankurussi-temple-r.JPG'
+  ];
+currentBgIndex = 0;
+  http= inject(HttpClient);
 constructor(private authService: AuthService, private router:Router){
   }
-
+ngOnInit() {
+  this.startBackgroundSlider();
+}
+startBackgroundSlider() {
+  setInterval(() => {
+    this.currentBgIndex =
+      (this.currentBgIndex + 1) % this.backgroundImages.length;
+  }, 4000); // 🔥 change every 4 sec
+}
   onLogin() {
     if (this.isLoggingIn) return; // 🚫 prevent multiple clicks
     this.isLoggingIn = true;

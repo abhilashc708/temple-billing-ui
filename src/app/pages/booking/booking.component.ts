@@ -35,6 +35,19 @@ selectedReceipt: any;
   profile: any = {};
      showMyProfileModal = false;
      isSubmitting = false;
+     highlightedIndex: number[] = []; // track per row
+     selectedReceiptId: number | null = null;
+
+         receipts: Receipt[] = [];
+         offerings: any[] = [];
+         filteredOfferings: any[][] = [];
+         activeDropdownIndex: number | null = null;
+         inputValues: string[] = [];
+
+         page = 0;
+         size = 8;
+         totalElements = 0;
+         totalPages = 0;
 
  @ViewChild(UpdateProfileComponent)
    updateProfilePopup!: UpdateProfileComponent;
@@ -75,18 +88,6 @@ birthStars = [
   { value: 'uthruttathi', label: 'Uthruttathi - ഉത്രട്ടാതി' },
   { value: 'revathi', label: 'Revathi - രേവതി' }
 ];
-    selectedReceiptId: number | null = null;
-
-    receipts: Receipt[] = [];
-    offerings: any[] = [];
-    filteredOfferings: any[][] = [];
-    activeDropdownIndex: number | null = null;
-    inputValues: string[] = [];
-
-    page = 0;
-    size = 8;
-    totalElements = 0;
-    totalPages = 0;
 
     constructor(private bookingService: BookingService,
        private offeringService: OfferingService,
@@ -218,6 +219,7 @@ loadOfferings() {
 openDropdown(index: number) {
   this.activeDropdownIndex = index;
   this.filteredOfferings[index] = [...this.offerings];
+  this.highlightedIndex[index] = 0;
 }
 // toggleDropdown(index: number, event: Event) {
 //   event.stopPropagation(); // 🔥 VERY IMPORTANT
@@ -700,7 +702,7 @@ printReceipt() {
         <style>
           @page {
             size: legal portrait; /* ✅ FIX 1 */
-            margin: 2mm;
+            margin: 0;
           }
         * {
           -webkit-print-color-adjust: exact;
@@ -708,20 +710,18 @@ printReceipt() {
         }
 
           body {
-            margin: 0;
-            padding: 8px;
+             margin: 0;
+             padding: 4px;
             font-family: Arial, sans-serif;
             font-size: 10px; /* ✅ FIX 2 */
           }
 
-//         tbody tr {
-//           height: calc(100% / 7);  /* 🔥 EXACTLY 7 ROWS */
-//         }
-
           /* 🔥 MAIN RECEIPT SIZE (1/3 LEGAL PAGE) */
           .receipt-container {
-            width: 100%;
-            height: 4.4in; /* ✅ FIX 3 (CRITICAL) */
+             width: 100%;
+             //height: 4.4in; /* ✅ FIX 3 (CRITICAL) */
+              //width: 100vw;     /* 🔥 force full width */
+              height: 4.66in;   /* adjust for exact 1/3 legal */
             box-sizing: border-box;
              border: 2px solid black !important;
             padding: 6px;
@@ -745,7 +745,7 @@ printReceipt() {
 
           /* IMAGES */
           .temple-img {
-            width: 120px; /* medium */
+            width: 100px; /* medium */
             position: absolute;
             top: 5px;
           }
@@ -931,5 +931,41 @@ openMyProfile(){
     this.showMyProfileModal = true;
 
   });
+}
+onKeyDown(event: KeyboardEvent, i: number) {
+  const list = this.filteredOfferings[i] || [];
+
+  if (!list.length) return;
+
+  // ⬇️ DOWN
+  if (event.key === 'ArrowDown') {
+    event.preventDefault();
+    const currentIndex = this.highlightedIndex[i] ?? -1;
+    this.highlightedIndex[i] =
+      (currentIndex + 1) % list.length;
+  }
+
+  // ⬆️ UP
+  else if (event.key === 'ArrowUp') {
+    event.preventDefault();
+    const currentIndex = this.highlightedIndex[i] ?? 0;
+    this.highlightedIndex[i] =
+      (currentIndex - 1 + list.length) % list.length;
+  }
+
+  // ✅ ENTER
+  else if (event.key === 'Enter') {
+    event.preventDefault();
+
+    const selected = list[this.highlightedIndex[i]];
+    if (selected) {
+      this.selectOffering(selected, i, event);
+    }
+  }
+
+  // ❌ ESC
+  else if (event.key === 'Escape') {
+    this.activeDropdownIndex = null;
+  }
 }
 }

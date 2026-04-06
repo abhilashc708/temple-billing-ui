@@ -56,4 +56,7 @@ syncIncome() {
 lastSyncDate() {
   return this.http.get<any>(`${this.baseUrl}/last-sync-date`);
 }
+getSummaryReport(data: any) {
+  return this.http.post<any[]>(`${this.baseUrl}/report/summary`,data);
+}
 }

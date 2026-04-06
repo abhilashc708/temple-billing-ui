@@ -16,7 +16,7 @@ import { DonationReportComponent } from './pages/donation-report/donation-report
 import { IncomeReportComponent } from './pages/income-report/income-report.component';
 import { ExpenseReportComponent } from './pages/expense-report/expense-report.component';
 import { UsersComponent } from './pages/users/users.component';
-
+import { IncomeSummaryComponent } from './pages/income-summary/income-summary.component';
 
 
 export const routes: Routes = [
@@ -105,7 +105,12 @@ export const routes: Routes = [
               path:'users',
                component: UsersComponent,
               canActivate: [authGuard]
-              }
+              },
+            {
+              path:'income-summary',
+              component: IncomeSummaryComponent,
+              canActivate: [authGuard]
+            }
 
   ];
 export const appRouter = provideRouter(routes);

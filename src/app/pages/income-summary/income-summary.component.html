@@ -1,0 +1,244 @@
+<div class="dashboard-wrapper" xmlns="http://www.w3.org/1999/html">
+
+  <!-- HEADER (UNCHANGED - PERFECT) -->
+  <header class="top-header">
+    <app-update-profile></app-update-profile>
+    <app-change-password></app-change-password>
+
+    <div class="navbar">
+      <div class="logo">
+        <h3>MANKURUSSI TEMPLE</h3>
+      </div>
+
+      <ul class="menu">
+
+        <li routerLink="/dashboard">Dashboard</li>
+
+        <li *ngIf="isAdmin()" (click)="toggleMenu('master')" class="has-sub">
+          Master
+          <span class="arrow" [class.rotate]="activeMenu === 'master'">▾</span>
+          <ul class="submenu" *ngIf="activeMenu === 'master'">
+            <li routerLink="/offering">Offerings/Vazhipadu</li>
+            <li routerLink="/event">Events</li>
+          </ul>
+        </li>
+
+        <li (click)="toggleMenu('booking')" class="has-sub">
+          Booking
+          <span class="arrow" [class.rotate]="activeMenu === 'booking'">▾</span>
+          <ul class="submenu" *ngIf="activeMenu === 'booking'">
+            <li routerLink="/booking">Counter</li>
+          </ul>
+        </li>
+
+        <li (click)="toggleMenu('donation')" class="has-sub">
+          Donation
+          <span class="arrow" [class.rotate]="activeMenu === 'donation'">▾</span>
+          <ul class="submenu" *ngIf="activeMenu === 'donation'">
+            <li routerLink="/donation">Add Donation</li>
+          </ul>
+        </li>
+
+        <li (click)="toggleMenu('accounts')" class="has-sub">
+          Accounts
+          <span class="arrow" [class.rotate]="activeMenu === 'accounts'">▾</span>
+          <ul class="submenu" *ngIf="activeMenu === 'accounts'">
+            <li *ngIf="isAdmin()" routerLink="/finance-manager">Income/Expense Titles</li>
+            <li routerLink="/income-entry">Income</li>
+            <li routerLink="/expense-entry">Expense</li>
+          </ul>
+        </li>
+
+        <li (click)="toggleMenu('reports')" class="has-sub active">
+          Reports
+          <span class="arrow" [class.rotate]="activeMenu === 'reports'">▾</span>
+          <ul class="submenu" *ngIf="activeMenu === 'reports'">
+            <li routerLink="/booking-report">Vazhipadu</li>
+            <li routerLink="/donation-report">Donation</li>
+            <li routerLink="/income-report">Income</li>
+            <li routerLink="/expense-report">Expense</li>
+            <li routerLink="/income-summary">Income/Expense Summary Report</li>
+          </ul>
+        </li>
+
+      </ul>
+
+      <!-- PROFILE -->
+      <div class="user-section" (click)="toggleProfile($event)">
+        Hi, {{ getFirstName(username) }}
+        <div class="avatar">{{avatar}}</div>
+
+        <div class="profile-dropdown" *ngIf="showProfile">
+          <div class="profile-top">
+            <div class="avatar big">{{avatar}}</div>
+            <div class="profile-text">
+              <h4>{{ getFirstName(username) }}</h4>
+              <span class="role">{{role}}</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="profile-item" (click)="openMyProfile()">👤 My Profile</div>
+          <div *ngIf="isUser()" class="profile-item" (click)="updateProfilePopup.open()">⚙ Update Profile</div>
+          <div *ngIf="isAdmin()" class="profile-item" routerLink="/users">⚙ Profiles</div>
+          <div class="profile-item" (click)="changePasswordPopup.open()">🔑 Change Password</div>
+
+          <div class="divider"></div>
+          <div class="profile-item logout" (click)="logout()">🚪 Sign Out</div>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="report-container">
+
+    <!-- FORM -->
+    <form [formGroup]="searchForm" class="search-grid">
+
+      <!-- TYPE -->
+      <div class="form-group">
+        <label>Report Type</label>
+        <select formControlName="reportType" (change)="onCategoryChange($any($event.target).value)">
+          <option value="">Select</option>
+          <option value="INCOME">Income</option>
+          <option value="EXPENSE">Expense</option>
+        </select>
+        <!-- 🔴 ERROR MESSAGE -->
+        <small class="error"
+               *ngIf="searchForm.get('reportType')?.touched && searchForm.get('reportType')?.invalid">
+          Report Type is required
+        </small>
+      </div>
+
+      <!-- RANGE -->
+      <div class="form-group">
+        <label>Range</label>
+        <select formControlName="type">
+          <option value="DAY">Day</option>
+          <option value="WEEK">Week</option>
+          <option value="MONTH">Month</option>
+          <option value="YEAR">Year</option>
+        </select>
+      </div>
+
+      <!-- DATES -->
+      <div class="form-group">
+        <label>From Date</label>
+        <input type="date" formControlName="receiptFrom">
+      </div>
+
+      <div class="form-group">
+        <label>To Date</label>
+        <input type="date" formControlName="receiptTo">
+      </div>
+
+      <!-- TYPES -->
+<!--      <div class="form-group">-->
+<!--        <label>{{ selectedCategory === 'INCOME' ? 'Income Type' : 'Expense Type' }}</label>-->
+
+<!--        <div class="multi-checkbox-box">-->
+
+<!--          <label class="checkbox-item">-->
+<!--            <input type="checkbox"-->
+<!--                   [checked]="isAllSelected"-->
+<!--                   (change)="toggleAll($event)">-->
+<!--            <b>Select All</b>-->
+<!--          </label>-->
+
+<!--          <label *ngFor="let f of financeList" class="checkbox-item">-->
+<!--            <input type="checkbox"-->
+<!--                   [value]="f.title"-->
+<!--                   [checked]="selectedTypes.includes(f.title)"-->
+<!--                   (change)="onTypeChange($event)">-->
+<!--            {{ f.title }}-->
+<!--          </label>-->
+
+<!--        </div>-->
+<!--      </div>-->
+      <!-- TYPES (HIDE UNTIL REPORT TYPE SELECTED) -->
+      <div class="form-group" *ngIf="selectedCategory">
+
+        <label>
+          {{ selectedCategory === 'INCOME' ? 'Income Type' : 'Expense Type' }}
+        </label>
+
+        <div class="multi-checkbox-box">
+
+          <label class="checkbox-item">
+            <input type="checkbox"
+                   [checked]="isAllSelected"
+                   (change)="toggleAll($event)">
+            <b>Select All</b>
+          </label>
+
+          <label *ngFor="let f of financeList" class="checkbox-item">
+            <input type="checkbox"
+                   [value]="f.title"
+                   [checked]="selectedTypes.includes(f.title)"
+                   (change)="onTypeChange($event)">
+            {{ f.title }}
+          </label>
+
+        </div>
+
+      </div>
+
+    </form>
+
+    <!-- BUTTONS -->
+    <div class="form-buttons">
+      <button class="btn report"
+              [disabled]="searchForm.get('reportType')?.invalid"
+              (click)="getSummary()">
+        GET REPORT
+      </button>
+      <button class="btn clear" (click)="clearForm()">CLEAR FORM</button>
+      <button class="btn refresh" (click)="refreshPage()">REFRESH</button>
+
+      <div *ngIf="summaryList.length > 0">
+        <button class="btn print" (click)="printReport()">🖨 Print</button>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div id="reportSection" *ngIf="summaryList.length > 0" class="report-table">
+
+      <div class="temple-header">
+        <h3> Mankurussi Bhagavathi Temple</h3>
+        <p>Karakurussi,Palakkad,Kerala -678595</p>
+        <p>Phone: 9072017303, Email: mankurussibhagavathitemple&#64;gmail.com</p>
+        <h2><b>{{ selectedCategory === 'INCOME' ? 'Income Summary Report' : 'Expense Summary Report' }}</b></h2>
+      </div>
+
+      <table>
+        <thead>
+        <tr>
+          <th>S/N</th>
+          <th>Period</th>
+          <th>{{ selectedCategory === 'INCOME' ? 'Income Type' : 'Expense Type' }}</th>
+          <th>Amount</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let item of summaryList; let i=index">
+          <td>{{i+1}}</td>
+          <td>{{item.period | date:'dd/MM/yyyy'}}</td>
+          <td>{{item.incomeType || item.expenseType}}</td>
+          <td>₹ {{item.amount}}</td>
+        </tr>
+
+        <tr class="grand-total">
+          <td colspan="3">Total</td>
+          <td>₹ {{getGrandTotal()}}.00</td>
+        </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+  </div>
+</div>
