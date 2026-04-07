@@ -351,7 +351,7 @@ printReceipt() {
 
           @page {
             size: legal portrait;
-            margin: 0;
+            margin: 0.5mm;
           }
 
           * {
@@ -369,13 +369,14 @@ printReceipt() {
           /* 🔥 MAIN RECEIPT (1/3 LEGAL PAGE) */
           .receipt-wrapper {
             width: 100%;
-           height: 4.66in;
+           height: 4.5in;
             box-sizing: border-box;
             border: 2px solid black;
             padding: 10px;
 
             display: flex;
             flex-direction: column;
+            margin-top: 2px;/* ✅ IMPORTANT */
           }
 
           /* HEADER */

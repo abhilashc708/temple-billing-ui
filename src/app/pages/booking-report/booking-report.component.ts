@@ -241,4 +241,24 @@ openMyProfile(){
   });
 }
 
+downloadReport() {
+  const element = document.getElementById('reportSection');
+  if (!element) return;
+
+  // ✅ GET TODAY DATE (YYYY-MM-DD)
+  const today = new Date().toISOString().split('T')[0];
+
+  const opt = {
+    margin: [0.3, 0.3, 0.5, 0.3],
+    filename: `Booking_Report_${today}.pdf`, // 🔥 DYNAMIC NAME
+    image: { type: 'jpeg' as const, quality: 1 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' },
+    pagebreak: { mode: ['css', 'legacy'] }
+  };
+
+  import('html2pdf.js').then((html2pdf: any) => {
+    html2pdf.default().set(opt).from(element).save();
+  });
+}
 }

@@ -177,15 +177,19 @@
       <div class="report-actions" *ngIf="reportList.length > 0">
         <button type="button" class="btn print" (click)="printReport()">🖨 Print</button>
       </div>
+      <div class="report-actions" *ngIf="reportList.length > 0">
+        <button type="button" class="btn download" (click)="downloadReport()">⬇ DOWNLOAD</button>
+      </div>
     </div>
     <!-- REPORT SECTION -->
     <div id="reportSection" *ngIf="reportList.length > 0" class="report-table">
 
       <!-- Temple Header -->
       <div class="temple-header">
-        <h3> Mankurussi Bhagavathi Temple</h3>
+        <h3> <b>Mankurussi Bhagavathi Temple</b></h3>
         <p>Karakurussi,Palakkad,Kerala -678595</p>
         <p>Phone: 9072017303, Email: mankurussibhagavathitemple&#64;gmail.com</p>
+        <h2><b>Donation Summary Report</b></h2>
       </div>
       <table>
 

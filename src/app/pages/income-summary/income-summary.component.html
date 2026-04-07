@@ -201,13 +201,16 @@
       <div *ngIf="summaryList.length > 0">
         <button class="btn print" (click)="printReport()">🖨 Print</button>
       </div>
+      <div *ngIf="summaryList.length > 0">
+        <button type="button" class="btn download" (click)="downloadReport()">⬇ DOWNLOAD</button>
+      </div>
     </div>
 
     <!-- TABLE -->
     <div id="reportSection" *ngIf="summaryList.length > 0" class="report-table">
 
       <div class="temple-header">
-        <h3> Mankurussi Bhagavathi Temple</h3>
+        <h3> <b>Mankurussi Bhagavathi Temple</b></h3>
         <p>Karakurussi,Palakkad,Kerala -678595</p>
         <p>Phone: 9072017303, Email: mankurussibhagavathitemple&#64;gmail.com</p>
         <h2><b>{{ selectedCategory === 'INCOME' ? 'Income Summary Report' : 'Expense Summary Report' }}</b></h2>
@@ -241,4 +244,67 @@
     </div>
 
   </div>
+</div>
+<!-- MY PROFILE MODAL -->
+
+<div class="profile-popup" *ngIf="showMyProfileModal">
+
+  <div class="profile-card">
+
+    <button class="close-btn" (click)="showMyProfileModal=false">✕</button>
+
+    <!-- Avatar -->
+    <div class="profile-avatar">
+      {{profile.name?.charAt(0) || 'U'}}
+    </div>
+
+    <!-- Name -->
+    <h3>{{profile.name}}</h3>
+    <span class="role-badge" [ngClass]="profile.role">
+      {{profile.role}}
+    </span>
+
+    <div class="profile-info">
+
+      <div class="info-row">
+        <span>Email</span>
+        <p>{{profile.email || '-'}}</p>
+      </div>
+
+      <div class="info-row">
+        <span>Phone</span>
+        <p>{{profile.phone || '-'}}</p>
+      </div>
+
+      <div class="info-row">
+        <span>Address</span>
+        <p>{{profile.address || '-'}}</p>
+      </div>
+
+      <div class="info-row">
+        <span>District</span>
+        <p>{{profile.district || '-'}}</p>
+      </div>
+
+      <div class="info-row">
+        <span>State</span>
+        <p>{{profile.state || '-'}}</p>
+      </div>
+
+    </div>
+
+    <div class="profile-actions">
+
+      <button class="btn-edit">
+        ✏ Edit Profile
+      </button>
+
+      <button class="btn-password">
+        🔑 Change Password
+      </button>
+
+    </div>
+
+  </div>
+
 </div>

@@ -389,7 +389,7 @@ printReceipt() {
 
           @page {
             size: legal portrait;
-            margin: 0;
+            margin: 0.5mm;
           }
 
           * {
@@ -407,15 +407,15 @@ printReceipt() {
           /* 🔥 MAIN RECEIPT BOX (LIKE BOOKING) */
           .donation-template {
             width: 100%;
-            height: 4.66in;    /* ✅ EXACT 1/3 LEGAL */
+            height: 4.5in;    /* ✅ EXACT 1/3 LEGAL */
               border: 2px solid black !important;
             padding: 6px;
             box-sizing: border-box;
-            margin: 0;
             display: flex;
             flex-direction: column;
              position: relative;
              page-break-after: always;
+             margin-top: 2px;/* ✅ IMPORTANT */
           }
 
           /* HEADER */

@@ -702,7 +702,7 @@ printReceipt() {
         <style>
           @page {
             size: legal portrait; /* ✅ FIX 1 */
-            margin: 0;
+            margin: 0.5mm;
           }
         * {
           -webkit-print-color-adjust: exact;
@@ -721,16 +721,16 @@ printReceipt() {
              width: 100%;
              //height: 4.4in; /* ✅ FIX 3 (CRITICAL) */
               //width: 100vw;     /* 🔥 force full width */
-              height: 4.66in;   /* adjust for exact 1/3 legal */
+              height: 4.5in;
             box-sizing: border-box;
              border: 2px solid black !important;
             padding: 6px;
             text-align: center;
             position: relative;
             page-break-after: always;
-             margin: 0;
             display: flex;              /* ✅ IMPORTANT */
-            flex-direction: column;     /* ✅ IMPORTANT */
+             flex-direction: column;
+            margin-top: 2px;/* ✅ IMPORTANT */
           }
 
           .receipt-container:last-child {

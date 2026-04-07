@@ -1009,3 +1009,7 @@ table th{
   font-size: 12px;
   margin-top: 4px;
 }
+tr {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}

@@ -966,4 +966,7 @@ table th{
   padding:8px;
   border-radius:6px;
 }
-
+tr {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
