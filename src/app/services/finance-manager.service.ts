@@ -4,12 +4,10 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FinanceManagerService {
-
-//   private baseUrl = 'http://localhost:8080/api/finance-master';
- private baseUrl = `${environment.apiBaseUrl}/api/finance-master`;
+  private baseUrl = `${environment.apiBaseUrl}/api/finance-master`;
 
   constructor(private http: HttpClient) {}
 
@@ -22,23 +20,27 @@ export class FinanceManagerService {
     return this.http.get<any>(this.baseUrl, { params });
   }
 
-  getAllByType(type: string, page: number, size: number, sortBy: string): Observable<any> {
+  getAllByType(
+    type: string,
+    page: number,
+    size: number,
+    sortBy: string
+  ): Observable<any> {
     return this.http.get(
       `${this.baseUrl}?type=${type}&page=${page}&size=${size}&sortBy=${sortBy}`
     );
   }
 
-searchFinance(params: any, page: number, size: number) {
-  return this.http.get(`${this.baseUrl}/search`, {
-    params: {
-      ...params,
-      page,
-      size,
-      sort: 'createdDate,desc'
-    }
-  });
-}
-
+  searchFinance(params: any, page: number, size: number) {
+    return this.http.get(`${this.baseUrl}/search`, {
+      params: {
+        ...params,
+        page,
+        size,
+        sort: 'createdDate,desc',
+      },
+    });
+  }
 
   create(data: any): Observable<any> {
     return this.http.post(this.baseUrl, data);

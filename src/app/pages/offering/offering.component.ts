@@ -1,6 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild, HostListener, OnInit } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators, FormsModule } from '@angular/forms';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  HostListener,
+  OnInit,
+} from '@angular/core';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  Validators,
+  FormsModule,
+} from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { OfferingService } from '../../services/offering.service';
 import { GodsService } from '../../services/gods.service';
@@ -14,32 +27,39 @@ import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dial
 @Component({
   selector: 'app-offering',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, UpdateProfileComponent, ChangePasswordComponent, ConfirmDialogComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+    UpdateProfileComponent,
+    ChangePasswordComponent,
+    ConfirmDialogComponent,
+  ],
   templateUrl: './offering.component.html',
-  styleUrl: './offering.component.scss'
+  styleUrl: './offering.component.scss',
 })
 export class OfferingComponent {
   successMessage: string = '';
   errorMessage: string = '';
-   profile: any = {};
-       showMyProfileModal = false;
+  profile: any = {};
+  showMyProfileModal = false;
   showProfile = false;
   role: string = '';
-    username: string = '';
-    avatar: string = '';
-offeringForm!: FormGroup;
+  username: string = '';
+  avatar: string = '';
+  offeringForm!: FormGroup;
   filterForm!: FormGroup;
   showModal = false;
   offerings: any[] = [];
   gods: any[] = [];
-    isEditMode = false;
-      selectedOfferingId: number | null = null;
+  isEditMode = false;
+  selectedOfferingId: number | null = null;
 
-      @ViewChild(UpdateProfileComponent)
-        updateProfilePopup!: UpdateProfileComponent;
+  @ViewChild(UpdateProfileComponent)
+  updateProfilePopup!: UpdateProfileComponent;
 
-     @ViewChild(ChangePasswordComponent)
-     changePasswordPopup!: ChangePasswordComponent;
+  @ViewChild(ChangePasswordComponent)
+  changePasswordPopup!: ChangePasswordComponent;
 
   page = 0;
   size = 10;
@@ -50,8 +70,8 @@ offeringForm!: FormGroup;
     private fb: FormBuilder,
     private offeringService: OfferingService,
     private godsService: GodsService,
-     private usersService: UsersService,
-     private router: Router
+    private usersService: UsersService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -59,74 +79,59 @@ offeringForm!: FormGroup;
     this.initializeForm();
     this.autoTranslate();
     this.loadOfferings();
-   // this.loadGods();
+    // this.loadGods();
     this.username = localStorage.getItem('name') || 'User';
     this.avatar = localStorage.getItem('avatar') || 'U';
     this.role = localStorage.getItem('role') || 'NULL';
   }
 
-getFirstName(username: string): string {
-  if (!username) return '';
-  const firstName = username.split(' ')[0];
-  return firstName.charAt(0).toUpperCase() + firstName.slice(1);
-}
+  getFirstName(username: string): string {
+    if (!username) return '';
+    const firstName = username.split(' ')[0];
+    return firstName.charAt(0).toUpperCase() + firstName.slice(1);
+  }
 
   initializeFilterForm() {
     this.filterForm = this.fb.group({
-      offeringEnglish: ['']
+      offeringEnglish: [''],
     });
   }
-initializeForm() {
-  this.offeringForm = this.fb.group({
-    offeringEnglish: ['', Validators.required],
-    offeringMalayalam: [''],
-    offeringType: ['', Validators.required],
-   // offeringGod: ['', Validators.required],
-    price: ['', Validators.required],
-   // noOfPooja: [''],
-    status: ['', Validators.required],
-   // remarks: ['']
-  });
-}
-
-//--Wait for some time before filling
-// autoTranslate() {
-//   this.offeringForm.get('offeringEnglish')?.valueChanges
-//     .pipe(debounceTime(500))
-//     .subscribe((value: string) => {
-//       if (value) {
-//         this.translateToMalayalam(value);
-//       }
-//     });
-// }
-
-autoTranslate() {
-  this.offeringForm.get('offeringEnglish')?.valueChanges
-    .subscribe((value: string) => {
-      if (!value) {
-        this.offeringForm.get('offeringMalayalam')?.setValue('');
-        return;
-      }
-      this.translateToMalayalam(value);
+  initializeForm() {
+    this.offeringForm = this.fb.group({
+      offeringEnglish: ['', Validators.required],
+      offeringMalayalam: [''],
+      offeringType: ['', Validators.required],
+      price: ['', Validators.required],
+      status: ['', Validators.required],
     });
-}
+  }
 
-translateToMalayalam(text: string) {
+  autoTranslate() {
+    this.offeringForm
+      .get('offeringEnglish')
+      ?.valueChanges.subscribe((value: string) => {
+        if (!value) {
+          this.offeringForm.get('offeringMalayalam')?.setValue('');
+          return;
+        }
+        this.translateToMalayalam(value);
+      });
+  }
 
-  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ml&dt=t&q=${text}`;
+  translateToMalayalam(text: string) {
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ml&dt=t&q=${text}`;
 
-  fetch(url)
-    .then(res => res.json())
-    .then(data => {
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => {
+        const translatedText = data[0][0][0];
 
-      const translatedText = data[0][0][0];
-
-      this.offeringForm.get('offeringMalayalam')
-        ?.setValue(translatedText, { emitEvent: false });
-
-    })
-    .catch(err => console.error(err));
-}
+        this.offeringForm
+          .get('offeringMalayalam')
+          ?.setValue(translatedText, { emitEvent: false });
+      })
+      .catch((err) => console.error(err));
+  }
 
   loadOfferings() {
     const filters = this.filterForm.value;
@@ -135,37 +140,36 @@ translateToMalayalam(text: string) {
       queryParams.offeringEnglish = filters.offeringEnglish;
     }
 
-const hasFilters = Object.keys(queryParams).length > 0;
-  if (hasFilters) {
-    this.offeringService
-      .searchOffering(queryParams, this.page, this.size)
-      .subscribe({
-        next: (res: any) => {
-          this.offerings = res.content;
-          this.totalPages = res.totalPages;
-          this.totalElements = res.totalElements;
-          this.page = res.number;
-        },
-        error: (err) => {
-          console.error('Error loading offerings', err);
-        }
-      });
-    }else{
+    const hasFilters = Object.keys(queryParams).length > 0;
+    if (hasFilters) {
       this.offeringService
-            .getOfferings(this.page, this.size, 'createdDate')
-            .subscribe({
-              next: (res: any) => {
-                this.offerings = res.content;
-                this.totalElements = res.totalElements;
-                 this.totalPages = res.totalPages;   // ✅ important
-                 this.page = res.number;             // ✅ current page
-              },
-              error: (err) => {
-                console.error('Error loading offerings', err);
-              }
-            });
-
-      }
+        .searchOffering(queryParams, this.page, this.size)
+        .subscribe({
+          next: (res: any) => {
+            this.offerings = res.content;
+            this.totalPages = res.totalPages;
+            this.totalElements = res.totalElements;
+            this.page = res.number;
+          },
+          error: (err) => {
+            console.error('Error loading offerings', err);
+          },
+        });
+    } else {
+      this.offeringService
+        .getOfferings(this.page, this.size, 'createdDate')
+        .subscribe({
+          next: (res: any) => {
+            this.offerings = res.content;
+            this.totalElements = res.totalElements;
+            this.totalPages = res.totalPages; // ✅ important
+            this.page = res.number; // ✅ current page
+          },
+          error: (err) => {
+            console.error('Error loading offerings', err);
+          },
+        });
+    }
   }
 
   onSearch() {
@@ -183,37 +187,27 @@ const hasFilters = Object.keys(queryParams).length > 0;
     this.page = newPage;
     this.loadOfferings();
   }
-activeMenu: string | null = null;
-toggleMenu(menu: string) {
+  activeMenu: string | null = null;
+  toggleMenu(menu: string) {
     this.activeMenu = this.activeMenu === menu ? null : menu;
   }
 
-//ADD/EDIT POPUP OPEN CODE
-openModal() {
-   this.showModal = true;
-      this.isEditMode = false;
-      this.selectedOfferingId = null;
-  this.initializeForm();
-}
+  //ADD/EDIT POPUP OPEN CODE
+  openModal() {
+    this.showModal = true;
+    this.isEditMode = false;
+    this.selectedOfferingId = null;
+    this.initializeForm();
+  }
 
-//ADD/EDIT POPUP CLOSE CODE
-closeModal() {
-  this.showModal = false;
-}
+  //ADD/EDIT POPUP CLOSE CODE
+  closeModal() {
+    this.showModal = false;
+  }
 
-//--- LOADING GODS DATA
-// loadGods() {
-//   this.godsService
-//     .getGods(this.page, this.size, 'createdDate')
-//     .subscribe((data: any) => {
-//       this.gods = data.content;  // ✅ FIX
-//     });
-// }
-
-//---LOADING EDIT DATA -----
+  //---LOADING EDIT DATA -----
 
   editOffering(offering: any) {
-
     this.showModal = true;
     this.isEditMode = true;
     this.selectedOfferingId = offering.id;
@@ -224,215 +218,121 @@ closeModal() {
       offeringEnglish: offering.offeringEnglish,
       offeringMalayalam: offering.offeringMalayalam,
       offeringType: offering.offeringType,
-    //  offeringGod: offering.offeringGod,
       price: offering.price,
-      //noOfPooja: offering.noOfPooja,
       status: offering.status,
-     // remarks: offering.remarks
     });
   }
 
-//---SAVE/UPDATE SUBMISSION-----
 
-//   submitOffering() {
-//
-//     if (this.offeringForm.invalid) {
-//       this.offeringForm.markAllAsTouched();
-//       return;
-//     }
-//
-//     const formData = this.offeringForm.value;
-//
-//     if (this.isEditMode && this.selectedOfferingId) {
-//
-//       this.offeringService
-//         .updateOffering(this.selectedOfferingId, formData)
-//         .subscribe({
-//           next: () => {
-//             alert('Offering Updated Successfully');
-//             this.afterSave();
-//           },
-//           error: () => alert('Update Failed')
-//         });
-//
-//     } else {
-//
-//       this.offeringService
-//         .createOffering(formData)
-//         .subscribe({
-//           next: () => {
-//             alert('Offering Created Successfully');
-//             this.afterSave();
-//           },
-//           error: () => alert('Create Failed')
-//         });
-//     }
-//   }
+  submitOffering() {
+    if (this.offeringForm.invalid) {
+      this.offeringForm.markAllAsTouched();
+      return;
+    }
 
-submitOffering() {
+    const formData = this.offeringForm.value;
 
-  if (this.offeringForm.invalid) {
-    this.offeringForm.markAllAsTouched();
-    return;
-  }
+    if (this.isEditMode && this.selectedOfferingId) {
+      this.offeringService
+        .updateOffering(this.selectedOfferingId, formData)
+        .subscribe({
+          next: () => {
+            this.successMessage = 'Offering Updated Successfully';
+            this.errorMessage = '';
 
-  const formData = this.offeringForm.value;
+            this.afterSave();
+            this.autoHideMessage();
+          },
+          error: (err) => {
+            this.errorMessage = err.error?.message || 'Update Failed';
+            this.successMessage = '';
 
-  if (this.isEditMode && this.selectedOfferingId) {
-
-    this.offeringService
-      .updateOffering(this.selectedOfferingId, formData)
-      .subscribe({
+            this.autoHideMessage();
+          },
+        });
+    } else {
+      this.offeringService.createOffering(formData).subscribe({
         next: () => {
-
-          this.successMessage = 'Offering Updated Successfully';
-          this.errorMessage = '';
-
-          this.afterSave();
-          this.autoHideMessage();
-
-        },
-        error: (err) => {
-
-          this.errorMessage = err.error?.message || 'Update Failed';
-          this.successMessage = '';
-
-          this.autoHideMessage();
-
-        }
-      });
-
-  } else {
-
-    this.offeringService
-      .createOffering(formData)
-      .subscribe({
-        next: () => {
-
           this.successMessage = 'Offering Created Successfully';
           this.errorMessage = '';
 
           this.afterSave();
           this.autoHideMessage();
-
         },
         error: (err) => {
-
           this.errorMessage = err.error?.message || 'Create Failed';
           this.successMessage = '';
 
           this.autoHideMessage();
-
-        }
+        },
       });
+    }
   }
-}
 
   afterSave() {
     this.closeModal();
     this.loadOfferings();
   }
 
-autoHideMessage() {
-  setTimeout(() => {
-    this.successMessage = '';
-    this.errorMessage = '';
-  }, 3000);
+  autoHideMessage() {
+    setTimeout(() => {
+      this.successMessage = '';
+      this.errorMessage = '';
+    }, 3000);
+  }
+
+
+  deleteConfirmed() {
+    if (!this.selectedOfferingId) return;
+
+    this.offeringService.deleteOffering(this.selectedOfferingId).subscribe({
+      next: () => {
+        this.successMessage = 'Offering deleted successfully';
+        this.loadOfferings();
+
+        this.autoHideMessage();
+      },
+
+      error: () => {
+        this.errorMessage = 'Delete failed';
+
+        this.autoHideMessage();
+      },
+    });
+  }
+
+  isAdmin(): boolean {
+    return this.role === 'ADMIN';
+  }
+
+  isUser(): boolean {
+    return this.role === 'USER';
+  }
+  //----AVATAR PROFILE -----
+
+  toggleProfile(event: Event) {
+    event.stopPropagation();
+    this.showProfile = !this.showProfile;
+  }
+
+  @HostListener('document:click')
+  closeProfile() {
+    this.showProfile = false;
+  }
+
+  logout() {
+    localStorage.clear();
+    this.router.navigate(['/login']);
+  }
+
+  @HostListener('document:click')
+  closeOutsideProfile() {
+    this.showProfile = false;
+  }
+  openMyProfile() {
+    this.usersService.getMyProfile().subscribe((res) => {
+      this.profile = res;
+      this.showMyProfileModal = true;
+    });
+  }
 }
-
-//----DELETE FUNCTION-----
-
-// deleteOffering(id: number) {
-//
-//   const confirmDelete = confirm('Are you sure you want to delete this offering?');
-//
-//   if (!confirmDelete) {
-//     return;
-//   }
-//
-//   this.offeringService.deleteOffering(id)
-//     .subscribe({
-//       next: () => {
-//           this.successMessage = 'Offering Deleted Successfully';
-//           this.errorMessage = '';
-//
-//          this.loadOfferings();
-//          this.autoHideMessage();
-//
-//       },
-//       error: (err) => {
-//   this.errorMessage = err.error?.message || 'Delete Failed';
-//           this.successMessage = '';
-//
-//          this.autoHideMessage();
-//       }
-//     });
-// }
-
-deleteConfirmed(){
-
-  if(!this.selectedOfferingId) return;
-
-  this.offeringService.deleteOffering(this.selectedOfferingId)
-  .subscribe({
-
-    next:()=>{
-
-      this.successMessage = "Offering deleted successfully";
-      this.loadOfferings();
-
-     this.autoHideMessage();
-
-    },
-
-    error:()=>{
-
-      this.errorMessage = "Delete failed";
-
-      this.autoHideMessage();
-
-    }
-
-  });
-
-}
-
-isAdmin(): boolean {
-  return this.role === 'ADMIN';
-}
-
-isUser(): boolean {
-  return this.role === 'USER';
-}
-//----AVATAR PROFILE -----
-
-toggleProfile(event: Event) {
-  event.stopPropagation();
-  this.showProfile = !this.showProfile;
-}
-
-@HostListener('document:click')
-closeProfile() {
-  this.showProfile = false;
-}
-
-logout() {
-  localStorage.clear();
- this.router.navigate(['/login']);
-}
-
-@HostListener('document:click')
-closeOutsideProfile() {
-  this.showProfile = false;
-}
-openMyProfile(){
-  this.usersService.getMyProfile().subscribe(res => {
-    this.profile = res;
-    this.showMyProfileModal = true;
-
-  });
-}
-}
-
-
-

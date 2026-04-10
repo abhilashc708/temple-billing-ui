@@ -3,14 +3,11 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DonationService {
-
- // private baseUrl = 'http://localhost:8080/api/donations';
- private baseUrl = `${environment.apiBaseUrl}/api/donations`;
+  private baseUrl = `${environment.apiBaseUrl}/api/donations`;
 
   constructor(private http: HttpClient) {}
 
@@ -34,19 +31,18 @@ export class DonationService {
   deleteDonation(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
-searchDonations(params: any, page: number, size: number) {
-  return this.http.get(`${this.baseUrl}/search`, {
-    params: {
-      ...params,
-      page,
-      size,
-      sort: 'createdDate,desc'
-    }
-  });
-}
+  searchDonations(params: any, page: number, size: number) {
+    return this.http.get(`${this.baseUrl}/search`, {
+      params: {
+        ...params,
+        page,
+        size,
+        sort: 'createdDate,desc',
+      },
+    });
+  }
 
   searchDonationsReport(searchData: any): Observable<any[]> {
     return this.http.post<any[]>(`${this.baseUrl}/report/search`, searchData);
   }
-
 }

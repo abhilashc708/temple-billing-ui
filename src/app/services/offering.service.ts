@@ -5,25 +5,26 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OfferingService {
-
-//   private baseUrl = 'http://localhost:8080/api/offerings';
-private baseUrl = `${environment.apiBaseUrl}/api/offerings`;
+  private baseUrl = `${environment.apiBaseUrl}/api/offerings`;
 
   constructor(private http: HttpClient) {}
 
   getOfferingsByStatus(): Observable<any[]> {
     return this.http
-      .get<any>(`${this.baseUrl}/getAllByStatus?page=0&size=100&sortBy=createdDate`)
+      .get<any>(
+        `${this.baseUrl}/getAllByStatus?page=0&size=100&sortBy=createdDate`
+      )
       .pipe(
-        map(response => response.content.filter((o: any) => o.status === 'ACTIVE'))
+        map((response) =>
+          response.content.filter((o: any) => o.status === 'ACTIVE')
+        )
       );
   }
 
- getOfferings(page: number, size: number, sortBy: string, search?: string) {
-
+  getOfferings(page: number, size: number, sortBy: string, search?: string) {
     let params = new HttpParams()
       .set('page', page)
       .set('size', size)
@@ -35,21 +36,20 @@ private baseUrl = `${environment.apiBaseUrl}/api/offerings`;
     return this.http.get<any>(`${this.baseUrl}`, { params });
   }
 
-searchOffering(params: any, page: number, size: number) {
-  return this.http.get(`${this.baseUrl}/search`, {
-    params: {
-      ...params,
-      page,
-      size,
-      sort: 'createdDate,desc'
-    }
-  });
-}
+  searchOffering(params: any, page: number, size: number) {
+    return this.http.get(`${this.baseUrl}/search`, {
+      params: {
+        ...params,
+        page,
+        size,
+        sort: 'createdDate,desc',
+      },
+    });
+  }
 
-createOffering(data: any) {
-  return this.http.post(`${this.baseUrl}`, data);
-}
-
+  createOffering(data: any) {
+    return this.http.post(`${this.baseUrl}`, data);
+  }
 
   // UPDATE
   updateOffering(id: number, data: any): Observable<any> {
@@ -60,8 +60,4 @@ createOffering(data: any) {
   deleteOffering(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
-
 }
-
-
-

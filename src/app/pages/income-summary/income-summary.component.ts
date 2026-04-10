@@ -1,7 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild, HostListener, OnInit } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 
 import { IncomeEntryService } from '../../services/income-entry.service';
 import { ExpenseEntryService } from '../../services/expense-entry.service'; // 👈 ADD THIS
@@ -19,13 +24,12 @@ import { ChangePasswordComponent } from '../../shared/change-password/change-pas
     RouterModule,
     ReactiveFormsModule,
     UpdateProfileComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
   ],
   templateUrl: './income-summary.component.html',
-  styleUrl: './income-summary.component.scss'
+  styleUrl: './income-summary.component.scss',
 })
 export class IncomeSummaryComponent implements OnInit {
-
   @ViewChild(UpdateProfileComponent)
   updateProfilePopup!: UpdateProfileComponent;
 
@@ -36,6 +40,8 @@ export class IncomeSummaryComponent implements OnInit {
   isAllSelected: boolean = false;
   showProfile = false;
   showMyProfileModal = false;
+  isLoading = false;
+  noDataFound = false;
 
   // ✅ USER INFO
   role: string = '';
@@ -70,10 +76,10 @@ export class IncomeSummaryComponent implements OnInit {
 
   ngOnInit(): void {
     this.searchForm = this.fb.group({
-     reportType: ['', Validators.required],   // ✅ REQUIRED
-      type: ['DAY'],              // 🔥 DEFAULT DAY
+      reportType: ['', Validators.required], // ✅ REQUIRED
+      type: ['DAY'], // 🔥 DEFAULT DAY
       receiptFrom: [''],
-      receiptTo: ['']
+      receiptTo: [''],
     });
 
     this.loadFinanceList();
@@ -88,110 +94,67 @@ export class IncomeSummaryComponent implements OnInit {
     if (!this.selectedCategory) return; // 🔥 prevent empty call
     this.financeService
       .getAllByType(this.selectedCategory, this.page, this.size, 'createdDate')
-      .subscribe(res => {
+      .subscribe((res) => {
         this.financeList = res.content;
         this.totalPages = res.totalPages;
       });
   }
 
-  // ✅ SWITCH BETWEEN INCOME / EXPENSE
-//   onCategoryChange(type: string) {
-//     this.selectedCategory = type;
-//     this.selectedTypes = [];
-//     this.isAllSelected = false;
-//     this.loadFinanceList();
-//   }
-onCategoryChange(value: string) {
-  this.selectedCategory = value;
+  onCategoryChange(value: string) {
+    this.selectedCategory = value;
 
-  this.selectedTypes = [];
-  this.isAllSelected = false;
+    this.selectedTypes = [];
+    this.isAllSelected = false;
 
-  this.loadFinanceList(); // ✅ ONE METHOD HANDLES BOTH
-}
+    this.loadFinanceList(); // ✅ ONE METHOD HANDLES BOTH
+  }
 
   // ✅ GET SUMMARY
-//   getSummary() {
-//     const payload = {
-//       receiptFrom: this.searchForm.value.receiptFrom,
-//       receiptTo: this.searchForm.value.receiptTo,
-//       types: this.selectedTypes
-//     };
-//
-//     const apiCall =
-//       this.selectedCategory === 'INCOME'
-//         ? this.incomeService.getSummary(payload)
-//         : this.expenseService.getSummary(payload);
-//
-//     apiCall.subscribe((res: any) => {
-//       this.summaryList = res;
-//     });
-//   }
-getSummary() {
-if (this.searchForm.invalid) {
-    this.searchForm.markAllAsTouched();  // 🔥 triggers error UI
-    return;
+  getSummary() {
+    this.isLoading = true;
+    this.noDataFound = false; // reset
+    if (this.searchForm.invalid) {
+      this.searchForm.markAllAsTouched(); // 🔥 triggers error UI
+      this.isLoading = false;
+      return;
+    }
+    const payload = {
+      rangeType: this.searchForm.value.type,
+      receiptFrom: this.searchForm.value.receiptFrom,
+      receiptTo: this.searchForm.value.receiptTo,
+      incomeTypes: this.selectedTypes, // 🔥 SAME key for both
+    };
+
+    if (this.selectedCategory === 'INCOME') {
+      this.incomeService.getSummaryReport(payload).subscribe((res: any) => {
+        this.summaryList = res;
+        this.isLoading = false;
+        this.noDataFound = res.length === 0; // 🔥 key line
+      });
+    } else {
+      this.expenseService.getSummaryReport(payload).subscribe((res: any) => {
+        this.summaryList = res;
+        this.isLoading = false;
+        this.noDataFound = res.length === 0; // 🔥 key line
+      });
+    }
   }
-  const payload = {
-    rangeType: this.searchForm.value.type,
-    receiptFrom: this.searchForm.value.receiptFrom,
-    receiptTo: this.searchForm.value.receiptTo,
-    incomeTypes: this.selectedTypes   // 🔥 SAME key for both
-  };
-
-  if (this.selectedCategory === 'INCOME') {
-
-    this.incomeService.getSummaryReport(payload).subscribe((res: any) => {
-      this.summaryList = res;
-    });
-
-  } else {
-
-    this.expenseService.getSummaryReport(payload).subscribe((res: any) => {
-      this.summaryList = res;
-    });
-
-  }
-}
 
   // ✅ CLEAR FORM (🔥 YOUR REQUIREMENT)
-//   clearForm() {
-//     this.searchForm.reset();
-//
-//     // 🔥 FORCE DEFAULT = DAY
-//     this.searchForm.patchValue({
-//       type: 'DAY'
-//     });
-//
-//     this.summaryList = [];
-//     this.selectedTypes = [];
-//     this.isAllSelected = false;
-//   }
-// clearForm() {
-//   this.searchForm.reset({
-//     reportType: '',   // ✅ RESET DROPDOWN
-//     type: 'DAY',
-//     receiptFrom: '',
-//     receiptTo: ''
-//   });
-//
-//   this.summaryList = [];
-//   this.selectedTypes = [];
-//   this.isAllSelected = false;
-// }
-clearForm() {
-  this.searchForm.reset({
-    reportType: '',
-    type: 'DAY',
-    receiptFrom: '',
-    receiptTo: ''
-  });
+  clearForm() {
+    this.searchForm.reset({
+      reportType: '',
+      type: 'DAY',
+      receiptFrom: '',
+      receiptTo: '',
+    });
 
-  this.selectedCategory = '';   // 🔥 THIS LINE IMPORTANT
-  this.summaryList = [];
-  this.selectedTypes = [];
-  this.isAllSelected = false;
-}
+    this.selectedCategory = ''; // 🔥 THIS LINE IMPORTANT
+    this.summaryList = [];
+    this.selectedTypes = [];
+    this.isAllSelected = false;
+    this.noDataFound = false;
+  }
 
   // ✅ CHECKBOX
   onTypeChange(event: any) {
@@ -200,7 +163,7 @@ clearForm() {
     if (event.target.checked) {
       this.selectedTypes.push(value);
     } else {
-      this.selectedTypes = this.selectedTypes.filter(v => v !== value);
+      this.selectedTypes = this.selectedTypes.filter((v) => v !== value);
     }
 
     this.isAllSelected = this.selectedTypes.length === this.financeList.length;
@@ -210,7 +173,7 @@ clearForm() {
     this.isAllSelected = event.target.checked;
 
     if (this.isAllSelected) {
-      this.selectedTypes = this.financeList.map(f => f.title);
+      this.selectedTypes = this.financeList.map((f) => f.title);
     } else {
       this.selectedTypes = [];
     }
@@ -231,23 +194,21 @@ clearForm() {
   }
 
   // ✅ PRINT
-   printReport() {
+  printReport() {
+    const printContents = document.getElementById('reportSection')?.innerHTML;
 
-              const printContents =
-                document.getElementById('reportSection')?.innerHTML;
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
 
-            const iframe = document.createElement('iframe');
-                iframe.style.position = 'fixed';
-                iframe.style.width = '0';
-                iframe.style.height = '0';
-                iframe.style.border = '0';
+    document.body.appendChild(iframe);
 
-                document.body.appendChild(iframe);
+    const doc = iframe.contentWindow!.document;
+    doc.open();
 
-           const doc = iframe.contentWindow!.document;
-            doc.open();
-
-             doc.write(`
+    doc.write(`
 
                 <html>
 
@@ -302,12 +263,11 @@ clearForm() {
 
               `);
 
-              doc.close();
-                iframe.contentWindow!.focus();
-                iframe.contentWindow!.print();
-                setTimeout(() => document.body.removeChild(iframe), 1000);
-
-            }
+    doc.close();
+    iframe.contentWindow!.focus();
+    iframe.contentWindow!.print();
+    setTimeout(() => document.body.removeChild(iframe), 1000);
+  }
   // ✅ USER
   getFirstName(username: string): string {
     return username ? username.split(' ')[0] : '';
@@ -338,32 +298,32 @@ clearForm() {
   }
 
   openMyProfile() {
-    this.usersService.getMyProfile().subscribe(res => {
+    this.usersService.getMyProfile().subscribe((res) => {
       this.profile = res;
       this.showMyProfileModal = true;
     });
   }
-refreshPage() {
-  window.location.reload();
-}
-downloadReport() {
-  const element = document.getElementById('reportSection');
-  if (!element) return;
+  refreshPage() {
+    window.location.reload();
+  }
+  downloadReport() {
+    const element = document.getElementById('reportSection');
+    if (!element) return;
 
-  // ✅ GET TODAY DATE (YYYY-MM-DD)
-  const today = new Date().toISOString().split('T')[0];
+    // ✅ GET TODAY DATE (YYYY-MM-DD)
+    const today = new Date().toISOString().split('T')[0];
 
-  const opt = {
-    margin: [0.3, 0.3, 0.5, 0.3],
-    filename: `Finance_Report_${today}.pdf`, // 🔥 DYNAMIC NAME
-    image: { type: 'jpeg' as const, quality: 1 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' },
-    pagebreak: { mode: ['css', 'legacy'] }
-  };
+    const opt = {
+      margin: [0.3, 0.3, 0.5, 0.3],
+      filename: `Finance_Report_${today}.pdf`, // 🔥 DYNAMIC NAME
+      image: { type: 'jpeg' as const, quality: 1 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' },
+      pagebreak: { mode: ['css', 'legacy'] },
+    };
 
-  import('html2pdf.js').then((html2pdf: any) => {
-    html2pdf.default().set(opt).from(element).save();
-  });
-}
+    import('html2pdf.js').then((html2pdf: any) => {
+      html2pdf.default().set(opt).from(element).save();
+    });
+  }
 }

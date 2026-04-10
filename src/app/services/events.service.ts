@@ -5,15 +5,14 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EventsService {
-// private baseUrl = 'http://localhost:8080/api/events';
- private baseUrl = `${environment.apiBaseUrl}/api/events`;
+  private baseUrl = `${environment.apiBaseUrl}/api/events`;
 
   constructor(private http: HttpClient) {}
 
-getEvents(page: number, size: number, sortBy: string) {
+  getEvents(page: number, size: number, sortBy: string) {
     let params = new HttpParams()
       .set('page', page)
       .set('size', size)
@@ -21,7 +20,7 @@ getEvents(page: number, size: number, sortBy: string) {
     return this.http.get<any>(`${this.baseUrl}`, { params });
   }
 
- // CREATE
+  // CREATE
   createEvent(data: any): Observable<any> {
     return this.http.post(this.baseUrl, data);
   }
@@ -35,5 +34,4 @@ getEvents(page: number, size: number, sortBy: string) {
   deleteEvent(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
-
 }

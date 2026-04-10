@@ -6,29 +6,27 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './confirm-dialog.component.html',
-  styleUrls: ['./confirm-dialog.component.scss']
+  styleUrls: ['./confirm-dialog.component.scss'],
 })
 export class ConfirmDialogComponent {
-
   show = false;
   message = '';
   title = 'Confirm';
 
   @Output() confirmed = new EventEmitter<void>();
 
-  open(title: string, message: string){
+  open(title: string, message: string) {
     this.title = title;
     this.message = message;
     this.show = true;
   }
 
-  cancel(){
+  cancel() {
     this.show = false;
   }
 
-  confirm(){
+  confirm() {
     this.confirmed.emit();
     this.show = false;
   }
-
 }

@@ -1,5 +1,18 @@
-import { Component, ElementRef, ViewChild, HostListener, OnInit } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators, FormsModule } from '@angular/forms';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  HostListener,
+  OnInit,
+} from '@angular/core';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  Validators,
+  FormsModule,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { IncomeEntryService } from '../../services/income-entry.service';
@@ -12,37 +25,44 @@ import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dial
 @Component({
   selector: 'app-income-entry',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, ConfirmDialogComponent, UpdateProfileComponent, ChangePasswordComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+    ConfirmDialogComponent,
+    UpdateProfileComponent,
+    ChangePasswordComponent,
+  ],
   templateUrl: './income-entry.component.html',
-  styleUrl: './income-entry.component.scss'
+  styleUrl: './income-entry.component.scss',
 })
 export class IncomeEntryComponent {
   successMessage: string = '';
-    errorMessage: string = '';
+  errorMessage: string = '';
   role: string = '';
-    username: string = '';
-    avatar: string = '';
- incomeList: any[] = [];
+  username: string = '';
+  avatar: string = '';
+  incomeList: any[] = [];
   incomeForm!: FormGroup;
   financeList: any[] = [];
-filterForm!: FormGroup;
-showPrintModal = false;
-selectedIncome: any;
- showProfile = false;
+  filterForm!: FormGroup;
+  showPrintModal = false;
+  selectedIncome: any;
+  showProfile = false;
   showModal = false;
   isEditMode = false;
   selectedId: number | null = null;
   profile: any = {};
-       showMyProfileModal = false;
-       isSyncing: boolean = false;
-       lastSyncDate: string | null = null;
-       showSyncInfo: boolean = false;
+  showMyProfileModal = false;
+  isSyncing: boolean = false;
+  lastSyncDate: string | null = null;
+  showSyncInfo: boolean = false;
 
-@ViewChild(UpdateProfileComponent)
+  @ViewChild(UpdateProfileComponent)
   updateProfilePopup!: UpdateProfileComponent;
 
- @ViewChild(ChangePasswordComponent)
- changePasswordPopup!: ChangePasswordComponent;
+  @ViewChild(ChangePasswordComponent)
+  changePasswordPopup!: ChangePasswordComponent;
 
   page = 0;
   size = 8;
@@ -68,55 +88,56 @@ selectedIncome: any;
     this.role = localStorage.getItem('role') || 'NULL';
   }
 
-getFirstName(username: string): string {
-  if (!username) return '';
-  const firstName = username.split(' ')[0];
-  return firstName.charAt(0).toUpperCase() + firstName.slice(1);
-}
+  getFirstName(username: string): string {
+    if (!username) return '';
+    const firstName = username.split(' ')[0];
+    return firstName.charAt(0).toUpperCase() + firstName.slice(1);
+  }
 
-filterInitializeForms() {
-  this.filterForm = this.fb.group({
-    receiptNo: [''],
-    receiptFrom: [''],
-    receiptTo: [''],
-    remarks: ['']
-  });
-}
+  filterInitializeForms() {
+    this.filterForm = this.fb.group({
+      receiptNo: [''],
+      receiptFrom: [''],
+      receiptTo: [''],
+      remarks: [''],
+    });
+  }
 
- applyFilter() {
+  applyFilter() {
     this.page = 0; // reset to first page
     this.loadIncomeList();
   }
-@ViewChild('receiptToInput') receiptToInput!: ElementRef;
-@ViewChild('receiptFromInput') receiptFromInput!: ElementRef;
-resetFilter() {
-   this.filterForm.reset({
+  @ViewChild('receiptToInput') receiptToInput!: ElementRef;
+  @ViewChild('receiptFromInput') receiptFromInput!: ElementRef;
+  resetFilter() {
+    this.filterForm.reset({
       receiptNo: '',
       receiptFrom: '',
       receiptTo: '',
-      remarks: ''
+      remarks: '',
     });
- if (this.receiptToInput) {
-    this.receiptToInput.nativeElement.type = 'text';
-  }
- if (this.receiptFromInput) {
-    this.receiptFromInput.nativeElement.type = 'text';
-  }
+    if (this.receiptToInput) {
+      this.receiptToInput.nativeElement.type = 'text';
+    }
+    if (this.receiptFromInput) {
+      this.receiptFromInput.nativeElement.type = 'text';
+    }
 
-  this.page = 0;
-  this.loadIncomeList();
-}
+    this.page = 0;
+    this.loadIncomeList();
+  }
 
   loadFinanceList() {
-         this.financeService.getAllByType('INCOME',this.page, this.size, 'createdDate')
-              .subscribe(res => {
-                this.financeList = res.content;
-                this.totalPages = res.totalPages;
-              });
+    this.financeService
+      .getAllByType('INCOME', this.page, this.size, 'createdDate')
+      .subscribe((res) => {
+        this.financeList = res.content;
+        this.totalPages = res.totalPages;
+      });
   }
 
-activeMenu: string | null = null;
-toggleMenu(menu: string) {
+  activeMenu: string | null = null;
+  toggleMenu(menu: string) {
     this.activeMenu = this.activeMenu === menu ? null : menu;
   }
 
@@ -128,60 +149,52 @@ toggleMenu(menu: string) {
       modeOfIncome: ['', Validators.required],
       chequeNo: [''],
       chequeDate: [''],
-      remarks: ['']
+      remarks: [''],
     });
   }
 
   loadIncomeList() {
+    const filters = this.filterForm.value;
 
-      const filters = this.filterForm.value;
+    let queryParams: any = {};
 
-          let queryParams: any = {};
+    if (filters.receiptNo) queryParams.receiptNo = filters.receiptNo;
 
-          if (filters.receiptNo)
-            queryParams.receiptNo = filters.receiptNo;
+    if (filters.receiptFrom) queryParams.receiptFrom = filters.receiptFrom;
 
-          if (filters.receiptFrom)
-            queryParams.receiptFrom = filters.receiptFrom;
+    if (filters.receiptTo) queryParams.receiptTo = filters.receiptTo;
 
-          if (filters.receiptTo)
-            queryParams.receiptTo = filters.receiptTo;
+    if (filters.remarks) queryParams.remarks = filters.remarks;
 
-          if (filters.remarks)
-             queryParams.remarks = filters.remarks;
-
-          const hasFilters = Object.keys(queryParams).length > 0;
+    const hasFilters = Object.keys(queryParams).length > 0;
 
     if (hasFilters) {
-this.incomeService
-            .searchIncomes(queryParams, this.page, this.size)
-            .subscribe({
-              next: (res: any) => {
-                this.incomeList = res.content;
-                this.totalElements = res.totalElements;
-                 this.totalPages = res.totalPages;   // ✅ important
-                 this.page = res.number;             // ✅ current page
-              },
-              error: (err) => {
-                console.error('Search error', err);
-              }
-            });
-      }else{
-this.incomeService
-            .getAll(this.page, this.size, 'createdDate')
-            .subscribe({
-              next: (res: any) => {
-                this.incomeList = res.content;
-                this.totalElements = res.totalElements;
-                 this.totalPages = res.totalPages;   // ✅ important
-                 this.page = res.number;             // ✅ current page
-              },
-              error: (err) => {
-                console.error('Search error', err);
-              }
-            });
-
-}
+      this.incomeService
+        .searchIncomes(queryParams, this.page, this.size)
+        .subscribe({
+          next: (res: any) => {
+            this.incomeList = res.content;
+            this.totalElements = res.totalElements;
+            this.totalPages = res.totalPages; // ✅ important
+            this.page = res.number; // ✅ current page
+          },
+          error: (err) => {
+            console.error('Search error', err);
+          },
+        });
+    } else {
+      this.incomeService.getAll(this.page, this.size, 'createdDate').subscribe({
+        next: (res: any) => {
+          this.incomeList = res.content;
+          this.totalElements = res.totalElements;
+          this.totalPages = res.totalPages; // ✅ important
+          this.page = res.number; // ✅ current page
+        },
+        error: (err) => {
+          console.error('Search error', err);
+        },
+      });
+    }
   }
 
   openModal() {
@@ -204,7 +217,6 @@ this.incomeService
   }
 
   submitIncome() {
-
     if (this.incomeForm.invalid) {
       this.incomeForm.markAllAsTouched();
       return;
@@ -213,91 +225,69 @@ this.incomeService
     const data = this.incomeForm.value;
 
     if (this.isEditMode && this.selectedId) {
-      this.incomeService.update(this.selectedId, data)
-//         .subscribe(() => {
-//           alert('Updated Successfully');
-//           this.afterSave();
-//         });
-.subscribe({
-              next: () => {
-          this.successMessage = 'Income Entry Updated Successfully';
-          this.errorMessage = '';
+      this.incomeService
+        .update(this.selectedId, data)
+        .subscribe({
+          next: () => {
+            this.successMessage = 'Income Entry Updated Successfully';
+            this.errorMessage = '';
 
-          this.afterSave();
-          this.autoHideMessage();
+            this.afterSave();
+            this.autoHideMessage();
+          },
+          error: (err) => {
+            this.errorMessage = err.error?.message || 'Update Failed';
+            this.successMessage = '';
 
-        },
-        error: (err) => {
-
-          this.errorMessage = err.error?.message || 'Update Failed';
-          this.successMessage = '';
-
-          this.autoHideMessage();
-
-        }
+            this.autoHideMessage();
+          },
         });
     } else {
-      this.incomeService.create(data)
-//         .subscribe(() => {
-//           alert('Added Successfully');
-//           this.afterSave();
-//         });
-.subscribe({
-       next: () => {
+      this.incomeService
+        .create(data)
+        .subscribe({
+          next: () => {
+            this.successMessage = 'Income Entry Created Successfully';
+            this.errorMessage = '';
 
-         this.successMessage = 'Income Entry Created Successfully';
-         this.errorMessage = '';
+            this.afterSave();
+            this.autoHideMessage();
+          },
+          error: (err) => {
+            this.errorMessage = err.error?.message || 'Create Failed';
+            this.successMessage = '';
 
-         this.afterSave();
-         this.autoHideMessage();
-
-       },
-       error: (err) => {
-
-         this.errorMessage = err.error?.message || 'Create Failed';
-         this.successMessage = '';
-
-         this.autoHideMessage();
-
-       }
-     });
+            this.autoHideMessage();
+          },
+        });
     }
   }
 
-autoHideMessage() {
-  setTimeout(() => {
-    this.successMessage = '';
-    this.errorMessage = '';
-  }, 3000);
-}
+  autoHideMessage() {
+    setTimeout(() => {
+      this.successMessage = '';
+      this.errorMessage = '';
+    }, 3000);
+  }
 
-deleteConfirmed(){
+  deleteConfirmed() {
+    if (!this.selectedId) return;
 
-  if(!this.selectedId) return;
+    this.incomeService.delete(this.selectedId).subscribe({
+      next: () => {
+        this.successMessage = 'Income Entry deleted successfully';
+        this.loadIncomeList();
 
-  this.incomeService.delete(this.selectedId)
-  .subscribe({
+        this.autoHideMessage();
+      },
 
-    next:()=>{
+      error: () => {
+        this.errorMessage = 'Delete failed';
 
-      this.successMessage = "Income Entry deleted successfully";
-      this.loadIncomeList();
-
-     this.autoHideMessage();
-
-    },
-
-    error:()=>{
-
-      this.errorMessage = "Delete failed";
-
-      this.autoHideMessage();
-
-    }
-
-  });
-
-}
+        this.autoHideMessage();
+      },
+    });
+  }
 
   afterSave() {
     this.closeModal();
@@ -313,36 +303,36 @@ deleteConfirmed(){
     this.loadIncomeList();
   }
 
-printIncome(item: any) {
-  this.selectedIncome = item;
-  this.showPrintModal = true;
-}
-closePrintModal() {
-  this.showPrintModal = false;
-}
+  printIncome(item: any) {
+    this.selectedIncome = item;
+    this.showPrintModal = true;
+  }
+  closePrintModal() {
+    this.showPrintModal = false;
+  }
 
-printReceipt() {
-  const receipt = document.getElementById('printSection') as HTMLElement;
-  if (!receipt) return;
+  printReceipt() {
+    const receipt = document.getElementById('printSection') as HTMLElement;
+    if (!receipt) return;
 
-  // ✅ Fix image paths (VERY IMPORTANT)
-  const html = receipt.outerHTML.replaceAll(
-    'src="assets/',
-    `src="${window.location.origin}/assets/`
-  );
+    // ✅ Fix image paths (VERY IMPORTANT)
+    const html = receipt.outerHTML.replaceAll(
+      'src="assets/',
+      `src="${window.location.origin}/assets/`
+    );
 
-  const iframe = document.createElement('iframe');
-  iframe.style.position = 'fixed';
-  iframe.style.width = '0';
-  iframe.style.height = '0';
-  iframe.style.border = '0';
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
 
-  document.body.appendChild(iframe);
+    document.body.appendChild(iframe);
 
-  const doc = iframe.contentWindow!.document;
-  doc.open();
+    const doc = iframe.contentWindow!.document;
+    doc.open();
 
-  doc.write(`
+    doc.write(`
     <html>
       <head>
         <title>Receipt Print</title>
@@ -447,109 +437,142 @@ printReceipt() {
     </html>
   `);
 
-  doc.close();
+    doc.close();
 
-  iframe.onload = () => {
-    setTimeout(() => {
-      iframe.contentWindow!.focus();
-      iframe.contentWindow!.print();
-    }, 300);
-  };
+    iframe.onload = () => {
+      setTimeout(() => {
+        iframe.contentWindow!.focus();
+        iframe.contentWindow!.print();
+      }, 300);
+    };
 
-  setTimeout(() => document.body.removeChild(iframe), 1500);
-}
+    setTimeout(() => document.body.removeChild(iframe), 1500);
+  }
 
-convertToWords(amount: number): string {
-  if (amount == null) return '';
+  convertToWords(amount: number): string {
+    if (amount == null) return '';
 
-  const ones = [
-    '', 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN',
-    'EIGHT', 'NINE', 'TEN', 'ELEVEN', 'TWELVE', 'THIRTEEN',
-    'FOURTEEN', 'FIFTEEN', 'SIXTEEN', 'SEVENTEEN', 'EIGHTEEN', 'NINETEEN'
-  ];
+    const ones = [
+      '',
+      'ONE',
+      'TWO',
+      'THREE',
+      'FOUR',
+      'FIVE',
+      'SIX',
+      'SEVEN',
+      'EIGHT',
+      'NINE',
+      'TEN',
+      'ELEVEN',
+      'TWELVE',
+      'THIRTEEN',
+      'FOURTEEN',
+      'FIFTEEN',
+      'SIXTEEN',
+      'SEVENTEEN',
+      'EIGHTEEN',
+      'NINETEEN',
+    ];
 
-  const tens = [
-    '', '', 'TWENTY', 'THIRTY', 'FORTY', 'FIFTY',
-    'SIXTY', 'SEVENTY', 'EIGHTY', 'NINETY'
-  ];
+    const tens = [
+      '',
+      '',
+      'TWENTY',
+      'THIRTY',
+      'FORTY',
+      'FIFTY',
+      'SIXTY',
+      'SEVENTY',
+      'EIGHTY',
+      'NINETY',
+    ];
 
-  const numToWords = (num: number): string => {
-    if (num < 20) return ones[num];
-    if (num < 100)
-      return tens[Math.floor(num / 10)] +
-        (num % 10 ? ' ' + ones[num % 10] : '');
-    if (num < 1000)
-      return ones[Math.floor(num / 100)] + ' HUNDRED' +
-        (num % 100 ? ' AND ' + numToWords(num % 100) : '');
-    if (num < 100000)
-      return numToWords(Math.floor(num / 1000)) + ' THOUSAND' +
-        (num % 1000 ? ' ' + numToWords(num % 1000) : '');
-    if (num < 10000000)
-      return numToWords(Math.floor(num / 100000)) + ' LAKH' +
-        (num % 100000 ? ' ' + numToWords(num % 100000) : '');
-    return numToWords(Math.floor(num / 10000000)) + ' CRORE' +
-      (num % 10000000 ? ' ' + numToWords(num % 10000000) : '');
-  };
+    const numToWords = (num: number): string => {
+      if (num < 20) return ones[num];
+      if (num < 100)
+        return (
+          tens[Math.floor(num / 10)] + (num % 10 ? ' ' + ones[num % 10] : '')
+        );
+      if (num < 1000)
+        return (
+          ones[Math.floor(num / 100)] +
+          ' HUNDRED' +
+          (num % 100 ? ' AND ' + numToWords(num % 100) : '')
+        );
+      if (num < 100000)
+        return (
+          numToWords(Math.floor(num / 1000)) +
+          ' THOUSAND' +
+          (num % 1000 ? ' ' + numToWords(num % 1000) : '')
+        );
+      if (num < 10000000)
+        return (
+          numToWords(Math.floor(num / 100000)) +
+          ' LAKH' +
+          (num % 100000 ? ' ' + numToWords(num % 100000) : '')
+        );
+      return (
+        numToWords(Math.floor(num / 10000000)) +
+        ' CRORE' +
+        (num % 10000000 ? ' ' + numToWords(num % 10000000) : '')
+      );
+    };
 
-  return numToWords(Math.floor(amount)) + ' RUPEES ONLY';
-}
-isAdmin(): boolean {
-  return this.role === 'ADMIN';
-}
+    return numToWords(Math.floor(amount)) + ' RUPEES ONLY';
+  }
+  isAdmin(): boolean {
+    return this.role === 'ADMIN';
+  }
 
-isUser(): boolean {
-  return this.role === 'USER';
-}
-//----AVATAR PROFILE -----
+  isUser(): boolean {
+    return this.role === 'USER';
+  }
+  //----AVATAR PROFILE -----
 
-toggleProfile(event: Event) {
-  event.stopPropagation();
-  this.showProfile = !this.showProfile;
-}
+  toggleProfile(event: Event) {
+    event.stopPropagation();
+    this.showProfile = !this.showProfile;
+  }
 
-@HostListener('document:click')
-closeProfile() {
-  this.showProfile = false;
-}
+  @HostListener('document:click')
+  closeProfile() {
+    this.showProfile = false;
+  }
 
-logout() {
-  localStorage.clear();
-   this.router.navigate(['/login']);
-}
+  logout() {
+    localStorage.clear();
+    this.router.navigate(['/login']);
+  }
 
-@HostListener('document:click')
-closeOutsideProfile() {
-  this.showProfile = false;
-}
-openMyProfile(){
-  this.usersService.getMyProfile().subscribe(res => {
-    this.profile = res;
-    this.showMyProfileModal = true;
-
-  });
-}
-loadLastSyncDate() {
-  this.incomeService.lastSyncDate()
-    .subscribe({
+  @HostListener('document:click')
+  closeOutsideProfile() {
+    this.showProfile = false;
+  }
+  openMyProfile() {
+    this.usersService.getMyProfile().subscribe((res) => {
+      this.profile = res;
+      this.showMyProfileModal = true;
+    });
+  }
+  loadLastSyncDate() {
+    this.incomeService.lastSyncDate().subscribe({
       next: (res) => {
         this.lastSyncDate = res.lastSyncDate;
-      }
+      },
     });
-}
+  }
 
-syncIncome() {
+  syncIncome() {
+    // 🔥 prevent double click
+    if (this.isSyncing) return;
 
-  // 🔥 prevent double click
-  if (this.isSyncing) return;
+    this.isSyncing = true;
+    this.successMessage = '';
+    this.errorMessage = '';
 
-  this.isSyncing = true;
-  this.successMessage = '';
-  this.errorMessage = '';
-
-  this.incomeService.syncIncome()
-    .subscribe({
+    this.incomeService.syncIncome().subscribe({
       next: (res: any) => {
-
         const today = new Date().toISOString().split('T')[0];
 
         // ✅ handle backend message properly
@@ -564,13 +587,13 @@ syncIncome() {
         // 🔥 update last sync date
         this.lastSyncDate = today;
 
-// 🔥 SHOW sync info
-  this.showSyncInfo = true;
+        // 🔥 SHOW sync info
+        this.showSyncInfo = true;
 
-  // 🔥 AUTO HIDE after 3 sec
-  setTimeout(() => {
-    this.showSyncInfo = false;
-  }, 3000);
+        // 🔥 AUTO HIDE after 3 sec
+        setTimeout(() => {
+          this.showSyncInfo = false;
+        }, 3000);
         // 🔥 reload table
         this.loadIncomeList();
 
@@ -579,7 +602,6 @@ syncIncome() {
       },
 
       error: (err) => {
-
         if (typeof err.error === 'string') {
           this.errorMessage = err.error;
         } else if (err.error?.message) {
@@ -590,7 +612,7 @@ syncIncome() {
 
         this.isSyncing = false;
         this.autoHideMessage();
-      }
+      },
     });
-}
+  }
 }

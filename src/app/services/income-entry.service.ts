@@ -4,13 +4,10 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class IncomeEntryService {
-
-
-//   private baseUrl = 'http://localhost:8080/api/income';
- private baseUrl = `${environment.apiBaseUrl}/api/income`;
+  private baseUrl = `${environment.apiBaseUrl}/api/income`;
 
   constructor(private http: HttpClient) {}
 
@@ -23,16 +20,16 @@ export class IncomeEntryService {
     return this.http.get<any>(this.baseUrl, { params });
   }
 
-searchIncomes(params: any, page: number, size: number) {
-  return this.http.get(`${this.baseUrl}/search`, {
-    params: {
-      ...params,
-      page,
-      size,
-      sort: 'createdDate,desc'
-    }
-  });
-}
+  searchIncomes(params: any, page: number, size: number) {
+    return this.http.get(`${this.baseUrl}/search`, {
+      params: {
+        ...params,
+        page,
+        size,
+        sort: 'createdDate,desc',
+      },
+    });
+  }
 
   create(data: any): Observable<any> {
     return this.http.post(this.baseUrl, data);
@@ -50,13 +47,13 @@ searchIncomes(params: any, page: number, size: number) {
     return this.http.post<any[]>(`${this.baseUrl}/report/search`, searchData);
   }
 
-syncIncome() {
-  return this.http.post(`${this.baseUrl}/sync-income`, {});
-}
-lastSyncDate() {
-  return this.http.get<any>(`${this.baseUrl}/last-sync-date`);
-}
-getSummaryReport(data: any) {
-  return this.http.post<any[]>(`${this.baseUrl}/report/summary`,data);
-}
+  syncIncome() {
+    return this.http.post(`${this.baseUrl}/sync-income`, {});
+  }
+  lastSyncDate() {
+    return this.http.get<any>(`${this.baseUrl}/last-sync-date`);
+  }
+  getSummaryReport(data: any) {
+    return this.http.post<any[]>(`${this.baseUrl}/report/summary`, data);
+  }
 }

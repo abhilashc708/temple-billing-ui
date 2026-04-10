@@ -3,12 +3,9 @@
   <app-change-password></app-change-password>
   <!-- NAVBAR -->
   <nav class="top-navbar" #menuContainer>
-    <div class="logo">
-      MANKURUSSI BHAGAVATHI TEMPLE
-    </div>
+    <div class="logo">MANKURUSSI BHAGAVATHI TEMPLE</div>
 
     <ul class="menu">
-
       <li>Dashboard</li>
 
       <!-- MASTER -->
@@ -16,8 +13,10 @@
         Master
         <span class="arrow" [class.rotate]="activeMenu === 'master'">▾</span>
         <ul class="submenu" *ngIf="activeMenu === 'master'">
-          <li routerLink="/offering" (click)="$event.stopPropagation()">Offerings/Vazhipadu</li>
-<!--          <li routerLink="/god" (click)="$event.stopPropagation()">Prathista</li>-->
+          <li routerLink="/offering" (click)="$event.stopPropagation()">
+            Offerings/Vazhipadu
+          </li>
+          <!--          <li routerLink="/god" (click)="$event.stopPropagation()">Prathista</li>-->
           <li routerLink="/event" (click)="$event.stopPropagation()">Events</li>
         </ul>
       </li>
@@ -28,7 +27,9 @@
         <span class="arrow" [class.rotate]="activeMenu === 'booking'">▾</span>
 
         <ul class="submenu" *ngIf="activeMenu === 'booking'">
-          <li routerLink="/booking" (click)="$event.stopPropagation()">Counter</li>
+          <li routerLink="/booking" (click)="$event.stopPropagation()">
+            Counter
+          </li>
         </ul>
       </li>
 
@@ -38,7 +39,9 @@
         <span class="arrow" [class.rotate]="activeMenu === 'donation'">▾</span>
 
         <ul class="submenu" *ngIf="activeMenu === 'donation'">
-          <li routerLink="/donation" (click)="$event.stopPropagation()">Add Donation</li>
+          <li routerLink="/donation" (click)="$event.stopPropagation()">
+            Add Donation
+          </li>
         </ul>
       </li>
 
@@ -48,10 +51,19 @@
         <span class="arrow" [class.rotate]="activeMenu === 'accounts'">▾</span>
 
         <ul class="submenu" *ngIf="activeMenu === 'accounts'">
-          <li *ngIf="isAdmin()" routerLink="/finance-manager" (click)="$event.stopPropagation()">Income/Expense Titles
+          <li
+            *ngIf="isAdmin()"
+            routerLink="/finance-manager"
+            (click)="$event.stopPropagation()"
+          >
+            Income/Expense Titles
           </li>
-          <li routerLink="/income-entry" (click)="$event.stopPropagation()">Income</li>
-          <li routerLink="/expense-entry" (click)="$event.stopPropagation()">Expense</li>
+          <li routerLink="/income-entry" (click)="$event.stopPropagation()">
+            Income
+          </li>
+          <li routerLink="/expense-entry" (click)="$event.stopPropagation()">
+            Expense
+          </li>
         </ul>
       </li>
 
@@ -61,44 +73,58 @@
         <span class="arrow" [class.rotate]="activeMenu === 'reports'">▾</span>
 
         <ul class="submenu" *ngIf="activeMenu === 'reports'">
-          <li routerLink="/booking-report" (click)="$event.stopPropagation()">Vazhipadu</li>
-          <li routerLink="/donation-report" (click)="$event.stopPropagation()">Donation</li>
-          <li routerLink="/income-report" (click)="$event.stopPropagation()">Income</li>
-          <li routerLink="/expense-report" (click)="$event.stopPropagation()">Expense</li>
-          <li routerLink="/income-summary" (click)="$event.stopPropagation()">Income/Expense Summary Report</li>
+          <li routerLink="/booking-report" (click)="$event.stopPropagation()">
+            Vazhipadu
+          </li>
+          <li routerLink="/donation-report" (click)="$event.stopPropagation()">
+            Donation
+          </li>
+          <li routerLink="/income-report" (click)="$event.stopPropagation()">
+            Income
+          </li>
+          <li routerLink="/expense-report" (click)="$event.stopPropagation()">
+            Expense
+          </li>
+          <li routerLink="/income-summary" (click)="$event.stopPropagation()">
+            Income/Expense Summary Report
+          </li>
         </ul>
       </li>
-
     </ul>
 
     <div class="user-section" (click)="toggleProfile($event)">
       Hi, {{ getFirstName(username) }}
-      <div class="avatar">{{avatar}}</div>
-
+      <div class="avatar">{{ avatar }}</div>
 
       <!-- PROFILE DROPDOWN -->
       <div class="profile-dropdown" *ngIf="showProfile">
-
         <div class="profile-top">
-          <div class="avatar big">{{avatar}}</div>
+          <div class="avatar big">{{ avatar }}</div>
 
           <div class="profile-text">
             <h4>{{ getFirstName(username) }}</h4>
-            <span class="role">{{role}}</span>
+            <span class="role">{{ role }}</span>
           </div>
         </div>
 
         <div class="divider"></div>
 
-        <div class="profile-item" (click)="openMyProfile()">
-          👤 My Profile
-        </div>
+        <div class="profile-item" (click)="openMyProfile()">👤 My Profile</div>
 
-        <div *ngIf="isUser()" class="profile-item" (click)="updateProfilePopup.open()">
+        <div
+          *ngIf="isUser()"
+          class="profile-item"
+          (click)="updateProfilePopup.open()"
+        >
           ⚙ Update Profile
         </div>
 
-        <div *ngIf="isAdmin()" class="profile-item" routerLink="/users" (click)="$event.stopPropagation()">
+        <div
+          *ngIf="isAdmin()"
+          class="profile-item"
+          routerLink="/users"
+          (click)="$event.stopPropagation()"
+        >
           ⚙ Profiles Management
         </div>
         <div class="profile-item" (click)="changePasswordPopup.open()">
@@ -107,14 +133,10 @@
 
         <div class="divider"></div>
 
-        <div class="profile-item logout" (click)="logout()">
-          🚪 Sign Out
-        </div>
-
+        <div class="profile-item logout" (click)="logout()">🚪 Sign Out</div>
       </div>
     </div>
   </nav>
-
 
   <!-- HEADER SECTION -->
   <div class="dashboard-header">
@@ -125,171 +147,171 @@
 
       <!--      <button class="add-btn">ADD NEW</button>-->
       <div class="quick-add">
-
         <button class="add-btn" (click)="toggleQuickMenu($event)">
           ADD NEW
         </button>
 
         <div class="quick-menu" *ngIf="showQuickMenu">
-
-          <div class="quick-item" routerLink="/booking" (click)="closeQuickMenu()">
+          <div
+            class="quick-item"
+            routerLink="/booking"
+            (click)="closeQuickMenu()"
+          >
             <i class="icon">🛕</i>
             Booking
           </div>
 
-          <div class="quick-item" routerLink="/donation" (click)="closeQuickMenu()">
+          <div
+            class="quick-item"
+            routerLink="/donation"
+            (click)="closeQuickMenu()"
+          >
             <i class="icon">💰</i>
             Donation
           </div>
 
-          <div class="quick-item" routerLink="/income-entry" (click)="closeQuickMenu()">
+          <div
+            class="quick-item"
+            routerLink="/income-entry"
+            (click)="closeQuickMenu()"
+          >
             <i class="icon">📈</i>
             Income
           </div>
 
-          <div class="quick-item" routerLink="/expense-entry" (click)="closeQuickMenu()">
+          <div
+            class="quick-item"
+            routerLink="/expense-entry"
+            (click)="closeQuickMenu()"
+          >
             <i class="icon">📉</i>
             Expense
           </div>
-
         </div>
-
       </div>
-
-
     </div>
   </div>
 
-
   <!-- SUMMARY CARDS -->
   <div class="cards-container">
-
     <!-- Booking Card -->
     <div class="card purple">
       <div class="card-body">
-        <h3>₹ {{dashboardData.bookingTotal || 0}}.00</h3>
+        <h3>₹ {{ dashboardData.bookingTotal || 0 }}.00</h3>
 
-        <p>Cash({{dashboardData.cashCount || 0}}) - {{dashboardData.bookingCash || 0}}.00</p>
+        <p>
+          Cash({{ dashboardData.cashCount || 0 }}) -
+          {{ dashboardData.bookingCash || 0 }}.00
+        </p>
 
-        <p>UPI({{dashboardData.upiCount || 0}}) - {{dashboardData.bookingUpi || 0}}.00</p>
+        <p>
+          UPI({{ dashboardData.upiCount || 0 }}) -
+          {{ dashboardData.bookingUpi || 0 }}.00
+        </p>
 
-        <p>Other Income - {{dashboardData.otherIncome || 0}}.00</p>
+        <p>Other Income - {{ dashboardData.otherIncome || 0 }}.00</p>
 
-        <p><strong>Total - {{dashboardData.bookingTotal || 0}}.00</strong></p>
+        <p>
+          <strong>Total - {{ dashboardData.bookingTotal || 0 }}.00</strong>
+        </p>
       </div>
       <div class="card-footer">
-        Booking({{dashboardData.totalCount || 0}}) Amount
+        Booking({{ dashboardData.totalCount || 0 }}) Amount
       </div>
     </div>
 
     <!-- Donation Card -->
     <div class="card purple">
       <div class="card-body">
-        <h3>₹ {{dashboardData.donationTotal || 0}}.00</h3>
+        <h3>₹ {{ dashboardData.donationTotal || 0 }}.00</h3>
 
-        <p>Cash({{dashboardData.donationCashCount || 0}}) - {{dashboardData.donationCash || 0}}.00</p>
+        <p>
+          Cash({{ dashboardData.donationCashCount || 0 }}) -
+          {{ dashboardData.donationCash || 0 }}.00
+        </p>
 
-        <p>UPI({{dashboardData.donationUpiCount || 0}}) - {{dashboardData.donationUpi || 0}}.00</p>
+        <p>
+          UPI({{ dashboardData.donationUpiCount || 0 }}) -
+          {{ dashboardData.donationUpi || 0 }}.00
+        </p>
 
-        <p><strong>Total - {{dashboardData.donationTotal || 0}}.00</strong></p>
-<!--        <h3>₹ {{dashboardData.donationTotal || 0}}.00</h3>-->
+        <p>
+          <strong>Total - {{ dashboardData.donationTotal || 0 }}.00</strong>
+        </p>
+        <!--        <h3>₹ {{dashboardData.donationTotal || 0}}.00</h3>-->
       </div>
       <div class="card-footer">
-        Donation({{dashboardData.totalDonationCount || 0}}) Amount
+        Donation({{ dashboardData.totalDonationCount || 0 }}) Amount
       </div>
     </div>
 
     <!-- Expense Card -->
     <div class="card red">
       <div class="card-body center">
-        <h3>₹ {{dashboardData.expenseTotal || 0}}.00</h3>
+        <h3>₹ {{ dashboardData.expenseTotal || 0 }}.00</h3>
       </div>
-      <div class="card-footer">
-        Expense Amount
-      </div>
+      <div class="card-footer">Expense Amount</div>
     </div>
-
   </div>
   <!-- FOOTER -->
   <footer class="dashboard-footer">
     <div class="footer-container">
+      <div class="footer-left">© 2026 Mankurussi Temple Booking System</div>
 
-      <div class="footer-left">
-        © 2026 Mankurussi Temple Booking System
-      </div>
+      <div class="footer-center">Powered by Abhilash C</div>
 
-      <div class="footer-center">
-        Powered by Abhilash C
-      </div>
-
-      <div class="footer-right">
-        Version 1.0.0
-      </div>
-
+      <div class="footer-right">Version 1.0.0</div>
     </div>
   </footer>
 </div>
 
-<!-- MY PROFILE MODAL -->
 
 <div class="profile-popup" *ngIf="showMyProfileModal">
-
   <div class="profile-card">
-
-    <button class="close-btn" (click)="showMyProfileModal=false">✕</button>
+    <button class="close-btn" (click)="showMyProfileModal = false">✕</button>
 
     <!-- Avatar -->
     <div class="profile-avatar">
-      {{profile.name?.charAt(0) || 'U'}}
+      {{ profile.name?.charAt(0) || 'U' }}
     </div>
 
     <!-- Name -->
-    <h3>{{profile.name}}</h3>
+    <h3>{{ profile.name }}</h3>
     <span class="role-badge" [ngClass]="profile.role">
-      {{profile.role}}
+      {{ profile.role }}
     </span>
 
     <div class="profile-info">
-
       <div class="info-row">
         <span>Email</span>
-        <p>{{profile.email || '-'}}</p>
+        <p>{{ profile.email || '-' }}</p>
       </div>
 
       <div class="info-row">
         <span>Phone</span>
-        <p>{{profile.phone || '-'}}</p>
+        <p>{{ profile.phone || '-' }}</p>
       </div>
 
       <div class="info-row">
         <span>Address</span>
-        <p>{{profile.address || '-'}}</p>
+        <p>{{ profile.address || '-' }}</p>
       </div>
 
       <div class="info-row">
         <span>District</span>
-        <p>{{profile.district || '-'}}</p>
+        <p>{{ profile.district || '-' }}</p>
       </div>
 
       <div class="info-row">
         <span>State</span>
-        <p>{{profile.state || '-'}}</p>
+        <p>{{ profile.state || '-' }}</p>
       </div>
-
     </div>
 
     <div class="profile-actions">
+      <button class="btn-edit">✏ Edit Profile</button>
 
-      <button class="btn-edit">
-        ✏ Edit Profile
-      </button>
-
-      <button class="btn-password">
-        🔑 Change Password
-      </button>
-
+      <button class="btn-password">🔑 Change Password</button>
     </div>
-
   </div>
-
 </div>

@@ -1,5 +1,4 @@
 <div class="dashboard-wrapper">
-
   <!-- 🔥 TOP MENU BAR -->
   <header class="top-header">
     <app-update-profile></app-update-profile>
@@ -9,17 +8,22 @@
         <h3>MANKURUSSI TEMPLE</h3>
       </div>
       <ul class="menu" #menuContainer1>
-
-        <li routerLink="/dashboard" (click)="$event.stopPropagation()">Dashboard</li>
+        <li routerLink="/dashboard" (click)="$event.stopPropagation()">
+          Dashboard
+        </li>
 
         <!-- MASTER -->
         <li *ngIf="isAdmin()" (click)="toggleMenu('master')" class="has-sub">
           Master
           <span class="arrow" [class.rotate]="activeMenu === 'master'">▾</span>
           <ul class="submenu" *ngIf="activeMenu === 'master'">
-            <li routerLink="/offering" (click)="$event.stopPropagation()">Offerings/Vazhipadu</li>
-<!--            <li routerLink="/god" (click)="$event.stopPropagation()">Prathista</li>-->
-            <li routerLink="/event" (click)="$event.stopPropagation()">Events</li>
+            <li routerLink="/offering" (click)="$event.stopPropagation()">
+              Offerings/Vazhipadu
+            </li>
+            <!--            <li routerLink="/god" (click)="$event.stopPropagation()">Prathista</li>-->
+            <li routerLink="/event" (click)="$event.stopPropagation()">
+              Events
+            </li>
           </ul>
         </li>
 
@@ -29,31 +33,47 @@
           <span class="arrow" [class.rotate]="activeMenu === 'booking'">▾</span>
 
           <ul class="submenu" *ngIf="activeMenu === 'booking'">
-            <li routerLink="/booking" (click)="$event.stopPropagation()">Counter</li>
+            <li routerLink="/booking" (click)="$event.stopPropagation()">
+              Counter
+            </li>
           </ul>
         </li>
 
         <!-- DONATION -->
         <li (click)="toggleMenu('donation')" class="has-sub">
           Donation
-          <span class="arrow" [class.rotate]="activeMenu === 'donation'">▾</span>
+          <span class="arrow" [class.rotate]="activeMenu === 'donation'"
+            >▾</span
+          >
 
           <ul class="submenu" *ngIf="activeMenu === 'donation'">
-            <li routerLink="/donation" (click)="$event.stopPropagation()">Add Donation</li>
+            <li routerLink="/donation" (click)="$event.stopPropagation()">
+              Add Donation
+            </li>
           </ul>
         </li>
 
         <!-- ACCOUNTS -->
         <li (click)="toggleMenu('accounts')" class="has-sub">
           Accounts
-          <span class="arrow" [class.rotate]="activeMenu === 'accounts'">▾</span>
+          <span class="arrow" [class.rotate]="activeMenu === 'accounts'"
+            >▾</span
+          >
 
           <ul class="submenu" *ngIf="activeMenu === 'accounts'">
-            <li *ngIf="isAdmin()" routerLink="/finance-manager" (click)="$event.stopPropagation()">Income/Expense
-              Titles
+            <li
+              *ngIf="isAdmin()"
+              routerLink="/finance-manager"
+              (click)="$event.stopPropagation()"
+            >
+              Income/Expense Titles
             </li>
-            <li routerLink="/income-entry" (click)="$event.stopPropagation()">Income</li>
-            <li routerLink="/expense-entry" (click)="$event.stopPropagation()">Expense</li>
+            <li routerLink="/income-entry" (click)="$event.stopPropagation()">
+              Income
+            </li>
+            <li routerLink="/expense-entry" (click)="$event.stopPropagation()">
+              Expense
+            </li>
           </ul>
         </li>
 
@@ -63,29 +83,40 @@
           <span class="arrow" [class.rotate]="activeMenu === 'reports'">▾</span>
 
           <ul class="submenu" *ngIf="activeMenu === 'reports'">
-            <li routerLink="/booking-report" (click)="$event.stopPropagation()">Vazhipadu</li>
-            <li routerLink="/donation-report" (click)="$event.stopPropagation()">Donation</li>
-            <li routerLink="/income-report" (click)="$event.stopPropagation()">Income</li>
-            <li routerLink="/expense-report" (click)="$event.stopPropagation()">Expense</li>
-            <li routerLink="/income-summary" (click)="$event.stopPropagation()">Income/Expense Summary Report</li>
+            <li routerLink="/booking-report" (click)="$event.stopPropagation()">
+              Vazhipadu
+            </li>
+            <li
+              routerLink="/donation-report"
+              (click)="$event.stopPropagation()"
+            >
+              Donation
+            </li>
+            <li routerLink="/income-report" (click)="$event.stopPropagation()">
+              Income
+            </li>
+            <li routerLink="/expense-report" (click)="$event.stopPropagation()">
+              Expense
+            </li>
+            <li routerLink="/income-summary" (click)="$event.stopPropagation()">
+              Income/Expense Summary Report
+            </li>
           </ul>
         </li>
-
       </ul>
 
       <div class="user-section" (click)="toggleProfile($event)">
         Hi, {{ getFirstName(username) }}
-        <div class="avatar">{{avatar}}</div>
+        <div class="avatar">{{ avatar }}</div>
 
         <!-- PROFILE DROPDOWN -->
         <div class="profile-dropdown" *ngIf="showProfile">
-
           <div class="profile-top">
-            <div class="avatar big">{{avatar}}</div>
+            <div class="avatar big">{{ avatar }}</div>
 
             <div class="profile-text">
               <h4>{{ getFirstName(username) }}</h4>
-              <span class="role">{{role}}</span>
+              <span class="role">{{ role }}</span>
             </div>
           </div>
 
@@ -95,11 +126,20 @@
             👤 My Profile
           </div>
 
-          <div *ngIf="isUser()" class="profile-item" (click)="updateProfilePopup.open()">
+          <div
+            *ngIf="isUser()"
+            class="profile-item"
+            (click)="updateProfilePopup.open()"
+          >
             ⚙ Update Profile
           </div>
 
-          <div *ngIf="isAdmin()" class="profile-item" routerLink="/users" (click)="$event.stopPropagation()">
+          <div
+            *ngIf="isAdmin()"
+            class="profile-item"
+            routerLink="/users"
+            (click)="$event.stopPropagation()"
+          >
             ⚙ Profiles Management
           </div>
 
@@ -109,13 +149,9 @@
 
           <div class="divider"></div>
 
-          <div class="profile-item logout" (click)="logout()">
-            🚪 Sign Out
-          </div>
-
+          <div class="profile-item logout" (click)="logout()">🚪 Sign Out</div>
         </div>
       </div>
-
     </div>
   </header>
   <!-- 🔥 PAGE CONTENT -->
@@ -123,13 +159,14 @@
   <div class="report-container">
     <!-- SEARCH FORM -->
     <form [formGroup]="searchForm" class="search-grid">
-
       <div class="form-group">
         <label>Vazhipadu </label>
         <select formControlName="vazhipadu">
           <option value="">Select Vazhipadu</option>
-          <option *ngFor="let offering of offerings"
-                  [value]="offering.offeringEnglish">
+          <option
+            *ngFor="let offering of offerings"
+            [value]="offering.offeringEnglish"
+          >
             {{ offering.offeringEnglish }} - {{ offering.offeringMalayalam }}
           </option>
           <!--          <option *ngFor="let v of vazhipaduList" [value]="v">{{v}}</option>-->
@@ -148,22 +185,22 @@
 
       <div class="form-group">
         <label>Vazhipadu From Date </label>
-        <input type="date" formControlName="vazhipaduFromDate">
+        <input type="date" formControlName="vazhipaduFromDate" />
       </div>
 
       <div class="form-group">
         <label>Vazhipadu To Date </label>
-        <input type="date" formControlName="vazhipaduToDate">
+        <input type="date" formControlName="vazhipaduToDate" />
       </div>
 
       <div class="form-group">
         <label>Booking From Date </label>
-        <input type="date" formControlName="bookingFromDate">
+        <input type="date" formControlName="bookingFromDate" />
       </div>
 
       <div class="form-group">
         <label>Booking To Date </label>
-        <input type="date" formControlName="bookingToDate">
+        <input type="date" formControlName="bookingToDate" />
       </div>
 
       <div class="form-group">
@@ -183,149 +220,155 @@
           <option value="UPI">UPI</option>
         </select>
       </div>
-
     </form>
 
     <!-- BUTTONS -->
     <div class="form-buttons">
-      <button type="button" class="btn report" (click)="getReport()">GET REPORT</button>
-      <button type="button" class="btn clear" (click)="clearForm()">CLEAR FORM</button>
-      <button type="button" class="btn refresh" (click)="refreshPage()">REFRESH PAGE</button>
+      <button
+        type="button"
+        class="btn report"
+        (click)="getReport()"
+        [disabled]="isLoading"
+      >
+        {{ isLoading ? 'Loading...' : 'GET REPORT' }}
+      </button>
+      <button type="button" class="btn clear" (click)="clearForm()">
+        CLEAR FORM
+      </button>
+      <button type="button" class="btn refresh" (click)="refreshPage()">
+        REFRESH PAGE
+      </button>
       <div class="report-actions" *ngIf="reportList.length > 0">
-        <button type="button" class="btn print" (click)="printReport()">🖨 Print</button>
+        <button type="button" class="btn print" (click)="printReport()">
+          🖨 Print
+        </button>
       </div>
       <div class="report-actions" *ngIf="reportList.length > 0">
-      <button type="button" class="btn download" (click)="downloadReport()">⬇ DOWNLOAD</button>
+        <button type="button" class="btn download" (click)="downloadReport()">
+          ⬇ DOWNLOAD
+        </button>
       </div>
-      </div>
+    </div>
+    <!-- 🔄 LOADER -->
+    <div *ngIf="isLoading" class="loader-overlay">
+      <div class="spinner"></div>
+      <p>Generating report...</p>
+    </div>
+    <!-- ❌ NO DATA MESSAGE -->
+    <div *ngIf="!isLoading && noDataFound" class="no-data">
+      ⚠ No records found for selected filters
+    </div>
     <!-- REPORT SECTION -->
-    <div id="reportSection" *ngIf="reportList.length > 0" class="report-table">
-
+    <div
+      id="reportSection"
+      *ngIf="reportList.length > 0 && !isLoading"
+      class="report-table"
+    >
       <!-- Temple Header -->
       <div class="temple-header">
-        <h3> <b>Mankurussi Bhagavathi Temple</b></h3>
+        <h3><b>Mankurussi Bhagavathi Temple</b></h3>
         <p>Karakurussi,Palakkad,Kerala -678595</p>
-        <p>Phone: 9072017303, Email: mankurussibhagavathitemple&#64;gmail.com</p>
+        <p>
+          Phone: 9072017303, Email: mankurussibhagavathitemple&#64;gmail.com
+        </p>
         <h2><b>Vazhipadu Summary Report</b></h2>
       </div>
 
       <table>
-
         <thead>
-        <tr>
-          <th>S/N</th>
-          <th>BOOKING ID</th>
-          <th>NAME</th>
-          <th>BIRTH STAR</th>
-          <th>VAZHIPADU</th>
-          <th>VAZHIPADU DATE</th>
-          <th>BOOKING DATE</th>
-          <th>STATUS</th>
-          <th>METHOD</th>
-          <th>QTY</th>
-          <th>AMOUNT</th>
-          <th>TOTAL</th>
-        </tr>
+          <tr>
+            <th>S/N</th>
+            <th>BOOKING ID</th>
+            <th>NAME</th>
+            <th>BIRTH STAR</th>
+            <th>VAZHIPADU</th>
+            <th>VAZHIPADU DATE</th>
+            <th>BOOKING DATE</th>
+            <th>STATUS</th>
+            <th>METHOD</th>
+            <th>QTY</th>
+            <th>AMOUNT</th>
+            <th>TOTAL</th>
+          </tr>
         </thead>
 
         <tbody>
+          <tr *ngFor="let item of reportList; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ item.receiptNumber }}</td>
+            <td>{{ item.devoteeName }}</td>
+            <td>{{ item.birthStar }}</td>
+            <td>{{ item.vazhipadu }}</td>
+            <td>{{ item.bookingDate }}</td>
+            <td>{{ item.createdDate | date: 'yyyy-MM-dd' }}</td>
+            <td>{{ item.paymentStatus }}</td>
+            <td>{{ item.paymentType }}</td>
 
-        <tr *ngFor="let item of reportList; let i = index">
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.amount }}</td>
 
-          <td>{{i+1}}</td>
-          <td>{{item.receiptNumber}}</td>
-          <td>{{item.devoteeName}}</td>
-          <td>{{item.birthStar}}</td>
-          <td>{{item.vazhipadu}}</td>
-          <td>{{item.bookingDate}}</td>
-          <td>{{item.createdDate | date:'yyyy-MM-dd'}}</td>
-          <td>{{item.paymentStatus}}</td>
-          <td>{{item.paymentType}}</td>
+            <!-- TOTAL = quantity * amount -->
+            <td>{{ item.quantity * item.amount }}</td>
+          </tr>
 
-          <td>{{item.quantity}}</td>
-          <td>{{item.amount}}</td>
-
-          <!-- TOTAL = quantity * amount -->
-          <td>{{item.quantity * item.amount}}</td>
-
-        </tr>
-
-        <!-- GRAND TOTAL -->
-        <tr class="grand-total">
-          <td colspan="11">GRAND TOTAL</td>
-          <td>{{getGrandTotal()}}</td>
-        </tr>
-
+          <!-- GRAND TOTAL -->
+          <tr class="grand-total">
+            <td colspan="11">GRAND TOTAL</td>
+            <td>{{ getGrandTotal() }}</td>
+          </tr>
         </tbody>
       </table>
-
     </div>
-
   </div>
-
 </div>
 
-<!-- MY PROFILE MODAL -->
 
 <div class="profile-popup" *ngIf="showMyProfileModal">
-
   <div class="profile-card">
-
-    <button class="close-btn" (click)="showMyProfileModal=false">✕</button>
+    <button class="close-btn" (click)="showMyProfileModal = false">✕</button>
 
     <!-- Avatar -->
     <div class="profile-avatar">
-      {{profile.name?.charAt(0) || 'U'}}
+      {{ profile.name?.charAt(0) || 'U' }}
     </div>
 
     <!-- Name -->
-    <h3>{{profile.name}}</h3>
+    <h3>{{ profile.name }}</h3>
     <span class="role-badge" [ngClass]="profile.role">
-      {{profile.role}}
+      {{ profile.role }}
     </span>
 
     <div class="profile-info">
-
       <div class="info-row">
         <span>Email</span>
-        <p>{{profile.email || '-'}}</p>
+        <p>{{ profile.email || '-' }}</p>
       </div>
 
       <div class="info-row">
         <span>Phone</span>
-        <p>{{profile.phone || '-'}}</p>
+        <p>{{ profile.phone || '-' }}</p>
       </div>
 
       <div class="info-row">
         <span>Address</span>
-        <p>{{profile.address || '-'}}</p>
+        <p>{{ profile.address || '-' }}</p>
       </div>
 
       <div class="info-row">
         <span>District</span>
-        <p>{{profile.district || '-'}}</p>
+        <p>{{ profile.district || '-' }}</p>
       </div>
 
       <div class="info-row">
         <span>State</span>
-        <p>{{profile.state || '-'}}</p>
+        <p>{{ profile.state || '-' }}</p>
       </div>
-
     </div>
 
     <div class="profile-actions">
+      <button class="btn-edit">✏ Edit Profile</button>
 
-      <button class="btn-edit">
-        ✏ Edit Profile
-      </button>
-
-      <button class="btn-password">
-        🔑 Change Password
-      </button>
-
+      <button class="btn-password">🔑 Change Password</button>
     </div>
-
   </div>
-
 </div>
-

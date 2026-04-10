@@ -4,7 +4,7 @@ import { jwtDecode } from 'jwt-decode';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
-  const token = localStorage.getItem("jwtToken");
+  const token = localStorage.getItem('jwtToken');
   if (token) {
     try {
       const decodedToken: any = jwtDecode(token); // Decode JWT
@@ -13,20 +13,20 @@ export const authGuard: CanActivateFn = (route, state) => {
       if (decodedToken.exp && decodedToken.exp > currentTime) {
         return true; // Token is valid
       } else {
-        console.log("Token expired. Redirecting to login.");
-        localStorage.removeItem("jwtToken"); // Clear expired token
-        router.navigateByUrl("login");
+        console.log('Token expired. Redirecting to login.');
+        localStorage.removeItem('jwtToken'); // Clear expired token
+        router.navigateByUrl('login');
         return false;
       }
     } catch (error) {
-      console.log("Invalid token. Redirecting to login.");
-      localStorage.removeItem("jwtToken"); // Clear invalid token
-      router.navigateByUrl("login");
+      console.log('Invalid token. Redirecting to login.');
+      localStorage.removeItem('jwtToken'); // Clear invalid token
+      router.navigateByUrl('login');
       return false;
     }
   } else {
-    console.log("No token found. Redirecting to login.");
-    router.navigateByUrl("login");
+    console.log('No token found. Redirecting to login.');
+    router.navigateByUrl('login');
     return false;
   }
 };

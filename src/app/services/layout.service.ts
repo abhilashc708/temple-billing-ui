@@ -4,15 +4,14 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LayoutService {
-//    private baseUrl = 'http://localhost:8080/api/dashboard';
- private baseUrl = `${environment.apiBaseUrl}/api/dashboard`;
+  private baseUrl = `${environment.apiBaseUrl}/api/dashboard`;
 
-    constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
-getDashboardSummary(){
-  return this.http.get<any>(`${this.baseUrl}/today`);
-}
+  getDashboardSummary() {
+    return this.http.get<any>(`${this.baseUrl}/today`);
+  }
 }

@@ -6,59 +6,47 @@ import { UsersService } from '../../services/users.service';
 @Component({
   selector: 'app-update-profile',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './update-profile.component.html',
-  styleUrl: './update-profile.component.scss'
+  styleUrl: './update-profile.component.scss',
 })
 export class UpdateProfileComponent {
-
   form!: FormGroup;
   showModal = false;
 
   constructor(
     private fb: FormBuilder,
     private usersService: UsersService
-  ){}
+  ) {}
 
-  ngOnInit(){
-
+  ngOnInit() {
     this.form = this.fb.group({
-      name:[''],
-      email:[''],
-      phone:[''],
-      address:[''],
-      district:[''],
-      state:['']
+      name: [''],
+      email: [''],
+      phone: [''],
+      address: [''],
+      district: [''],
+      state: [''],
     });
-
   }
 
-  open(){
-
-    this.usersService.getMyProfile().subscribe(res=>{
+  open() {
+    this.usersService.getMyProfile().subscribe((res) => {
       this.form.patchValue(res);
       this.showModal = true;
     });
-
   }
 
-  close(){
+  close() {
     this.showModal = false;
   }
 
-  updateProfile(){
-
+  updateProfile() {
     const payload = this.form.value;
 
-    this.usersService.updateMyProfile(payload)
-      .subscribe(()=>{
-        alert("Profile Updated Successfully");
-        this.close();
-      });
-
+    this.usersService.updateMyProfile(payload).subscribe(() => {
+      alert('Profile Updated Successfully');
+      this.close();
+    });
   }
-
 }

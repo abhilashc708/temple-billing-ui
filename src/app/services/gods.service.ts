@@ -5,16 +5,14 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GodsService {
-
-//  private baseUrl = 'http://localhost:8080/api/gods';
- private baseUrl = `${environment.apiBaseUrl}/api/gods`;
+  private baseUrl = `${environment.apiBaseUrl}/api/gods`;
 
   constructor(private http: HttpClient) {}
 
-getGods(page: number, size: number, sortBy: string) {
+  getGods(page: number, size: number, sortBy: string) {
     let params = new HttpParams()
       .set('page', page)
       .set('size', size)
@@ -22,7 +20,7 @@ getGods(page: number, size: number, sortBy: string) {
     return this.http.get<any>(`${this.baseUrl}`, { params });
   }
 
- // CREATE
+  // CREATE
   createGod(data: any): Observable<any> {
     return this.http.post(this.baseUrl, data);
   }
@@ -36,5 +34,4 @@ getGods(page: number, size: number, sortBy: string) {
   deleteGod(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
-
 }

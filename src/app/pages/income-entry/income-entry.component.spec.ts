@@ -8,9 +8,8 @@ describe('IncomeEntryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [IncomeEntryComponent]
-    })
-    .compileComponents();
+      imports: [IncomeEntryComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(IncomeEntryComponent);
     component = fixture.componentInstance;

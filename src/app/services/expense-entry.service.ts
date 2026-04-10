@@ -4,13 +4,10 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ExpenseEntryService {
-
-
-//   private baseUrl = 'http://localhost:8080/api/expense';
- private baseUrl = `${environment.apiBaseUrl}/api/expense`;
+  private baseUrl = `${environment.apiBaseUrl}/api/expense`;
 
   constructor(private http: HttpClient) {}
 
@@ -23,16 +20,16 @@ export class ExpenseEntryService {
     return this.http.get<any>(this.baseUrl, { params });
   }
 
-searchExpense(params: any, page: number, size: number) {
-  return this.http.get(`${this.baseUrl}/search`, {
-    params: {
-      ...params,
-      page,
-      size,
-      sort: 'createdDate,desc'
-    }
-  });
-}
+  searchExpense(params: any, page: number, size: number) {
+    return this.http.get(`${this.baseUrl}/search`, {
+      params: {
+        ...params,
+        page,
+        size,
+        sort: 'createdDate,desc',
+      },
+    });
+  }
 
   create(data: any): Observable<any> {
     return this.http.post(this.baseUrl, data);
@@ -46,11 +43,11 @@ searchExpense(params: any, page: number, size: number) {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
 
- searchExpenseReport(searchData: any): Observable<any[]> {
+  searchExpenseReport(searchData: any): Observable<any[]> {
     return this.http.post<any[]>(`${this.baseUrl}/report/search`, searchData);
   }
 
-getSummaryReport(data: any) {
-  return this.http.post<any[]>(`${this.baseUrl}/report/summary`, data);
-}
+  getSummaryReport(data: any) {
+    return this.http.post<any[]>(`${this.baseUrl}/report/summary`, data);
+  }
 }

@@ -5,41 +5,37 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UsersService {
-// private baseUrl = 'http://localhost:8080/api/users';
-private baseUrl = `${environment.apiBaseUrl}/api/users`;
-
-//  private api = environment.apiBaseUrl + '/api/users';
+  private baseUrl = `${environment.apiBaseUrl}/api/users`;
 
   constructor(private http: HttpClient) {}
 
-  getUsers(page:number,size:number){
+  getUsers(page: number, size: number) {
     return this.http.get(`${this.baseUrl}?page=${page}&size=${size}`);
   }
 
-  createUser(data:any){
-    return this.http.post(this.baseUrl,data);
+  createUser(data: any) {
+    return this.http.post(this.baseUrl, data);
   }
 
-  updateUser(id:number,data:any){
-    return this.http.put(`${this.baseUrl}/${id}`,data);
+  updateUser(id: number, data: any) {
+    return this.http.put(`${this.baseUrl}/${id}`, data);
   }
 
-  deleteUser(id:number){
+  deleteUser(id: number) {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
 
-getMyProfile(){
-  return this.http.get<any>(`${this.baseUrl}/me`);
-}
-updateMyProfile(data:any){
-  return this.http.put(`${this.baseUrl}/me`, data);
-}
+  getMyProfile() {
+    return this.http.get<any>(`${this.baseUrl}/me`);
+  }
+  updateMyProfile(data: any) {
+    return this.http.put(`${this.baseUrl}/me`, data);
+  }
 
-changePassword(data:any){
-  return this.http.post(`${this.baseUrl}/change-password`,data);
-}
-
+  changePassword(data: any) {
+    return this.http.post(`${this.baseUrl}/change-password`, data);
+  }
 }

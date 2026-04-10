@@ -1,7 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild, HostListener, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  HostListener,
+  OnInit,
+} from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  Validators,
+} from '@angular/forms';
 import { BookingService } from '../../services/booking.service';
 import { OfferingService } from '../../services/offering.service';
 import { UsersService } from '../../services/users.service';
@@ -10,139 +22,161 @@ import { ChangePasswordComponent } from '../../shared/change-password/change-pas
 
 @Component({
   selector: 'app-booking-report',
-    standalone: true,
-    imports: [CommonModule, RouterModule, ReactiveFormsModule, UpdateProfileComponent, ChangePasswordComponent],
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+    UpdateProfileComponent,
+    ChangePasswordComponent,
+  ],
   templateUrl: './booking-report.component.html',
-  styleUrl: './booking-report.component.scss'
+  styleUrl: './booking-report.component.scss',
 })
 export class BookingReportComponent {
   showProfile = false;
   role: string = '';
-username: string = '';
+  username: string = '';
   avatar: string = '';
-searchForm!: FormGroup;
-reportList: any[] = [];
-receipts: any[] = [];
- offerings: any[] = [];
+  searchForm!: FormGroup;
+  reportList: any[] = [];
+  receipts: any[] = [];
+  offerings: any[] = [];
   profile: any = {};
   showMyProfileModal = false;
+  isLoading = false;
+  noDataFound = false;
 
   @ViewChild(UpdateProfileComponent)
-    updateProfilePopup!: UpdateProfileComponent;
+  updateProfilePopup!: UpdateProfileComponent;
 
   @ViewChild(ChangePasswordComponent)
   changePasswordPopup!: ChangePasswordComponent;
 
-birthStars = [
-  { value: 'aswathi', label: 'Aswathi - അശ്വതി' },
-  { value: 'bharani', label: 'Bharani - ഭരണി' },
-  { value: 'karthika', label: 'Karthika - കാർത്തിക' },
-  { value: 'rohini', label: 'Rohini - രോഹിണി' },
-  { value: 'makayiram', label: 'Makayiram - മകയിരം' },
-  { value: 'thiruvathira', label: 'Thiruvathira - തിരുവാതിര' },
-  { value: 'punartham', label: 'Punartham - പുനർതം' },
-  { value: 'pooyam', label: 'Pooyam - പൂയം' },
-  { value: 'ayilyam', label: 'Ayilyam - ആയില്യം' },
-  { value: 'makam', label: 'Makam - മകം' },
-  { value: 'poorom', label: 'Poorom - പൂരം' },
-  { value: 'uthram', label: 'Uthram - ഉത്രം' },
-  { value: 'atham', label: 'Atham - അത്തം' },
-  { value: 'chithira', label: 'Chithira - ചിത്തിര' },
-  { value: 'chothi', label: 'Chothi - ചോതി' },
-  { value: 'visakham', label: 'Visakham - വിശാഖം' },
-  { value: 'anizham', label: 'Anizham - അനിഴം' },
-  { value: 'thrikketta', label: 'Thrikketta - തൃക്കേട്ട' },
-  { value: 'moolam', label: 'Moolam - മൂലം' },
-  { value: 'pooradam', label: 'Pooradam - പൂരാടം' },
-  { value: 'uthradam', label: 'Uthradam - ഉത്രാടം' },
-  { value: 'thiruvonam', label: 'Thiruvonam - തിരുവോണം' },
-  { value: 'avittam', label: 'Avittam - അവിട്ടം' },
-  { value: 'chathayam', label: 'Chathayam - ചതയം' },
-  { value: 'pooruruttathi', label: 'Pooruruttathi - പൂരുരുട്ടാതി' },
-  { value: 'uthruttathi', label: 'Uthruttathi - ഉത്രട്ടാതി' },
-  { value: 'revathi', label: 'Revathi - രേവതി' }
-];
+  birthStars = [
+    { value: 'aswathi', label: 'Aswathi - അശ്വതി' },
+    { value: 'bharani', label: 'Bharani - ഭരണി' },
+    { value: 'karthika', label: 'Karthika - കാർത്തിക' },
+    { value: 'rohini', label: 'Rohini - രോഹിണി' },
+    { value: 'makayiram', label: 'Makayiram - മകയിരം' },
+    { value: 'thiruvathira', label: 'Thiruvathira - തിരുവാതിര' },
+    { value: 'punartham', label: 'Punartham - പുനർതം' },
+    { value: 'pooyam', label: 'Pooyam - പൂയം' },
+    { value: 'ayilyam', label: 'Ayilyam - ആയില്യം' },
+    { value: 'makam', label: 'Makam - മകം' },
+    { value: 'poorom', label: 'Poorom - പൂരം' },
+    { value: 'uthram', label: 'Uthram - ഉത്രം' },
+    { value: 'atham', label: 'Atham - അത്തം' },
+    { value: 'chithira', label: 'Chithira - ചിത്തിര' },
+    { value: 'chothi', label: 'Chothi - ചോതി' },
+    { value: 'visakham', label: 'Visakham - വിശാഖം' },
+    { value: 'anizham', label: 'Anizham - അനിഴം' },
+    { value: 'thrikketta', label: 'Thrikketta - തൃക്കേട്ട' },
+    { value: 'moolam', label: 'Moolam - മൂലം' },
+    { value: 'pooradam', label: 'Pooradam - പൂരാടം' },
+    { value: 'uthradam', label: 'Uthradam - ഉത്രാടം' },
+    { value: 'thiruvonam', label: 'Thiruvonam - തിരുവോണം' },
+    { value: 'avittam', label: 'Avittam - അവിട്ടം' },
+    { value: 'chathayam', label: 'Chathayam - ചതയം' },
+    { value: 'pooruruttathi', label: 'Pooruruttathi - പൂരുരുട്ടാതി' },
+    { value: 'uthruttathi', label: 'Uthruttathi - ഉത്രട്ടാതി' },
+    { value: 'revathi', label: 'Revathi - രേവതി' },
+  ];
 
-search: any = {
+  search: any = {
     bookingFromDate: [''],
     bookingToDate: [''],
     vazhipaduFromDate: [''],
-    vazhipaduToDate: ['']
+    vazhipaduToDate: [''],
   };
-constructor(private bookingService: BookingService,
-  private offeringService: OfferingService,
-  private usersService: UsersService,
-  private fb:FormBuilder,
-  private router: Router){}
+  constructor(
+    private bookingService: BookingService,
+    private offeringService: OfferingService,
+    private usersService: UsersService,
+    private fb: FormBuilder,
+    private router: Router
+  ) {}
 
-ngOnInit(){
-  this.searchForm = this.fb.group({
-    vazhipadu:[''],
-    birthStar:[''],
-    vazhipaduFromDate:[''],
-    vazhipaduToDate:[''],
-    bookingFromDate:[''],
-    bookingToDate:[''],
-    paymentStatus:[''],
-    paymentType:['']
-  });
-this.loadOfferings();
- this.username = localStorage.getItem('name') || 'User';
- this.avatar = localStorage.getItem('avatar') || 'U';
- this.role = localStorage.getItem('role') || 'NULL';
-}
+  ngOnInit() {
+    this.searchForm = this.fb.group({
+      vazhipadu: [''],
+      birthStar: [''],
+      vazhipaduFromDate: [''],
+      vazhipaduToDate: [''],
+      bookingFromDate: [''],
+      bookingToDate: [''],
+      paymentStatus: [''],
+      paymentType: [''],
+    });
+    this.loadOfferings();
+    this.username = localStorage.getItem('name') || 'User';
+    this.avatar = localStorage.getItem('avatar') || 'U';
+    this.role = localStorage.getItem('role') || 'NULL';
+  }
 
-getFirstName(username: string): string {
-  if (!username) return '';
-  const firstName = username.split(' ')[0];
-  return firstName.charAt(0).toUpperCase() + firstName.slice(1);
-}
+  getFirstName(username: string): string {
+    if (!username) return '';
+    const firstName = username.split(' ')[0];
+    return firstName.charAt(0).toUpperCase() + firstName.slice(1);
+  }
 
-loadOfferings() {
-  this.offeringService.getOfferingsByStatus().subscribe(data => {
-    this.offerings = data;
-  });
-}
+  loadOfferings() {
+    this.offeringService.getOfferingsByStatus().subscribe((data) => {
+      this.offerings = data;
+    });
+  }
 
-getReport(){
-  const payload = Object.fromEntries(
-    Object.entries(this.searchForm.value)
-      .map(([k,v]) => [k, v === '' ? null : v])
-  );
-  this.bookingService.searchBookings(payload).subscribe((res:any)=>{
-    this.reportList = res;
-  });
+  getReport() {
+    this.isLoading = true;
+    this.noDataFound = false; // reset
+    const payload = Object.fromEntries(
+      Object.entries(this.searchForm.value).map(([k, v]) => [
+        k,
+        v === '' ? null : v,
+      ])
+    );
+    this.bookingService.searchBookings(payload).subscribe((res: any) => {
+      this.reportList = res;
+      this.noDataFound = res.length === 0; // 🔥 key line
+      this.isLoading = false;
+    });
+  }
 
-}
+  clearForm() {
+    this.searchForm.reset({
+      vazhipadu: '',
+      birthStar: '',
+      vazhipaduFromDate: '',
+      vazhipaduToDate: '',
+      bookingFromDate: '',
+      bookingToDate: '',
+      paymentStatus: '',
+      paymentType: '',
+    });
+    this.noDataFound = false;
+    this.reportList = [];
+  }
 
-clearForm(){
-  this.searchForm.reset();
-  this.reportList=[];
-}
-
-refreshPage(){
-  window.location.reload();
-}
+  refreshPage() {
+    window.location.reload();
+  }
 
   activeMenu: string | null = null;
   toggleMenu(menu: string) {
-      this.activeMenu = this.activeMenu === menu ? null : menu;
-    }
-
-  getGrandTotal(): number {
-
-    return this.reportList.reduce((sum: number, item: any) => {
-      return sum + (item.quantity * item.amount);
-    }, 0);
-
+    this.activeMenu = this.activeMenu === menu ? null : menu;
   }
 
-printReport() {
+  getGrandTotal(): number {
+    return this.reportList.reduce((sum: number, item: any) => {
+      return sum + item.quantity * item.amount;
+    }, 0);
+  }
 
-  const printContents = document.getElementById('reportSection')?.innerHTML;
+  printReport() {
+    const printContents = document.getElementById('reportSection')?.innerHTML;
     if (!printContents) return;
 
-   const iframe = document.createElement('iframe');
+    const iframe = document.createElement('iframe');
     iframe.style.position = 'fixed';
     iframe.style.width = '0';
     iframe.style.height = '0';
@@ -150,9 +184,9 @@ printReport() {
 
     document.body.appendChild(iframe);
 
-  const doc = iframe.contentWindow!.document;
-  doc.open();
-  doc.write(`
+    const doc = iframe.contentWindow!.document;
+    doc.open();
+    doc.write(`
     <html>
       <head>
         <title>Booking Report</title>
@@ -199,66 +233,64 @@ printReport() {
       </body>
     </html>
   `);
- doc.close();
-  iframe.contentWindow!.focus();
-  iframe.contentWindow!.print();
-  setTimeout(() => document.body.removeChild(iframe), 1000);
+    doc.close();
+    iframe.contentWindow!.focus();
+    iframe.contentWindow!.print();
+    setTimeout(() => document.body.removeChild(iframe), 1000);
+  }
+  isAdmin(): boolean {
+    return this.role === 'ADMIN';
+  }
 
-}
-isAdmin(): boolean {
-  return this.role === 'ADMIN';
-}
+  isUser(): boolean {
+    return this.role === 'USER';
+  }
+  //----AVATAR PROFILE -----
 
-isUser(): boolean {
-  return this.role === 'USER';
-}
-//----AVATAR PROFILE -----
+  toggleProfile(event: Event) {
+    event.stopPropagation();
+    this.showProfile = !this.showProfile;
+  }
 
-toggleProfile(event: Event) {
-  event.stopPropagation();
-  this.showProfile = !this.showProfile;
-}
+  @HostListener('document:click')
+  closeProfile() {
+    this.showProfile = false;
+  }
 
-@HostListener('document:click')
-closeProfile() {
-  this.showProfile = false;
-}
+  logout() {
+    localStorage.clear();
+    this.router.navigate(['/login']);
+  }
 
-logout() {
-  localStorage.clear();
-  this.router.navigate(['/login']);
-}
+  @HostListener('document:click')
+  closeOutsideProfile() {
+    this.showProfile = false;
+  }
+  openMyProfile() {
+    this.usersService.getMyProfile().subscribe((res) => {
+      this.profile = res;
+      this.showMyProfileModal = true;
+    });
+  }
 
-@HostListener('document:click')
-closeOutsideProfile() {
-  this.showProfile = false;
-}
-openMyProfile(){
-  this.usersService.getMyProfile().subscribe(res => {
-    this.profile = res;
-    this.showMyProfileModal = true;
+  downloadReport() {
+    const element = document.getElementById('reportSection');
+    if (!element) return;
 
-  });
-}
+    // ✅ GET TODAY DATE (YYYY-MM-DD)
+    const today = new Date().toISOString().split('T')[0];
 
-downloadReport() {
-  const element = document.getElementById('reportSection');
-  if (!element) return;
+    const opt = {
+      margin: [0.3, 0.3, 0.5, 0.3],
+      filename: `Booking_Report_${today}.pdf`, // 🔥 DYNAMIC NAME
+      image: { type: 'jpeg' as const, quality: 1 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' },
+      pagebreak: { mode: ['css', 'legacy'] },
+    };
 
-  // ✅ GET TODAY DATE (YYYY-MM-DD)
-  const today = new Date().toISOString().split('T')[0];
-
-  const opt = {
-    margin: [0.3, 0.3, 0.5, 0.3],
-    filename: `Booking_Report_${today}.pdf`, // 🔥 DYNAMIC NAME
-    image: { type: 'jpeg' as const, quality: 1 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' },
-    pagebreak: { mode: ['css', 'legacy'] }
-  };
-
-  import('html2pdf.js').then((html2pdf: any) => {
-    html2pdf.default().set(opt).from(element).save();
-  });
-}
+    import('html2pdf.js').then((html2pdf: any) => {
+      html2pdf.default().set(opt).from(element).save();
+    });
+  }
 }

@@ -1,25 +1,23 @@
-<div class="login-page"
-     [ngStyle]="{
-       'background-image': 'url(' + backgroundImages[currentBgIndex] + ')'
-     }">
-
+<div
+  class="login-page"
+  [ngStyle]="{
+    'background-image': 'url(' + backgroundImages[currentBgIndex] + ')',
+  }"
+>
   <!-- BACKGROUND IMAGE -->
   <div class="bg-overlay"></div>
 
   <!-- LOGIN CARD -->
   <div class="login-card">
-
     <img src="assets/logo.png" class="logo" />
 
     <h3>Mankurussi Bhagavathi Temple</h3>
-<!--    <h3>Temple Billing System</h3>-->
+    <!--    <h3>Temple Billing System</h3>-->
     <p class="subtitle">Sign in to continue</p>
 
     <form (ngSubmit)="onLogin()" #loginForm="ngForm">
-
       <!-- USERNAME -->
       <div class="form-group">
-
         <input
           type="text"
           name="username"
@@ -27,13 +25,15 @@
           #usernameRef="ngModel"
           placeholder="Email or Phone"
           required
-          minlength="3">
+          minlength="3"
+        />
 
         <div class="error" *ngIf="usernameRef.invalid && usernameRef.touched">
-          <small *ngIf="usernameRef.errors?.['required']">Username required</small>
+          <small *ngIf="usernameRef.errors?.['required']"
+            >Username required</small
+          >
           <small *ngIf="usernameRef.errors?.['minlength']">Min 3 chars</small>
         </div>
-
       </div>
 
       <!-- PASSWORD -->
@@ -45,43 +45,39 @@
           #passwordRef="ngModel"
           placeholder="Password"
           required
-          minlength="4">
+          minlength="4"
+        />
         <div class="error" *ngIf="passwordRef.invalid && passwordRef.touched">
-          <small *ngIf="passwordRef.errors?.['required']">Password required</small>
+          <small *ngIf="passwordRef.errors?.['required']"
+            >Password required</small
+          >
           <small *ngIf="passwordRef.errors?.['minlength']">Min 4 chars</small>
         </div>
       </div>
 
       <!-- OPTIONS -->
       <div class="options">
-        <label>
-          <input type="checkbox"> Remember me
-        </label>
+        <label> <input type="checkbox" /> Remember me </label>
         <a href="#">Forgot?</a>
       </div>
 
       <!-- BUTTON -->
-<!--      <button type="submit" [disabled]="loginForm.invalid">-->
-<!--        Sign In-->
-<!--      </button>-->
+      <!--      <button type="submit" [disabled]="loginForm.invalid">-->
+      <!--        Sign In-->
+      <!--      </button>-->
       <button type="submit" [disabled]="isLoggingIn">
-
-        <ng-container *ngIf="!isLoggingIn">
-          Sign In
-        </ng-container>
+        <ng-container *ngIf="!isLoggingIn"> Sign In </ng-container>
 
         <ng-container *ngIf="isLoggingIn">
           <span class="spinner"></span>
           Signing in...
         </ng-container>
-
       </button>
 
       <!-- ERROR -->
       <div *ngIf="errorMessage" class="error-box">
         {{ errorMessage }}
       </div>
-
     </form>
   </div>
 

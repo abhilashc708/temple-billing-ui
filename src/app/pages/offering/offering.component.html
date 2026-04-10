@@ -1,5 +1,4 @@
 <div class="dashboard-wrapper">
-
   <!-- 🔥 TOP MENU BAR -->
   <header class="top-header">
     <app-update-profile></app-update-profile>
@@ -9,17 +8,26 @@
         <h3>MANKURUSSI TEMPLE</h3>
       </div>
       <ul class="menu" #menuContainer1>
-
-        <li routerLink="/dashboard" (click)="$event.stopPropagation()">Dashboard</li>
+        <li routerLink="/dashboard" (click)="$event.stopPropagation()">
+          Dashboard
+        </li>
 
         <!-- MASTER -->
-        <li *ngIf="isAdmin()" (click)="toggleMenu('master')" class="has-sub active">
+        <li
+          *ngIf="isAdmin()"
+          (click)="toggleMenu('master')"
+          class="has-sub active"
+        >
           Master
           <span class="arrow" [class.rotate]="activeMenu === 'master'">▾</span>
           <ul class="submenu" *ngIf="activeMenu === 'master'">
-            <li routerLink="/offering" (click)="$event.stopPropagation()">Offerings/Vazhipadu</li>
-<!--            <li routerLink="/god" (click)="$event.stopPropagation()">Prathista</li>-->
-            <li routerLink="/event" (click)="$event.stopPropagation()">Events</li>
+            <li routerLink="/offering" (click)="$event.stopPropagation()">
+              Offerings/Vazhipadu
+            </li>
+            <!--            <li routerLink="/god" (click)="$event.stopPropagation()">Prathista</li>-->
+            <li routerLink="/event" (click)="$event.stopPropagation()">
+              Events
+            </li>
           </ul>
         </li>
 
@@ -29,31 +37,47 @@
           <span class="arrow" [class.rotate]="activeMenu === 'booking'">▾</span>
 
           <ul class="submenu" *ngIf="activeMenu === 'booking'">
-            <li routerLink="/booking" (click)="$event.stopPropagation()">Counter</li>
+            <li routerLink="/booking" (click)="$event.stopPropagation()">
+              Counter
+            </li>
           </ul>
         </li>
 
         <!-- DONATION -->
         <li (click)="toggleMenu('donation')" class="has-sub">
           Donation
-          <span class="arrow" [class.rotate]="activeMenu === 'donation'">▾</span>
+          <span class="arrow" [class.rotate]="activeMenu === 'donation'"
+            >▾</span
+          >
 
           <ul class="submenu" *ngIf="activeMenu === 'donation'">
-            <li routerLink="/donation" (click)="$event.stopPropagation()">Add Donation</li>
+            <li routerLink="/donation" (click)="$event.stopPropagation()">
+              Add Donation
+            </li>
           </ul>
         </li>
 
         <!-- ACCOUNTS -->
         <li (click)="toggleMenu('accounts')" class="has-sub">
           Accounts
-          <span class="arrow" [class.rotate]="activeMenu === 'accounts'">▾</span>
+          <span class="arrow" [class.rotate]="activeMenu === 'accounts'"
+            >▾</span
+          >
 
           <ul class="submenu" *ngIf="activeMenu === 'accounts'">
-            <li *ngIf="isAdmin()" routerLink="/finance-manager" (click)="$event.stopPropagation()">Income/Expense
-              Titles
+            <li
+              *ngIf="isAdmin()"
+              routerLink="/finance-manager"
+              (click)="$event.stopPropagation()"
+            >
+              Income/Expense Titles
             </li>
-            <li routerLink="/income-entry" (click)="$event.stopPropagation()">Income</li>
-            <li routerLink="/expense-entry" (click)="$event.stopPropagation()">Expense</li>
+            <li routerLink="/income-entry" (click)="$event.stopPropagation()">
+              Income
+            </li>
+            <li routerLink="/expense-entry" (click)="$event.stopPropagation()">
+              Expense
+            </li>
           </ul>
         </li>
 
@@ -63,30 +87,40 @@
           <span class="arrow" [class.rotate]="activeMenu === 'reports'">▾</span>
 
           <ul class="submenu" *ngIf="activeMenu === 'reports'">
-            <li routerLink="/booking-report" (click)="$event.stopPropagation()">Vazhipadu</li>
-            <li routerLink="/donation-report" (click)="$event.stopPropagation()">Donation</li>
-            <li routerLink="/income-report" (click)="$event.stopPropagation()">Income</li>
-            <li routerLink="/expense-report" (click)="$event.stopPropagation()">Expense</li>
-            <li routerLink="/income-summary" (click)="$event.stopPropagation()">Income/Expense Summary Report</li>
+            <li routerLink="/booking-report" (click)="$event.stopPropagation()">
+              Vazhipadu
+            </li>
+            <li
+              routerLink="/donation-report"
+              (click)="$event.stopPropagation()"
+            >
+              Donation
+            </li>
+            <li routerLink="/income-report" (click)="$event.stopPropagation()">
+              Income
+            </li>
+            <li routerLink="/expense-report" (click)="$event.stopPropagation()">
+              Expense
+            </li>
+            <li routerLink="/income-summary" (click)="$event.stopPropagation()">
+              Income/Expense Summary Report
+            </li>
           </ul>
         </li>
-
-
       </ul>
 
       <div class="user-section" (click)="toggleProfile($event)">
         Hi, {{ getFirstName(username) }}
-        <div class="avatar">{{avatar}}</div>
+        <div class="avatar">{{ avatar }}</div>
 
         <!-- PROFILE DROPDOWN -->
         <div class="profile-dropdown" *ngIf="showProfile">
-
           <div class="profile-top">
-            <div class="avatar big">{{avatar}}</div>
+            <div class="avatar big">{{ avatar }}</div>
 
             <div class="profile-text">
               <h4>{{ getFirstName(username) }}</h4>
-              <span class="role">{{role}}</span>
+              <span class="role">{{ role }}</span>
             </div>
           </div>
 
@@ -96,11 +130,20 @@
             👤 My Profile
           </div>
 
-          <div *ngIf="isUser()" class="profile-item" (click)="updateProfilePopup.open()">
+          <div
+            *ngIf="isUser()"
+            class="profile-item"
+            (click)="updateProfilePopup.open()"
+          >
             ⚙ Update Profile
           </div>
 
-          <div *ngIf="isAdmin()" class="profile-item" routerLink="/users" (click)="$event.stopPropagation()">
+          <div
+            *ngIf="isAdmin()"
+            class="profile-item"
+            routerLink="/users"
+            (click)="$event.stopPropagation()"
+          >
             ⚙ Profiles Management
           </div>
 
@@ -110,18 +153,13 @@
 
           <div class="divider"></div>
 
-          <div class="profile-item logout" (click)="logout()">
-            🚪 Sign Out
-          </div>
-
+          <div class="profile-item logout" (click)="logout()">🚪 Sign Out</div>
         </div>
       </div>
-
     </div>
   </header>
   <!-- 🔥 PAGE CONTENT -->
   <div class="content-area">
-
     <div class="page-header">
       <h2>Manage Offerings</h2>
       <button class="btn-new" (click)="openModal()">NEW OFFERING</button>
@@ -130,135 +168,132 @@
     <!-- MESSAGE HERE -->
 
     <div *ngIf="successMessage" class="success-alert">
-      ✔ {{successMessage}}
+      ✔ {{ successMessage }}
     </div>
 
-    <div *ngIf="errorMessage" class="error-alert">
-      ⚠ {{errorMessage}}
-    </div>
+    <div *ngIf="errorMessage" class="error-alert">⚠ {{ errorMessage }}</div>
 
     <div class="table-card">
-
       <div class="filter-row" [formGroup]="filterForm">
-
-        <input type="text"
-               placeholder="Offering"
-               formControlName="offeringEnglish">
+        <input
+          type="text"
+          placeholder="Offering"
+          formControlName="offeringEnglish"
+        />
         <div class="btn-group">
           <button class="btn-search" (click)="onSearch()">Search</button>
           <button class="btn-reset" (click)="onReset()">Reset</button>
         </div>
-
-
       </div>
 
       <!-- 📋 Offering Table -->
       <table>
         <thead>
-        <tr>
-          <th>Offering English</th>
-          <th>Offering Malayalam</th>
-          <th>Price</th>
-<!--          <th>God</th>-->
-          <th>Type</th>
-<!--          <th>Remarks</th>-->
-<!--          <th>Pooja/Day</th>-->
-          <th>Status</th>
-          <th>Edit</th>
-          <th>Delete</th>
-        </tr>
+          <tr>
+            <th>Offering English</th>
+            <th>Offering Malayalam</th>
+            <th>Price</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let offering of offerings">
-          <td>{{ offering.offeringEnglish }}</td>
-          <td>{{ offering.offeringMalayalam }}</td>
-          <td>₹ {{ offering.price }}</td>
-<!--          <td>{{ offering.offeringGod }}</td>-->
-          <td>{{ offering.offeringType }}</td>
-<!--          <td>{{ offering.remarks }}</td>-->
-<!--          <td>{{ offering.noOfPooja }}</td>-->
-          <td>
-             <span
-               class="badge"
-               [ngClass]="{
-      'on': offering.status === 'ACTIVE',
-      'off': offering.status === 'INACTIVE'
-    }">
-    {{ offering.status }}
-  </span>
-          </td>
-          <td>
-            <button class="edit-btn" (click)="editOffering(offering)">Edit</button>
-          </td>
-          <!--          <td>-->
-          <!--            <button class="delete-btn" (click)="deleteOffering(offering.id)">Delete</button>-->
-          <!--          </td>-->
-          <td>
-            <button
-              class="delete-btn"
-              (click)="confirmDialog.open('Delete Offering','Are you sure you want to delete this offering?'); selectedOfferingId = offering.id">
-
-              Delete
-            </button>
-          </td>
-        </tr>
+          <tr *ngFor="let offering of offerings">
+            <td>{{ offering.offeringEnglish }}</td>
+            <td>{{ offering.offeringMalayalam }}</td>
+            <td>₹ {{ offering.price }}</td>
+            <td>{{ offering.offeringType }}</td>
+            <td>
+              <span
+                class="badge"
+                [ngClass]="{
+                  on: offering.status === 'ACTIVE',
+                  off: offering.status === 'INACTIVE',
+                }"
+              >
+                {{ offering.status }}
+              </span>
+            </td>
+            <td>
+              <button class="edit-btn" (click)="editOffering(offering)">
+                Edit
+              </button>
+            </td>
+            <td>
+              <button
+                class="delete-btn"
+                (click)="
+                  confirmDialog.open(
+                    'Delete Offering',
+                    'Are you sure you want to delete this offering?'
+                  );
+                  selectedOfferingId = offering.id
+                "
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+          <!-- 🔥 EMPTY MESSAGE -->
+          <tr *ngIf="offerings.length === 0">
+            <td colspan="4" class="no-data">🚫 No records found</td>
+          </tr>
         </tbody>
       </table>
       <div class="pagination" *ngIf="totalPages > 1">
-
-        <button
-          [disabled]="page === 0"
-          (click)="changePage(page - 1)">
+        <button [disabled]="page === 0" (click)="changePage(page - 1)">
           ⬅ Prev
         </button>
 
-        <span>
-    Page {{ page + 1 }} of {{ totalPages }}
-  </span>
+        <span> Page {{ page + 1 }} of {{ totalPages }} </span>
 
         <button
           [disabled]="page === totalPages - 1"
-          (click)="changePage(page + 1)">
+          (click)="changePage(page + 1)"
+        >
           Next ➡
         </button>
-
       </div>
     </div>
-
   </div>
-
 </div>
 
-<!-- ADD/UPDATE OFFERING MODAL -->
 <div class="modal-overlay" *ngIf="showModal">
-
   <div class="modal-container">
-
     <div class="modal-header">
       <h3>{{ isEditMode ? 'Edit Offering' : 'Add Offering' }}</h3>
       <button class="close-btn" (click)="closeModal()">✕</button>
     </div>
 
     <form [formGroup]="offeringForm" (ngSubmit)="submitOffering()">
-
       <div class="form-grid">
-
         <div class="form-group">
           <label>Offering English Name <span class="required">*</span></label>
-          <input type="text"
-                 placeholder="Offering English Name"
-                 formControlName="offeringEnglish" (click)="autoTranslate()">
-          <small class="error"
-                 *ngIf="offeringForm.get('offeringEnglish')?.touched &&
-         offeringForm.get('offeringEnglish')?.invalid">
+          <input
+            type="text"
+            placeholder="Offering English Name"
+            formControlName="offeringEnglish"
+            (click)="autoTranslate()"
+          />
+          <small
+            class="error"
+            *ngIf="
+              offeringForm.get('offeringEnglish')?.touched &&
+              offeringForm.get('offeringEnglish')?.invalid
+            "
+          >
             Offering name is required
           </small>
         </div>
         <div class="form-group">
           <label>Offering Malayalam Name </label>
-          <input type="text"
-                 placeholder="Offering Malayalam Name"
-                 formControlName="offeringMalayalam">
+          <input
+            type="text"
+            placeholder="Offering Malayalam Name"
+            formControlName="offeringMalayalam"
+          />
         </div>
         <div class="form-group">
           <label>Offering Type <span class="required">*</span></label>
@@ -268,44 +303,29 @@
             <option value="Special">Special</option>
             <option value="Other">Other</option>
           </select>
-          <small class="error"
-                 *ngIf="offeringForm.get('offeringType')?.touched &&
-         offeringForm.get('offeringType')?.invalid">
+          <small
+            class="error"
+            *ngIf="
+              offeringForm.get('offeringType')?.touched &&
+              offeringForm.get('offeringType')?.invalid
+            "
+          >
             Offering Type is required
           </small>
         </div>
-<!--        <div class="form-group">-->
-<!--          <label>Offering God <span class="required">*</span></label>-->
-<!--          <select formControlName="offeringGod">-->
-<!--            <option value="">Select</option>-->
-<!--            <option *ngFor="let g of gods"-->
-<!--                    [value]="g.god">{{ g.god }}-->
-<!--            </option>-->
-<!--          </select>-->
-<!--          <small class="error"-->
-<!--                 *ngIf="offeringForm.get('offeringGod')?.touched &&-->
-<!--         offeringForm.get('offeringGod')?.invalid">-->
-<!--            Offering God is required-->
-<!--          </small>-->
-<!--        </div>-->
         <div class="form-group">
           <label>Price <span class="required">*</span></label>
-          <input type="number"
-                 placeholder="Price"
-                 formControlName="price">
-          <small class="error"
-                 *ngIf="offeringForm.get('price')?.touched &&
-         offeringForm.get('price')?.invalid">
+          <input type="number" placeholder="Price" formControlName="price" />
+          <small
+            class="error"
+            *ngIf="
+              offeringForm.get('price')?.touched &&
+              offeringForm.get('price')?.invalid
+            "
+          >
             Price is required
           </small>
         </div>
-
-<!--        <div class="form-group">-->
-<!--          <label>No of Pooja / Day</label>-->
-<!--          <input type="number"-->
-<!--                 placeholder="No of Pooja/Day"-->
-<!--                 formControlName="noOfPooja">-->
-<!--        </div>-->
         <div class="form-group">
           <label>Status <span class="required">*</span></label>
           <select formControlName="status">
@@ -313,97 +333,82 @@
             <option value="ACTIVE">Active</option>
             <option value="INACTIVE">Inactive</option>
           </select>
-          <small class="error"
-                 *ngIf="offeringForm.get('status')?.touched &&
-         offeringForm.get('status')?.invalid">
+          <small
+            class="error"
+            *ngIf="
+              offeringForm.get('status')?.touched &&
+              offeringForm.get('status')?.invalid
+            "
+          >
             Offering Status is required
           </small>
         </div>
-<!--        <div class="form-group">-->
-<!--          <label>Remarks</label>-->
-<!--          <input type="text"-->
-<!--                 placeholder="Remarks"-->
-<!--                 formControlName="remarks">-->
-<!--        </div>-->
-
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="cancel-btn" (click)="closeModal()">Cancel</button>
-        <button type="submit" class="btn-submit" [disabled]="offeringForm.invalid"> {{ isEditMode ? 'Update Offering' :
-          'Save Offering' }}
+        <button type="button" class="cancel-btn" (click)="closeModal()">
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn-submit"
+          [disabled]="offeringForm.invalid"
+        >
+          {{ isEditMode ? 'Update Offering' : 'Save Offering' }}
         </button>
       </div>
-
     </form>
-
   </div>
-
 </div>
-<!-- MY PROFILE MODAL -->
 
 <div class="profile-popup" *ngIf="showMyProfileModal">
-
   <div class="profile-card">
-
-    <button class="close-btn" (click)="showMyProfileModal=false">✕</button>
+    <button class="close-btn" (click)="showMyProfileModal = false">✕</button>
 
     <!-- Avatar -->
     <div class="profile-avatar">
-      {{profile.name?.charAt(0) || 'U'}}
+      {{ profile.name?.charAt(0) || 'U' }}
     </div>
 
     <!-- Name -->
-    <h3>{{profile.name}}</h3>
+    <h3>{{ profile.name }}</h3>
     <span class="role-badge" [ngClass]="profile.role">
-      {{profile.role}}
+      {{ profile.role }}
     </span>
 
     <div class="profile-info">
-
       <div class="info-row">
         <span>Email</span>
-        <p>{{profile.email || '-'}}</p>
+        <p>{{ profile.email || '-' }}</p>
       </div>
 
       <div class="info-row">
         <span>Phone</span>
-        <p>{{profile.phone || '-'}}</p>
+        <p>{{ profile.phone || '-' }}</p>
       </div>
 
       <div class="info-row">
         <span>Address</span>
-        <p>{{profile.address || '-'}}</p>
+        <p>{{ profile.address || '-' }}</p>
       </div>
 
       <div class="info-row">
         <span>District</span>
-        <p>{{profile.district || '-'}}</p>
+        <p>{{ profile.district || '-' }}</p>
       </div>
 
       <div class="info-row">
         <span>State</span>
-        <p>{{profile.state || '-'}}</p>
+        <p>{{ profile.state || '-' }}</p>
       </div>
-
     </div>
 
     <div class="profile-actions">
+      <button class="btn-edit">✏ Edit Profile</button>
 
-      <button class="btn-edit">
-        ✏ Edit Profile
-      </button>
-
-      <button class="btn-password">
-        🔑 Change Password
-      </button>
-
+      <button class="btn-password">🔑 Change Password</button>
     </div>
-
   </div>
-
 </div>
-<app-confirm-dialog
-  #confirmDialog
-  (confirmed)="deleteConfirmed()">
+<app-confirm-dialog #confirmDialog (confirmed)="deleteConfirmed()">
 </app-confirm-dialog>

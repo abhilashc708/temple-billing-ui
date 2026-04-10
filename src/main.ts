@@ -7,11 +7,11 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { importProvidersFrom } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
 
-
 bootstrapApplication(AppComponent, {
-    providers: [appRouter,
-      provideHttpClient(withInterceptors([authInterceptor])),
-      provideAnimationsAsync(),
-      importProvidersFrom(MatDialogModule)
-      ]
-}).catch(err => console.error(err));
+  providers: [
+    appRouter,
+    provideHttpClient(withInterceptors([authInterceptor])),
+    provideAnimationsAsync(),
+    importProvidersFrom(MatDialogModule),
+  ],
+}).catch((err) => console.error(err));

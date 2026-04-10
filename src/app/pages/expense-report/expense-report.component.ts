@@ -1,7 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild, HostListener, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  HostListener,
+  OnInit,
+} from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  Validators,
+} from '@angular/forms';
 import { ExpenseEntryService } from '../../services/expense-entry.service';
 import { FinanceManagerService } from '../../services/finance-manager.service';
 import { UsersService } from '../../services/users.service';
@@ -11,135 +23,144 @@ import { ChangePasswordComponent } from '../../shared/change-password/change-pas
 @Component({
   selector: 'app-expense-report',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, UpdateProfileComponent, ChangePasswordComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+    UpdateProfileComponent,
+    ChangePasswordComponent,
+  ],
   templateUrl: './expense-report.component.html',
-  styleUrl: './expense-report.component.scss'
+  styleUrl: './expense-report.component.scss',
 })
 export class ExpenseReportComponent {
   @ViewChild(UpdateProfileComponent)
-    updateProfilePopup!: UpdateProfileComponent;
+  updateProfilePopup!: UpdateProfileComponent;
 
-   @ViewChild(ChangePasswordComponent)
-   changePasswordPopup!: ChangePasswordComponent;
+  @ViewChild(ChangePasswordComponent)
+  changePasswordPopup!: ChangePasswordComponent;
 
-isAllSelected: boolean = false;
-     profile: any = {};
-       showMyProfileModal = false;
+  isLoading = false;
+  noDataFound = false;
+  isAllSelected: boolean = false;
+  profile: any = {};
+  showMyProfileModal = false;
   showProfile = false;
   role: string = '';
-   username: string = '';
-    avatar: string = '';
-searchForm!: FormGroup;
+  username: string = '';
+  avatar: string = '';
+  searchForm!: FormGroup;
   reportList: any[] = [];
   financeList: any[] = [];
-    selectedExpenseTypes: string[] = [];
-   search: any = {
-        receiptFrom: [''],
-        receiptTo: ['']
-      };
-       page = 0;
-        size = 5;
-        totalElements = 0;
-        totalPages = 0;
-         constructor(
-              private fb: FormBuilder,
-              private expenseEntryService: ExpenseEntryService,
-               private financeService: FinanceManagerService,
-                private usersService: UsersService,
-                private router: Router
-            ) {}
+  selectedExpenseTypes: string[] = [];
+  search: any = {
+    receiptFrom: [''],
+    receiptTo: [''],
+  };
+  page = 0;
+  size = 5;
+  totalElements = 0;
+  totalPages = 0;
+  constructor(
+    private fb: FormBuilder,
+    private expenseEntryService: ExpenseEntryService,
+    private financeService: FinanceManagerService,
+    private usersService: UsersService,
+    private router: Router
+  ) {}
 
-     ngOnInit(): void {
-
-          this.searchForm = this.fb.group({
-            expenseTypes: [''],
-            receiptFrom: [''],
-            receiptTo: [''],
-             modeOfExpense: ['']
-          });
-        this.loadFinanceList();
-        this.username = localStorage.getItem('name') || 'User';
-        this.avatar = localStorage.getItem('avatar') || 'U';
-        this.role = localStorage.getItem('role') || 'NULL';
-        }
+  ngOnInit(): void {
+    this.searchForm = this.fb.group({
+      expenseTypes: [''],
+      receiptFrom: [''],
+      receiptTo: [''],
+      modeOfExpense: [''],
+    });
+    this.loadFinanceList();
+    this.username = localStorage.getItem('name') || 'User';
+    this.avatar = localStorage.getItem('avatar') || 'U';
+    this.role = localStorage.getItem('role') || 'NULL';
+  }
   getFirstName(username: string): string {
     if (!username) return '';
     const firstName = username.split(' ')[0];
     return firstName.charAt(0).toUpperCase() + firstName.slice(1);
   }
   getReport() {
-      const payload = {
-        receiptFrom: this.searchForm.value.receiptFrom,
-        receiptTo: this.searchForm.value.receiptTo,
-        modeOfExpense: this.searchForm.value.modeOfExpense,
-        expenseTypes: this.selectedExpenseTypes   // ✅ ARRAY
-      };
+    this.isLoading = true;
+    this.noDataFound = false; // reset
+    const payload = {
+      receiptFrom: this.searchForm.value.receiptFrom,
+      receiptTo: this.searchForm.value.receiptTo,
+      modeOfExpense: this.searchForm.value.modeOfExpense,
+      expenseTypes: this.selectedExpenseTypes, // ✅ ARRAY
+    };
 
-      this.expenseEntryService.searchExpenseReport(payload).subscribe((res:any) => {
+    this.expenseEntryService
+      .searchExpenseReport(payload)
+      .subscribe((res: any) => {
         this.reportList = res;
+        this.noDataFound = res.length === 0; // 🔥 key line
+        this.isLoading = false;
       });
+  }
+
+  loadFinanceList() {
+    this.financeService
+      .getAllByType('EXPENSE', this.page, this.size, 'createdDate')
+      .subscribe((res) => {
+        this.financeList = res.content;
+        this.totalPages = res.totalPages;
+      });
+  }
+
+  clearForm() {
+    this.searchForm.reset({
+      modeOfExpense: '',
+      expenseTypes: '',
+      receiptFrom: '',
+      receiptTo: '',
+    });
+    this.reportList = [];
+    this.selectedExpenseTypes = [];
+    this.isAllSelected = false; // 🔥 IMPORTANT
+    this.noDataFound = false;
+  }
+
+  refreshPage() {
+    window.location.reload();
+  }
+
+  activeMenu: string | null = null;
+  toggleMenu(menu: string) {
+    this.activeMenu = this.activeMenu === menu ? null : menu;
+  }
+
+  getGrandTotal(): number {
+    if (!this.reportList || this.reportList.length === 0) {
+      return 0;
     }
 
-     loadFinanceList() {
-             this.financeService.getAllByType('EXPENSE',this.page, this.size, 'createdDate')
-                  .subscribe(res => {
-                    this.financeList = res.content;
-                    this.totalPages = res.totalPages;
-                  });
-      }
+    return this.reportList.reduce((sum, item) => {
+      return sum + (item.amount || 0);
+    }, 0);
+  }
 
-    clearForm(){
-        this.searchForm.reset({
-            modeOfExpense: '',
-            expenseTypes: '',
-            receiptFrom: '',
-            receiptTo: ''
-          });
-        this.reportList=[];
-          this.selectedExpenseTypes=[];
-          this.isAllSelected = false;   // 🔥 IMPORTANT
-      }
+  printReport() {
+    const printContents = document.getElementById('reportSection')?.innerHTML;
 
-      refreshPage(){
-        window.location.reload();
-      }
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
 
-        activeMenu: string | null = null;
-        toggleMenu(menu: string) {
-            this.activeMenu = this.activeMenu === menu ? null : menu;
-          }
+    document.body.appendChild(iframe);
 
-        getGrandTotal(): number {
+    const doc = iframe.contentWindow!.document;
+    doc.open();
 
-            if (!this.reportList || this.reportList.length === 0) {
-              return 0;
-            }
-
-            return this.reportList.reduce((sum, item) => {
-
-              return sum + (item.amount || 0);
-
-            }, 0);
-
-          }
-
-          printReport() {
-
-            const printContents =
-              document.getElementById('reportSection')?.innerHTML;
-
-          const iframe = document.createElement('iframe');
-              iframe.style.position = 'fixed';
-              iframe.style.width = '0';
-              iframe.style.height = '0';
-              iframe.style.border = '0';
-
-              document.body.appendChild(iframe);
-
-         const doc = iframe.contentWindow!.document;
-          doc.open();
-
-           doc.write(`
+    doc.write(`
 
               <html>
 
@@ -192,86 +213,87 @@ searchForm!: FormGroup;
 
             `);
 
-            doc.close();
-              iframe.contentWindow!.focus();
-              iframe.contentWindow!.print();
-              setTimeout(() => document.body.removeChild(iframe), 1000);
+    doc.close();
+    iframe.contentWindow!.focus();
+    iframe.contentWindow!.print();
+    setTimeout(() => document.body.removeChild(iframe), 1000);
+  }
+  isAdmin(): boolean {
+    return this.role === 'ADMIN';
+  }
 
-          }
-        isAdmin(): boolean {
-          return this.role === 'ADMIN';
-        }
+  isUser(): boolean {
+    return this.role === 'USER';
+  }
+  //----AVATAR PROFILE -----
 
-        isUser(): boolean {
-          return this.role === 'USER';
-        }
-      //----AVATAR PROFILE -----
+  toggleProfile(event: Event) {
+    event.stopPropagation();
+    this.showProfile = !this.showProfile;
+  }
 
-      toggleProfile(event: Event) {
-        event.stopPropagation();
-        this.showProfile = !this.showProfile;
-      }
+  @HostListener('document:click')
+  closeProfile() {
+    this.showProfile = false;
+  }
 
-      @HostListener('document:click')
-      closeProfile() {
-        this.showProfile = false;
-      }
+  logout() {
+    localStorage.clear();
+    this.router.navigate(['/login']);
+  }
 
-      logout() {
-        localStorage.clear();
-         this.router.navigate(['/login']);
-      }
-
-      @HostListener('document:click')
-      closeOutsideProfile() {
-        this.showProfile = false;
-      }
-    openMyProfile(){
-      this.usersService.getMyProfile().subscribe(res => {
-        this.profile = res;
-        this.showMyProfileModal = true;
-
-      });
-    }
+  @HostListener('document:click')
+  closeOutsideProfile() {
+    this.showProfile = false;
+  }
+  openMyProfile() {
+    this.usersService.getMyProfile().subscribe((res) => {
+      this.profile = res;
+      this.showMyProfileModal = true;
+    });
+  }
   onExpenseTypeChange(event: any) {
     const value = event.target.value;
 
     if (event.target.checked) {
       this.selectedExpenseTypes.push(value);
     } else {
-      this.selectedExpenseTypes = this.selectedExpenseTypes.filter(v => v !== value);
+      this.selectedExpenseTypes = this.selectedExpenseTypes.filter(
+        (v) => v !== value
+      );
     }
 
     // 🔥 AUTO UPDATE SELECT ALL STATE
-    this.isAllSelected = this.selectedExpenseTypes.length === this.financeList.length;
+    this.isAllSelected =
+      this.selectedExpenseTypes.length === this.financeList.length;
   }
   toggleAll(event: any) {
     this.isAllSelected = event.target.checked;
 
     if (this.isAllSelected) {
-      this.selectedExpenseTypes = this.financeList.map(f => f.title);
+      this.selectedExpenseTypes = this.financeList.map((f) => f.title);
     } else {
       this.selectedExpenseTypes = [];
     }
   }
-downloadReport() {
-  const element = document.getElementById('reportSection');
-  if (!element) return;
+  downloadReport() {
+    const element = document.getElementById('reportSection');
+    if (!element) return;
 
-  // ✅ GET TODAY DATE (YYYY-MM-DD)
-  const today = new Date().toISOString().split('T')[0];
+    // ✅ GET TODAY DATE (YYYY-MM-DD)
+    const today = new Date().toISOString().split('T')[0];
 
-  const opt = {
-    margin: [0.3, 0.3, 0.5, 0.3],
-    filename: `Expense_Report_${today}.pdf`, // 🔥 DYNAMIC NAME
-    image: { type: 'jpeg' as const, quality: 1 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' },
-    pagebreak: { mode: ['css', 'legacy'] }
-  };
+    const opt = {
+      margin: [0.3, 0.3, 0.5, 0.3],
+      filename: `Expense_Report_${today}.pdf`, // 🔥 DYNAMIC NAME
+      image: { type: 'jpeg' as const, quality: 1 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' },
+      pagebreak: { mode: ['css', 'legacy'] },
+    };
 
-  import('html2pdf.js').then((html2pdf: any) => {
-    html2pdf.default().set(opt).from(element).save();
-  });
-}
+    import('html2pdf.js').then((html2pdf: any) => {
+      html2pdf.default().set(opt).from(element).save();
+    });
+  }
 }
