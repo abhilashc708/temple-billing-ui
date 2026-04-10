@@ -258,8 +258,12 @@ export class BookingReportComponent {
   }
 
   logout() {
+   const rememberUser = localStorage.getItem('rememberUser');
     localStorage.clear();
-    this.router.navigate(['/login']);
+     if (rememberUser) {
+       localStorage.setItem('rememberUser', rememberUser);
+     }
+   this.router.navigate(['/login']);
   }
 
   @HostListener('document:click')

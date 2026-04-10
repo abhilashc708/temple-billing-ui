@@ -19,6 +19,7 @@ export class LoginComponent {
   password = '';
   errorMessage: string = ''; // ✅ ADD THIS LINE
   isLoggingIn = false;
+  rememberMe: boolean = false;
 
   backgroundImages: string[] = [
     'assets/mankurussi-temple-f.JPG',
@@ -32,6 +33,11 @@ export class LoginComponent {
     private router: Router
   ) {}
   ngOnInit() {
+     const savedUser = localStorage.getItem('rememberUser');
+      if (savedUser) {
+        this.username = savedUser;
+        this.rememberMe = true;
+      }
     this.startBackgroundSlider();
   }
   startBackgroundSlider() {
@@ -53,6 +59,11 @@ export class LoginComponent {
     }
     this.authService.login(this.username, this.password).subscribe({
       next: (response) => {
+        if (this.rememberMe) {
+            localStorage.setItem('rememberUser', this.username);
+        } else {
+            localStorage.removeItem('rememberUser');
+        }
         this.isLoggingIn = false;
         this.authService.storeToken(response.token, this.username);
         const role = this.authService.getUserRole();

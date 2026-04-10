@@ -817,8 +817,12 @@ export class BookingComponent {
   }
 
   logout() {
-    localStorage.clear();
-    this.router.navigate(['/login']);
+    const rememberUser = localStorage.getItem('rememberUser');
+      localStorage.clear();
+      if (rememberUser) {
+        localStorage.setItem('rememberUser', rememberUser);
+      }
+      this.router.navigate(['/login']);
   }
 
   @HostListener('document:click')

@@ -57,14 +57,13 @@
 
       <!-- OPTIONS -->
       <div class="options">
-        <label> <input type="checkbox" /> Remember me </label>
+        <label>
+          <input type="checkbox" [(ngModel)]="rememberMe" name="rememberMe" />
+          Remember me
+        </label>
         <a href="#">Forgot?</a>
       </div>
 
-      <!-- BUTTON -->
-      <!--      <button type="submit" [disabled]="loginForm.invalid">-->
-      <!--        Sign In-->
-      <!--      </button>-->
       <button type="submit" [disabled]="isLoggingIn">
         <ng-container *ngIf="!isLoggingIn"> Sign In </ng-container>
 
