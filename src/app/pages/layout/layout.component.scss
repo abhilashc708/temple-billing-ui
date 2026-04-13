@@ -207,7 +207,7 @@
 }
 
 .red {
-  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+  background: linear-gradient(135deg, #be3c5a, #7e1a08);
 }
 
 /* ================= FOOTER ================= */
@@ -478,4 +478,55 @@
   border: none;
   padding: 8px;
   border-radius: 6px;
+}
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+.header-title h2 {
+  margin: 0;
+  white-space: nowrap; /* 🔥 prevents breaking */
+}
+
+/* DATE TIME BLOCK */
+.date-time {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 400;
+  color: #f1f1f1;
+}
+
+/* ⏰ CLOCK ICON ANIMATION */
+.clock-icon {
+  display: inline-block;
+  animation: tick 1s infinite steps(1);
+}
+
+/* blinking effect */
+@keyframes tick {
+  0% { transform: rotate(0deg); opacity: 1; }
+  50% { transform: rotate(10deg); opacity: 0.6; }
+  100% { transform: rotate(0deg); opacity: 1; }
+}
+
+/* AM / PM COLOR */
+.ampm {
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 5px;
+}
+
+/* AM STYLE */
+.ampm.AM {
+  background: #3498db;
+  color: white;
+}
+
+/* PM STYLE */
+.ampm.PM {
+  background: #e67e22;
+  color: white;
 }

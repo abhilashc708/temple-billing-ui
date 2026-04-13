@@ -16,7 +16,6 @@
           <li routerLink="/offering" (click)="$event.stopPropagation()">
             Offerings/Vazhipadu
           </li>
-          <!--          <li routerLink="/god" (click)="$event.stopPropagation()">Prathista</li>-->
           <li routerLink="/event" (click)="$event.stopPropagation()">Events</li>
         </ul>
       </li>
@@ -141,11 +140,16 @@
   <!-- HEADER SECTION -->
   <div class="dashboard-header">
     <div class="header-content">
-      <div>
+      <div class="header-title">
         <h2>Counter Dashboard</h2>
-      </div>
 
-      <!--      <button class="add-btn">ADD NEW</button>-->
+        <div class="date-time">
+          <span class="clock-icon">⏰</span>
+          <span>{{ date }}</span>
+          <span>{{ time }}</span>
+          <span class="ampm" [ngClass]="ampm">{{ ampm }}</span>
+        </div>
+      </div>
       <div class="quick-add">
         <button class="add-btn" (click)="toggleQuickMenu($event)">
           ADD NEW
@@ -238,7 +242,6 @@
         <p>
           <strong>Total - {{ dashboardData.donationTotal || 0 }}.00</strong>
         </p>
-        <!--        <h3>₹ {{dashboardData.donationTotal || 0}}.00</h3>-->
       </div>
       <div class="card-footer">
         Donation({{ dashboardData.totalDonationCount || 0 }}) Amount
@@ -256,7 +259,7 @@
   <!-- FOOTER -->
   <footer class="dashboard-footer">
     <div class="footer-container">
-      <div class="footer-left">© 2026 Mankurussi Temple Booking System</div>
+      <div class="footer-left">© 2026 Mankurussi Temple Billing System</div>
 
       <div class="footer-center">Powered by Abhilash C</div>
 

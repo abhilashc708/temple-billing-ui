@@ -38,6 +38,9 @@ export class LayoutComponent implements OnInit {
   showProfile = false;
   profile: any = {};
   showMyProfileModal = false;
+  date: string = '';
+  time: string = '';
+  ampm: string = '';
 
   @ViewChild(UpdateProfileComponent)
   updateProfilePopup!: UpdateProfileComponent;
@@ -58,7 +61,31 @@ export class LayoutComponent implements OnInit {
     this.username = localStorage.getItem('name') || 'User';
     this.avatar = localStorage.getItem('avatar') || 'U';
     this.role = localStorage.getItem('role') || 'NULL';
+   this.updateClock();
+     setInterval(() => {
+       this.updateClock();
+     }, 1000);
   }
+
+
+updateClock() {
+  const now = new Date();
+
+  // 📅 DATE
+  this.date = now.toLocaleDateString('en-GB'); // dd/mm/yyyy
+
+  // ⏰ TIME WITH SECONDS
+  let hours = now.getHours();
+  const minutes = now.getMinutes().toString().padStart(2, '0');
+  const seconds = now.getSeconds().toString().padStart(2, '0');
+
+  this.ampm = hours >= 12 ? 'PM' : 'AM';
+
+  hours = hours % 12;
+  hours = hours ? hours : 12; // 0 -> 12
+
+  this.time = `${hours}:${minutes}:${seconds}`;
+}
 
   getFirstName(username: string): string {
     if (!username) return '';
