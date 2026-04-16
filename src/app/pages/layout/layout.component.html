@@ -204,16 +204,25 @@
         <h3>₹ {{ dashboardData.bookingTotal || 0 }}.00</h3>
 
         <p>
-          Cash({{ dashboardData.cashCount || 0 }}) -
+          Vazhipadu Counter Cash({{ dashboardData.cashCount || 0 }}) -
           {{ dashboardData.bookingCash || 0 }}.00
         </p>
 
         <p>
-          UPI({{ dashboardData.upiCount || 0 }}) -
+          Vazhipadu Counter UPI({{ dashboardData.upiCount || 0 }}) -
           {{ dashboardData.bookingUpi || 0 }}.00
         </p>
 
-        <p>Other Income - {{ dashboardData.otherIncome || 0 }}.00</p>
+<!--        <p>Other Income - {{ dashboardData.otherIncome || 0 }}.00</p>-->
+        <p>
+          Other Income Cash ({{ dashboardData.otherCashCount || 0 }}) -
+          {{dashboardData.otherCash || 0 }}.00
+        </p>
+
+        <p>
+          Other Income UPI ({{ dashboardData.otherUpiCount || 0 }}) -
+          {{dashboardData.otherUpi || 0 }}.00
+        </p>
 
         <p>
           <strong>Total - {{ dashboardData.bookingTotal || 0 }}.00</strong>
@@ -230,12 +239,12 @@
         <h3>₹ {{ dashboardData.donationTotal || 0 }}.00</h3>
 
         <p>
-          Cash({{ dashboardData.donationCashCount || 0 }}) -
+          Donation Counter Cash({{ dashboardData.donationCashCount || 0 }}) -
           {{ dashboardData.donationCash || 0 }}.00
         </p>
 
         <p>
-          UPI({{ dashboardData.donationUpiCount || 0 }}) -
+          Donation Counter UPI({{ dashboardData.donationUpiCount || 0 }}) -
           {{ dashboardData.donationUpi || 0 }}.00
         </p>
 
