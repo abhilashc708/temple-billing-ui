@@ -46,6 +46,7 @@ export class EventComponent {
   role: string = '';
   profile: any = {};
   showMyProfileModal = false;
+  isLoading = false;
 
   showModal = false;
   isEditMode = false;
@@ -95,11 +96,13 @@ export class EventComponent {
   }
 
   loadEvents() {
+    this.isLoading = true;
     this.eventsService
       .getEvents(this.page, this.size, 'createdDate')
       .subscribe((res: any) => {
         this.events = res.content;
         this.totalPages = res.totalPages;
+        this.isLoading = false;
       });
   }
 

@@ -186,8 +186,13 @@
         </div>
       </div>
 
+      <!-- 🔄 LOADING -->
+      <div *ngIf="isLoading" class="loader-container">
+        <div class="spinner"></div>
+        <p>Loading offering...</p>
+      </div>
       <!-- 📋 Offering Table -->
-      <table>
+      <table *ngIf="!isLoading">
         <thead>
           <tr>
             <th>Offering English</th>
@@ -237,8 +242,8 @@
             </td>
           </tr>
           <!-- 🔥 EMPTY MESSAGE -->
-          <tr *ngIf="offerings.length === 0">
-            <td colspan="4" class="no-data">🚫 No records found</td>
+          <tr *ngIf="!isLoading && offerings.length === 0">
+            <td colspan="7" class="no-data">🚫 No records found</td>
           </tr>
         </tbody>
       </table>

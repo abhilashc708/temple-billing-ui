@@ -211,9 +211,13 @@
           <button class="btn-reset" (click)="resetFilter()">Reset</button>
         </div>
       </div>
-
+      <!-- 🔄 LOADING -->
+      <div *ngIf="isLoading" class="loader-container">
+        <div class="spinner"></div>
+        <p>Loading bookings...</p>
+      </div>
       <!-- 📋 Booking Table -->
-      <table>
+      <table *ngIf="!isLoading">
         <thead>
           <tr>
             <th>Booking #</th>
@@ -262,8 +266,8 @@
             </td>
           </tr>
           <!-- 🔥 EMPTY MESSAGE -->
-          <tr *ngIf="receipts.length === 0">
-            <td colspan="4" class="no-data">🚫 No records found</td>
+          <tr *ngIf="!isLoading && receipts.length === 0">
+            <td colspan="8" class="no-data">🚫 No records found</td>
           </tr>
         </tbody>
       </table>

@@ -54,6 +54,7 @@ export class OfferingComponent {
   gods: any[] = [];
   isEditMode = false;
   selectedOfferingId: number | null = null;
+  isLoading = false;
 
   @ViewChild(UpdateProfileComponent)
   updateProfilePopup!: UpdateProfileComponent;
@@ -79,7 +80,6 @@ export class OfferingComponent {
     this.initializeForm();
     this.autoTranslate();
     this.loadOfferings();
-    // this.loadGods();
     this.username = localStorage.getItem('name') || 'User';
     this.avatar = localStorage.getItem('avatar') || 'U';
     this.role = localStorage.getItem('role') || 'NULL';
@@ -134,6 +134,7 @@ export class OfferingComponent {
   }
 
   loadOfferings() {
+    this.isLoading = true;
     const filters = this.filterForm.value;
     let queryParams: any = {};
     if (filters.offeringEnglish) {
@@ -150,9 +151,11 @@ export class OfferingComponent {
             this.totalPages = res.totalPages;
             this.totalElements = res.totalElements;
             this.page = res.number;
+            this.isLoading = false;
           },
           error: (err) => {
             console.error('Error loading offerings', err);
+            this.isLoading = false;
           },
         });
     } else {
@@ -164,9 +167,11 @@ export class OfferingComponent {
             this.totalElements = res.totalElements;
             this.totalPages = res.totalPages; // ✅ important
             this.page = res.number; // ✅ current page
+            this.isLoading = false;
           },
           error: (err) => {
             console.error('Error loading offerings', err);
+            this.isLoading = false;
           },
         });
     }

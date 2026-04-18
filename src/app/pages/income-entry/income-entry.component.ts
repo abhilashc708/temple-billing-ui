@@ -57,6 +57,7 @@ export class IncomeEntryComponent {
   isSyncing: boolean = false;
   lastSyncDate: string | null = null;
   showSyncInfo: boolean = false;
+  isLoading = false;
 
   @ViewChild(UpdateProfileComponent)
   updateProfilePopup!: UpdateProfileComponent;
@@ -128,11 +129,13 @@ export class IncomeEntryComponent {
   }
 
   loadFinanceList() {
+    this.isLoading = true;
     this.financeService
       .getAllByType('INCOME', this.page, this.size, 'createdDate')
       .subscribe((res) => {
         this.financeList = res.content;
         this.totalPages = res.totalPages;
+        this.isLoading = false;
       });
   }
 
@@ -154,6 +157,7 @@ export class IncomeEntryComponent {
   }
 
   loadIncomeList() {
+    this.isLoading = true;
     const filters = this.filterForm.value;
 
     let queryParams: any = {};
@@ -177,9 +181,11 @@ export class IncomeEntryComponent {
             this.totalElements = res.totalElements;
             this.totalPages = res.totalPages; // ✅ important
             this.page = res.number; // ✅ current page
+            this.isLoading = false;
           },
           error: (err) => {
             console.error('Search error', err);
+            this.isLoading = false;
           },
         });
     } else {
@@ -189,9 +195,11 @@ export class IncomeEntryComponent {
           this.totalElements = res.totalElements;
           this.totalPages = res.totalPages; // ✅ important
           this.page = res.number; // ✅ current page
+          this.isLoading = false;
         },
         error: (err) => {
           console.error('Search error', err);
+          this.isLoading = false;
         },
       });
     }

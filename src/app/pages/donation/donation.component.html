@@ -209,8 +209,12 @@
           <button class="btn-reset" (click)="resetFilter()">Reset</button>
         </div>
       </div>
-
-      <table>
+      <!-- 🔄 LOADING -->
+      <div *ngIf="isLoading" class="loader-container">
+        <div class="spinner"></div>
+        <p>Loading donations...</p>
+      </div>
+      <table *ngIf="!isLoading">
         <thead>
           <tr>
             <th>ID</th>
@@ -277,8 +281,8 @@
             </td>
           </tr>
           <!-- 🔥 EMPTY MESSAGE -->
-          <tr *ngIf="donations.length === 0">
-            <td colspan="4" class="no-data">🚫 No records found</td>
+          <tr  *ngIf="!isLoading && donations.length === 0">
+            <td colspan="13" class="no-data">🚫 No records found</td>
           </tr>
         </tbody>
       </table>

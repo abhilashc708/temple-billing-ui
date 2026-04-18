@@ -174,8 +174,12 @@
 
     <div class="table-card">
       <!-- 📋 Gods Table -->
-
-      <table>
+      <!-- 🔄 LOADING -->
+      <div *ngIf="isLoading" class="loader-container">
+        <div class="spinner"></div>
+        <p>Loading bookings...</p>
+      </div>
+      <table *ngIf="!isLoading">
         <thead>
           <tr>
             <th>Event</th>
@@ -210,7 +214,7 @@
             </td>
           </tr>
           <!-- 🔥 EMPTY MESSAGE -->
-          <tr *ngIf="events.length === 0">
+          <tr *ngIf="!isLoading && events.length === 0">
             <td colspan="4" class="no-data">🚫 No records found</td>
           </tr>
         </tbody>

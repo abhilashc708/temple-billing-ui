@@ -55,6 +55,7 @@ export class BookingComponent {
   isSubmitting = false;
   highlightedIndex: number[] = []; // track per row
   selectedReceiptId: number | null = null;
+  isLoading = false;
 
   receipts: Receipt[] = [];
   offerings: any[] = [];
@@ -156,6 +157,7 @@ export class BookingComponent {
   }
 
   loadBookings() {
+    this.isLoading = true;
     const filters = this.filterForm.value;
 
     let queryParams: any = {};
@@ -183,9 +185,11 @@ export class BookingComponent {
             this.totalElements = res.totalElements;
             this.totalPages = res.totalPages; // ✅ important
             this.page = res.number; // ✅ current page
+            this.isLoading = false;
           },
           error: (err) => {
             console.error('Search error', err);
+            this.isLoading = false;
           },
         });
     } else {
@@ -197,9 +201,11 @@ export class BookingComponent {
             this.totalElements = res.totalElements;
             this.totalPages = res.totalPages; // ✅ important
             this.page = res.number; // ✅ current page
+           this.isLoading = false;
           },
           error: (err) => {
             console.error('Error loading receipts', err);
+            this.isLoading = false;
           },
         });
     }

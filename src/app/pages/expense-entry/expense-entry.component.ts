@@ -55,6 +55,7 @@ export class ExpenseEntryComponent {
   showModal = false;
   isEditMode = false;
   selectedId: number | null = null;
+  isLoading = false;
 
   @ViewChild(UpdateProfileComponent)
   updateProfilePopup!: UpdateProfileComponent;
@@ -122,11 +123,13 @@ export class ExpenseEntryComponent {
     this.loadExpenseList();
   }
   loadFinanceList() {
+    this.isLoading = true;
     this.financeService
       .getAllByType('EXPENSE', this.page, this.size, 'createdDate')
       .subscribe((res) => {
         this.financeList = res.content;
         this.totalPages = res.totalPages;
+        this.isLoading = false;
       });
   }
   activeMenu: string | null = null;
@@ -148,6 +151,7 @@ export class ExpenseEntryComponent {
   }
 
   loadExpenseList() {
+    this.isLoading = true;
     const filters = this.filterForm.value;
 
     let queryParams: any = {};
@@ -171,9 +175,11 @@ export class ExpenseEntryComponent {
             this.totalElements = res.totalElements;
             this.totalPages = res.totalPages; // ✅ important
             this.page = res.number; // ✅ current page
+            this.isLoading = false;
           },
           error: (err) => {
             console.error('Search error', err);
+            this.isLoading = false;
           },
         });
     } else {
@@ -185,9 +191,11 @@ export class ExpenseEntryComponent {
             this.totalElements = res.totalElements;
             this.totalPages = res.totalPages; // ✅ important
             this.page = res.number; // ✅ current page
+            this.isLoading = false;
           },
           error: (err) => {
             console.error('Search error', err);
+            this.isLoading = false;
           },
         });
     }

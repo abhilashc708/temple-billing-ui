@@ -57,6 +57,7 @@ export class DonationComponent {
   showMyProfileModal = false;
   showReceiptFields = false;
   showReceiptPopup = false;
+  isLoading = false;
 
   @ViewChild(UpdateProfileComponent)
   updateProfilePopup!: UpdateProfileComponent;
@@ -124,6 +125,7 @@ export class DonationComponent {
   }
 
   loadDonations() {
+    this.isLoading = true;
     const filters = this.filterForm.value;
 
     let queryParams: any = {};
@@ -150,9 +152,11 @@ export class DonationComponent {
             this.totalElements = res.totalElements;
             this.totalPages = res.totalPages; // ✅ important
             this.page = res.number; // ✅ current page
+            this.isLoading = false;
           },
           error: (err) => {
             console.error('Search error', err);
+            this.isLoading = false;
           },
         });
     } else {
@@ -164,9 +168,11 @@ export class DonationComponent {
             this.totalElements = res.totalElements;
             this.totalPages = res.totalPages; // ✅ important
             this.page = res.number; // ✅ current page
+            this.isLoading = false;
           },
           error: (err) => {
             console.error('Error loading receipts', err);
+            this.isLoading = false;
           },
         });
     }

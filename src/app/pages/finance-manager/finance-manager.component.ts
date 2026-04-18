@@ -56,6 +56,7 @@ export class FinanceManagerComponent {
   selectedId: number | null = null;
   profile: any = {};
   showMyProfileModal = false;
+  isLoading = false;
 
   page = 0;
   size = 8;
@@ -102,6 +103,7 @@ export class FinanceManagerComponent {
   }
 
   loadFinanceList() {
+    this.isLoading = true;
     const filters = this.filterForm.value;
     let queryParams: any = {};
     if (filters.title) {
@@ -118,9 +120,11 @@ export class FinanceManagerComponent {
             this.totalPages = res.totalPages;
             this.totalElements = res.totalElements;
             this.page = res.number;
+            this.isLoading = false;
           },
           error: (err) => {
             console.error('Error loading offerings', err);
+            this.isLoading = false;
           },
         });
     } else {
@@ -132,9 +136,11 @@ export class FinanceManagerComponent {
             this.totalElements = res.totalElements;
             this.totalPages = res.totalPages; // ✅ important
             this.page = res.number; // ✅ current page
+            this.isLoading = false;
           },
           error: (err) => {
             console.error('Error loading offerings', err);
+            this.isLoading = false;
           },
         });
     }
